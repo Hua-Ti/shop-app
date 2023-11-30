@@ -66,7 +66,7 @@ import mySrc from './assets/icons/my.svg';
 
 <style lang="scss" scoped>
 .nav {
-  font-size: 13px;
+  font-size: 12px;
   padding: 0 40px;
   height: 55px;
   text-align: center;

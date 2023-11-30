@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="allBox">
         <van-search v-model="keyWord" show-action placeholder="冬季连衣裙搭配" shape="round" :clearable="false">
             <template #action>
                 <van-icon @click="gotoShop" name="shopping-cart-o" size="20" />
@@ -74,6 +74,9 @@ function gotoChildView(curId: number) {
 </script>
 
 <style lang="scss" scoped>
+.allBox{
+    font-size: 14px;
+}
 .main {
     padding: 0 10px;
 }
@@ -91,10 +94,10 @@ function gotoChildView(curId: number) {
 
     .router-link-active {
         color: black;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
         position: relative;
-        margin-top: -3px;
+        // margin-top: -3px;
 
         &::after {
             content: '';
@@ -104,7 +107,7 @@ function gotoChildView(curId: number) {
             background-color: #ff5777;
 
             position: absolute;
-            bottom: 3px;
+            bottom: 5px;
             left: 14px;
         }
     }
