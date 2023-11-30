@@ -1,7 +1,7 @@
 import './assets/base.scss';
 // 引入vant所需样式
 import 'vant/es/dialog/style'
-
+import './assets/fontIcon/iconfont.css'
 import { createApp } from 'vue'
 // import { createPinia } from 'pinia'
 import pinia from './stores/store';
