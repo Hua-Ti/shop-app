@@ -55,7 +55,7 @@ onMounted(() => {
 // 点击跳转相关
 function gotoShop() {
     keyWord.value = '';
-    router.replace({ name: 'shop' })
+    router.push({ name: 'shop' })
 }
 
 function gotoChildView(curId: number) {
