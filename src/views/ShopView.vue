@@ -1,5 +1,5 @@
 <template>
-    <div>我是购物袋页面</div>
+    <div>冯少康更改后的文件</div>
 </template>
 
 <script setup lang="ts"></script>
