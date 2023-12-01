@@ -6,6 +6,7 @@ import RegisterView from '../views/AuthorizationViewChildren/RegisterView.vue'
 import ShopView from '../views/ShopView.vue'
 import UserView from '../views/UserView.vue'
 import LiveView from '../views/LiveView.vue'
+import SearchView from '../views/SearchView.vue'
 import DressingView from '../views/LiveViewChildren/DressingView.vue'
 import HotView from '../views/LiveViewChildren/HotView.vue'
 import MakeupView from '../views/LiveViewChildren/MakeupView.vue'
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: UserView
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: SearchView
     },
     {
       path: '/live',
