@@ -81,6 +81,7 @@ import mySrc from './assets/icons/my.svg';
   justify-content: space-between;
   align-items: center;
 
+  z-index: 999;
   .router-link-active {
     position: relative;
     // color: var(--subject-color);

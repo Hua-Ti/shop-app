@@ -1,53 +1,70 @@
 <template>
-    <div class="allBox">
-        <div class="user-about">
-            <van-image width="30" height="30" :round="true" src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-            <div class="user-name">苗乐乐</div>
+    <div class="mona-live-item" v-for="(ld, index) in liveData" :key="index">
+        <div class="actor-info">
+            <!-- 主播头像 -->
+            <van-image round width="45px" height="45px" :src="ld.avatar" />
+            <span class="user-name">{{ ld.userName }}</span>
         </div>
-        <div class="show-goods-box">
-            <div class="goods-box">
-                <div class="living-count">
-                    <div class="living-text">
-                        <span class="point"></span>
-                        <p>直播中</p>
-                    </div>
-                    <div class="living-much">
-                        <van-icon name="fire-o" />
-                        <p>2.2w</p>
-                    </div>
-                </div>
-                <div class="introduction">
-                    <p>体验捡漏,速拼减肥塑形</p>
-                </div>
-                <div class="goods-content">
-                    <div class="goods-item">
-                        <van-image width="50" height="50" src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-                    </div>
-                    <div class="price">¥69.9</div>
+        <!-- 商品推荐与评论 -->
+        <div class="main" :style="{ background: 'url(' + ld.bgImg + ')' }">
+            <div class="live-info-mask">
+                <div class="live-info">
+                    <div class="dot"></div>
+                    <div class="status">直播中</div>
+                    <div class="watch-num">{{  }}</div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
 <script setup lang="ts">
-import { } from 'vue';
 
-// 获取参数值
-const props = defineProps({});
+const props = defineProps(["liveData"])
 
 </script>
 
-<style lang="scss" scoped>
-.user-about {}
+<style lang="scss">
+.mona-live-item {
+    padding: 0 10px;
+    // margin-bottom: 10px;
 
-.show-goods-box {}
+    .actor-info {
+        display: flex;
+        // align-items: center;
+        height: 40px;
 
-.goods-box {}
+        .van-image {
+            border: 0.04rem solid hsla(0, 0%, 100%, .9);
+            transform: translate(20%, 15%);
+        }
 
-.living-count {}
+        .user-name {
+            font-size: 14px;
+            margin-left: 15px;
+            transform: translateY(45%);
+        }
+    }
 
-.introduction {}
-
-.goods-content {}
+    .main {
+        background-size: 100% auto !important;
+        background-position: 50%;
+        background-repeat: no-repeat !important;
+        display: flex;
+        flex-direction: column;
+        height: 195px;
+        border-radius: 10px;
+        background-color: #efefef;
+    }
+    .live-info-mask{
+        position: relative;
+        margin-top: auto;
+        padding: 5px 12px;
+        background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.4));
+        .live-info{
+            padding:0 5px;
+        }
+    }
+}
 </style>

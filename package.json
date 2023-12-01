@@ -19,10 +19,13 @@
   "devDependencies": {
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^18.18.5",
+    "@types/postcss-pxtorem": "^6.0.3",
     "@vant/auto-import-resolver": "^1.0.2",
     "@vitejs/plugin-vue": "^4.4.0",
     "@vue/tsconfig": "^0.4.0",
+    "amfe-flexible": "^2.2.1",
     "npm-run-all2": "^6.1.1",
+    "postcss-pxtorem": "^6.0.0",
     "sass": "^1.69.5",
     "typescript": "~5.2.0",
     "unplugin-vue-components": "^0.25.2",

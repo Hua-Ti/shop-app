@@ -1,113 +1,145 @@
 <template>
     <div>
+        <!-- 搜索栏 -->
         <van-search v-model="keyWord" show-action placeholder="冬季连衣裙搭配" shape="round" :clearable="false">
             <template #action>
                 <van-icon @click="gotoShop" name="shopping-cart-o" size="20" />
             </template>
         </van-search>
-        <div class="main">
-            <div class="tab-bar">
-                <RouterLink replace :to="{ name: 'hot' }" v-slot="{ navigate, isActive, isExactActive }" custom>
-                    <div @click="navigate"
-                        :class="['tab-title', isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
-                        <span>热门</span>
-                    </div>
-                </RouterLink>
-                <RouterLink replace :to="{ name: 'dressing' }" v-slot="{ navigate, isActive, isExactActive }" custom>
-                    <div @click="navigate"
-                        :class="['tab-title', isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
-                        <span>穿搭</span>
-                    </div>
-                </RouterLink>
-                <RouterLink replace :to="{ name: 'makeup' }" v-slot="{ navigate, isActive, isExactActive }" custom>
-                    <div @click="navigate"
-                        :class="['tab-title', isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
-                        <span>美妆</span>
-                    </div>
-                </RouterLink>
-            </div>
-            <!-- tab-bar 结束 -->
 
-            <div>
-                <RouterView />
-            </div>
+        <div class="lives">
+            <!-- nav标签页 -->
+            <van-tabs v-model:active="active" :animated="true" title-active-color="#ff5777" line-width="80"
+                @click-tab="onNavHadle(liveList[active].id)" sticky>
+                <van-tab v-for="(item, index) in liveList" :key="index" :title="item.name">
+                    <!-- 下拉刷新,上拉加载 -->
+                    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+                        <van-list v-model:loading="loading" :finished="finished" finished-text="我也是有底线的喔o(〃＾▽＾〃)o"
+                            @load="onLoad">
+                            <LiveComponent :liveData="liveData" />
+                        </van-list>
+                    </van-pull-refresh>
+                    <!-- <LiveComponent :liveData="liveData" /> -->
+                </van-tab>
+            </van-tabs>
+            <p class="bottom-text" v-show="filterShow">暂时没有直播间</p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { RouterView, useRouter } from "vue-router";
-import { } from '../apic/live-data';
-import type { } from '../typings';
+import { ref, onMounted, nextTick } from "vue";
+import { useRouter } from "vue-router";
+import LiveComponent from "@/components/LiveComponent.vue";
+import { getLiveBroadcastSort, getLiveList } from '../apic/live-data';
+import type { LiveSortTabs, LiveList } from '../typings';
 const router = useRouter();
-
 let keyWord = ref('');
-let isActive = 1;
 
+
+const active = ref(0);
+const liveList = ref<Array<LiveSortTabs>>([])
+const page = ref(1)
+const liveData = ref<Array<LiveList>>([])
+const liveId = ref(1);
+let loading = ref(true);
+let finished = ref(false);
+let refreshing = ref(false);
+let filterShow = ref(false);
 //获取数据
 
-onMounted(() => {
-})
-
-
+onMounted(async () => {
+    //首页导航
+    let { data } = await getLiveBroadcastSort();
+    // console.log('直播分类数据', data)
+    liveList.value = data.tabs.items;
+    page.value = 1;
+    getLivesList();
+    console.log(liveData.value);
+    
+});
 
 // 点击跳转相关
 function gotoShop() {
     keyWord.value = '';
-    router.replace({ name: 'shop' })
+    router.push({ name: 'shop' })
 }
 
-function gotoChildView(curId: number) {
-    if (curId == 1) {
-        isActive = 1;
-        router.replace({ name: 'hot' })
-    } else if (curId == 60) {
-        isActive = 60;
-        router.replace({ name: 'dressing' })
-    } else {
-        isActive = 61;
-        router.replace({ name: 'makeup' })
+const getLivesList = (async () => {
+    let { data } = await getLiveList(liveId.value, page.value);
+
+    liveData.value = [...data?.lives, ...liveData.value];
+    loading.value = false
+    filterShow.value = false
+    refreshing.value = false
+    if (page.value > 1) {
+        liveData.value = [...liveData.value, ...data?.lives];
     }
+    if (data.lives.length == 0) {
+        finished.value = true
+        filterShow.value = false
+    }
+    if (liveData.value.length == 0) {
+        loading.value = false
+        finished.value = false
+        filterShow.value = true
+    }
+
+    finished.value = true
+    return
+})
+
+
+const onNavHadle = function (i: any) {
+    //点击事件切换nav改变直播类型ID并传值
+    page.value = 1;
+    liveId.value = i;
+    liveData.value = [];
+    getLivesList();
+}
+
+//上拉加载
+
+const onLoad = async () => {
+        page.value++
+        await getLivesList()
+}
+// 下拉刷新
+const onRefresh = () => {
+    finished.value = false;
+    page.value = 1
+    liveData.value = [];
+    loading.value = true;
+    getLivesList()
+    // onLoad()
 }
 
 </script>
 
-<style lang="scss" scoped>
-.main {
-    padding: 0 10px;
-}
+<style lang="scss">
+.lives {
 
-.tab-bar {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 60px;
 
-    .tab-title {
-        padding: 12px;
-        color: #666666;
+    .van-tab {
+        font-size: 15px;
+        border-bottom: 1px solid #ececec;
     }
 
-    .router-link-active {
-        color: black;
-        font-size: 16px;
-        font-weight: 700;
-        position: relative;
-        margin-top: -3px;
-
-        &::after {
-            content: '';
-            display: block;
-            width: 26px;
-            height: 2px;
-            background-color: #ff5777;
-
-            position: absolute;
-            bottom: 3px;
-            left: 14px;
-        }
+    .van-tab--active {
+        font-size: 17px;
+        font-weight: 600;
     }
 
+    .van-tabs__line {
+        background-color: #ff5777;
+    }
+
+    .bottom-text {
+        font-size: 14px;
+        text-align: center;
+        margin-top: 15px;
+        margin-bottom: 65px;
+    }
 }
 </style>
