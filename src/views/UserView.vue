@@ -132,13 +132,13 @@ function escUser() {
 
 <style lang="scss" scoped>
 .iconfont {
-    font-size: 30px;
+    font-size: 25px;
     color: #707070;
 
     span {
         // display: block;
         margin-top: 5px;
-        font-size: 14px;
+        font-size: 12px;
 
     }
 
@@ -151,7 +151,7 @@ function escUser() {
 
 .user-box {
     padding: 0px 10px;
-    font-size: 14px;
+    font-size: 13px;
     // background-position: center center;
     background-position: 0px 0px;
     background-repeat: no-repeat;
@@ -197,7 +197,7 @@ function escUser() {
 
         p {
             margin-top: 46px;
-            font-size: 16px;
+            font-size: 15px;
         }
     }
 }
@@ -317,7 +317,7 @@ function escUser() {
         border-bottom: 2px solid #efefef;
 
         p {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         span {
@@ -336,6 +336,7 @@ function escUser() {
 
         div {
             width: 71px;
+            transform: translateY(6px);
 
             &:hover {
                 color: var(--subject-color);
@@ -374,7 +375,7 @@ function escUser() {
         border-bottom: 2px solid #efefef;
 
         p {
-            font-size: 16px;
+            font-size: 14px;
         }
 
     }
@@ -389,6 +390,7 @@ function escUser() {
 
         div {
             width: 71px;
+            transform: translateY(4px);
 
             &:hover {
                 color: var(--subject-color);
@@ -415,14 +417,16 @@ function escUser() {
     height: 115px;
     width: 91vw;
     margin: 0px auto;
-
+    
     button {
         width: 100%;
         height: 41px;
         border: none;
         background-color: var(--subject-color);
         color: white;
-        font-size: 16px;
+        font-size: 14px;
+        border-radius: 999px;
+        transform: translateY(10px);
     }
 }
 </style>
