@@ -91,16 +91,16 @@
             </div>
             <div class="user-five">
                 <div>
-                    <i class="iconfont">&#xe69a;<span class="nav-title">签到</span></i>
+                    <i class="iconfont">&#xe603;<span class="nav-title">签到</span></i>
                 </div>
                 <div>
-                    <i class="iconfont">&#xe62c;<span class="nav-title">大姨妈</span></i>
+                    <i class="iconfont">&#xe610;<span class="nav-title">大姨妈</span></i>
                 </div>
                 <div>
-                    <i class="iconfont">&#xe669;<span class="nav-title">客服</span></i>
+                    <i class="iconfont">&#xe606;<span class="nav-title">客服</span></i>
                 </div>
                 <div>
-                    <i class="iconfont">&#xe6ab;<span class="nav-title">达人中心</span></i>
+                    <i class="iconfont">&#xe611;<span class="nav-title">达人中心</span></i>
                 </div>
             </div>
         </div>
@@ -119,6 +119,7 @@ import userHome from '../assets/icons/user_home.png'
 import userMessage from '../assets/icons/user_message.png'
 import userShoucang from '../assets/icons/user_shoucang.png'
 import userAttention from '../assets/icons/user_attention.png'
+
 const router = useRouter();
 
 function escUser() {
@@ -155,7 +156,7 @@ function escUser() {
     background-position: 0px 0px;
     background-repeat: no-repeat;
     background-size: 100%;
-    background-color: #f6f6f6;
+    background-color: #f1f1f1;
 
     position: fixed;
     top: 0px;
