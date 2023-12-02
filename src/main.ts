@@ -1,7 +1,10 @@
 import './assets/base.scss';
+import 'amfe-flexible' // rem 布局适配
+
 // 引入vant所需样式
 import 'vant/es/dialog/style'
-
+import './assets/fontIcon/iconfont.css'
+import './assets/fontIcon2/iconfont.css'
 import { createApp } from 'vue'
 // import { createPinia } from 'pinia'
 import pinia from './stores/store';

@@ -11,9 +11,30 @@
                 <div class="live-info">
                     <div class="dot"></div>
                     <div class="status">直播中</div>
-                    <div class="watch-num">{{  }}</div>
+                    <div class="watch-num">{{ (ld.visitorCount / 10000).toFixed(1) }}W</div>
+                </div>
+                <div class="live-title">{{ ld.intro }}</div>
+                <!-- 推荐商品 -->
+                <div class="good-list">
+                    <div class="good-item" v-for="(item, index) in ld.shopCarts.goods" :key="index"
+                        :style="{ background: 'url(' + item.cover + ')' }">
+                        <div class="price-mask">
+                            <div class="price">{{ item.price }}</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 评论 -->
+                <div class="comment-wrap">
+                    <div class="comment-list">
+                        <div class="comment-item" v-for="(comment, index) in ld.comments" :key="index">
+                            <van-image round width="15px" height="15px" :src="comment.avatar" />
+                            <div class="message">{{ comment.content }}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
         </div>
 
     </div>
@@ -57,14 +78,129 @@ const props = defineProps(["liveData"])
         border-radius: 10px;
         background-color: #efefef;
     }
-    .live-info-mask{
+
+    .live-info-mask {
         position: relative;
         margin-top: auto;
         padding: 5px 12px;
-        background-image: linear-gradient(180deg,transparent,rgba(0,0,0,.4));
-        .live-info{
-            padding:0 5px;
+        background-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, .4));
+
+        .live-info {
+            padding: 0 5px;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            height: 20px;
+            color: #fff;
+            background-color: rgba(0, 0, 0, .26);
+            border-radius: 3px;
+            font-size: 11px;
+            // line-height: 1;
         }
+
+        .dot {
+            margin-right: 5px;
+            width: 8.5px;
+            height: 8.5px;
+            border-radius: 50%;
+            background-color: #f5342f;
+            animation: dot-flicker 2s infinite;
+        }
+
+        .status {
+            border-right: 1px solid hsla(0, 0%, 100%, .3);
+            padding-right: 5px;
+        }
+
+        .watch-num {
+            display: inline-block;
+            padding-left: 12.5px;
+            background: url(../assets/icons/hot_count.png) no-repeat;
+            background-size: 8.5px auto;
+            margin-left: 4.5px;
+        }
+
+        .live-title {
+            margin-top: 5px;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+
+        .good-list {
+            display: flex;
+            margin-top: 8.5px;
+            height: 60px;
+        }
+
+        .good-item {
+            flex-direction: column;
+            margin-right: 5px;
+            width: 60px;
+            height: 100%;
+            background-repeat: no-repeat !important;
+            background-color: #efefef !important;
+            background-size: cover !important;
+            display: flex;
+        }
+
+        .price-mask {
+            margin-top: auto;
+            height: 18.5px;
+            background-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, .6));
+        }
+
+        .price {
+            margin-left: 5px;
+            font-size: 12px;
+            color: #fff;
+        }
+    }
+
+    .comment-wrap {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        width: 120px;
+        height: 60px;
+        overflow: hidden;
+
+        .comment-list {
+            height: 100%;
+        }
+    }
+
+    .comment-item {
+        display: flex;
+        margin-top: 5px;
+        opacity: .8;
+        width: 100%;
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        .message {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+            font-weight: 500;
+            font-size: 11px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+        }
+    }
+}
+
+
+@keyframes dot-flicker {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }
 </style>

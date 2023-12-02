@@ -55,7 +55,6 @@ onMounted(async () => {
     liveList.value = data.tabs.items;
     page.value = 1;
     getLivesList();
-    console.log(liveData.value);
     
 });
 
@@ -67,7 +66,8 @@ function gotoShop() {
 
 const getLivesList = (async () => {
     let { data } = await getLiveList(liveId.value, page.value);
-
+    console.log(data);
+    
     liveData.value = [...data?.lives, ...liveData.value];
     loading.value = false
     filterShow.value = false

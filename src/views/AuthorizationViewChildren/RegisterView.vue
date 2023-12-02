@@ -70,7 +70,9 @@ function isRegistered() {
             message: "请勾选《用户协议》和《隐私政策》!",
             confirmButtonColor: "#ff4569",
             theme: "round-button",
-        }).then(() => { });
+        }).then(() => {
+            checked.value = true;
+        });
     } else {
         showDialog({
             message: "请完成填写后再注册!",

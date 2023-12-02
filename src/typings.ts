@@ -4,6 +4,37 @@
         export interface live.....{}
 */
 
+// 首页导航 （数组（字符串））
+export interface HomeTopNav {
+    image: string
+    sort: number
+    _system_record_entry_id: number
+    link: string
+    // _material_end_time: Number
+    title: string
+    titleColor: string
+    // description?:String
+    // acm: String
+    h5Link: string
+    // material_start_time: Number
+}
+
+// 首页限时快抢
+export interface gettimeRob {
+    timestamp: number
+    _system_record_entry_id: string
+    tagTitle: string
+    link: string
+    title: string
+    _material_start_time: number
+    countdown: number
+    w: number
+    backgroundImage: string
+    _material_end_time: number
+    acm: string
+    categoryId?: number
+}
+
 
 // live-data相关配置
 export interface LiveBroadcastSort {
