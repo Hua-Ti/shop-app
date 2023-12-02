@@ -159,11 +159,11 @@ const props = defineProps(["liveData"])
 
     .comment-wrap {
         position: absolute;
-        bottom: 12px;
-        right: 12px;
+        bottom: 0;
+        right: 22px;
         width: 120px;
         height: 60px;
-        overflow: hidden;
+        // overflow: hidden;
 
         .comment-list {
             height: 100%;
@@ -175,6 +175,7 @@ const props = defineProps(["liveData"])
         margin-top: 5px;
         opacity: .8;
         width: 100%;
+        align-items: center;
 
         &:first-child {
             margin-top: 0px;
@@ -189,6 +190,7 @@ const props = defineProps(["liveData"])
             font-weight: 500;
             font-size: 11px;
             text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+            margin-left: 2px;
         }
     }
 }
