@@ -71,3 +71,57 @@ export interface liveHomeShopCartsCommentsItem {
     "avatar": string,
     "uid": string
 }
+
+// 直播回放相关
+export interface livePlayBackData {
+    "mbook": string,
+    "list": Array<livePlayBackList>
+}
+
+export interface livePlayBackList {
+    "explainItemType": number,
+    "link": string,
+    "itemIdUrl": string,
+    "liveId": number,
+    "itemImage": string,
+    "similarityUrl": string,
+    "actorIdUrl": string,
+    "type": number,
+    "showDiscountPrice": string,
+    "sale": string,
+    "itemId": number,
+    "actorName": string,
+    "videoId": number,
+    "lefttop_taglist": Array<livePlayBackListLefttop_taglistItem>,
+    "firstFrame": string,
+    "id": string,
+    "liveStatus": number,
+    "actorId": number,
+    "videoH265Url": string,
+    "liveLink": string,
+    "actorAvatar": string,
+    "orgPrice": number,
+    "isSecKillItem": number,
+    "hasSimilarity": boolean,
+    "originItemImage": string,
+    "imageAdapt": boolean,
+    "pcLink": string,
+    "discountPrice": string
+    "explainId": number,
+    "itemType": number,
+    "title": string,
+    "showOrgPrice": string,
+    "useVideoUrl": boolean,
+    "clientUrl": string,
+    "itemMarks": string
+}
+
+// 直播的小图标
+export interface livePlayBackListLefttop_taglistItem {
+    "styleType": number,
+    "img": string,
+    "w": number,
+    "h": number,
+    "sort": string,
+    "pagani_system_tagType": string
+}

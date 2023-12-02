@@ -64,7 +64,7 @@ function isHasUser() {
             });
             return;
         }
-
+        
         localStorage.token = "salkjdklsdfjkg111";
 
         // 跳转到点击进入的页面

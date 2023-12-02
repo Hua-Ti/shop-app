@@ -10,6 +10,8 @@ import SearchView from '../views/SearchView.vue'
 import DressingView from '../views/LiveViewChildren/DressingView.vue'
 import HotView from '../views/LiveViewChildren/HotView.vue'
 import MakeupView from '../views/LiveViewChildren/MakeupView.vue'
+import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
+import LivingView from '../views/LiveViewChildren/LivingView.vue'
 
 // 在路由中引入pinia
 import pinia from '@/stores/store'
@@ -65,6 +67,16 @@ const router = createRouter({
           path: 'makeup',
           name: 'makeup',
           component: MakeupView,
+        },
+        {
+          path: 'livePlaybackOrPlay',
+          name: 'livePlaybackOrPlay',
+          component: LivePlaybackView,
+        },
+        {
+          path: 'living',
+          name: 'living',
+          component: LivingView,
         }
       ]
     },

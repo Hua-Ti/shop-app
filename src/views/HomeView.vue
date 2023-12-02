@@ -73,8 +73,8 @@ onMounted(async () => {
     let data = await getHomeModuleRow();
 
     let dataTime = await gettimeLimitedQuickGrab();
-    console.log('首页导航数据', data)
-    console.log('首页限时抢数据', dataTime)
+    // console.log('首页导航数据', data)
+    // console.log('首页限时抢数据', dataTime)
 
     homeNav.value = data
     TimeRob.value = dataTime
