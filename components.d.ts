@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
     LivePlaybackOrPlayComponent: typeof import('./src/components/LivePlaybackOrPlayComponent.vue')['default']
-    LivePlaybackOrPlayView: typeof import('./src/components/LivePlaybackOrPlayView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     VanCellGroup: typeof import('vant/es')['CellGroup']
