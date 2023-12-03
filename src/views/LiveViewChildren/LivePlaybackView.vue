@@ -38,9 +38,9 @@ const videoUrl = ref('');
 
 const getData = async () => {
     console.log('发起请求')
-    let { data } = await axios.get<livePlayBackList>(`https://apic.netstart.cn/mogujie/video/item?page=2`)
-    // firstFrame.value = data.data.list[0].firstFrame;
-    // videoUrl.value = data.data.list[0].videoUrl;
+    let { data } = await axios.get<livePlayBackList>(`https://apis.netstart.cn/mogujie/video/item?page=2`)
+    firstFrame.value = data.data.list[0].firstFrame;
+    videoUrl.value = data.data.list[0].videoUrl;
     console.log(videoUrl.value)
 }
 

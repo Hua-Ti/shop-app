@@ -67,18 +67,18 @@ const router = createRouter({
           path: 'makeup',
           name: 'makeup',
           component: MakeupView,
-        },
-        {
-          path: 'livePlaybackOrPlay',
-          name: 'livePlaybackOrPlay',
-          component: LivePlaybackView,
-        },
-        {
-          path: 'living',
-          name: 'living',
-          component: LivingView,
         }
       ]
+    },
+    {
+      path: '/livePlayback',
+      name: 'livePlayback',
+      component: LivePlaybackView,
+    },
+    {
+      path: '/living',
+      name: 'living',
+      component: LivingView,
     },
     {
       path: '/authorization',
