@@ -151,3 +151,61 @@ export interface livePlayBackListLefttop_taglistItem {
     "sort": string,
     "pagani_system_tagType": string
 }
+
+
+// 搜索的相关接口
+export interface HotWords {
+    data: {
+        hotWord: {
+            data: Array<HotWord>
+        }
+    }
+}
+
+export interface HotWord {
+    color: string;
+    query: string;
+    acm: string;
+    frontword: string;
+}
+
+export interface Optain {
+    q: string,
+    sort: string,
+    page: number,
+    minPrice: number,
+    maxPrice: number,
+}
+
+export interface searchByKeyword {
+    result: {
+        sortFilter: Array<sortFilterList>,
+        priceFilter: Array<priceFilterList>,
+        wall:{
+            docs:Array<wallDocsList>
+        }
+    }
+}
+
+export interface sortFilterList {
+    sortKey: string,
+    title: string,
+}
+export interface priceFilterList {
+    max: string,
+    min: string,
+}
+export interface wallDocsList{
+    tradeItemId:string,
+    img:string,
+    title:string,
+    leftbottom_taglist:Array<leftbottomTagList>
+    orgPrice:number,
+    price:69,
+}
+
+export interface leftbottomTagList{
+    color:string,
+    bgColor:string,
+    content:string,
+}
