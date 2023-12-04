@@ -5,11 +5,11 @@
             <div class="top-box">
                 <div class="user-message">
                     <div>
-                        <img src="../assets/images/user_touxiang.jpg" alt="">
+                        <img @click.stop="gotoHomepage" src="../assets/images/user_touxiang.png" alt="">
                     </div>
                 </div>
                 <div class="user_white">
-                    <p>m_i6pjkml6cdv4bbb</p>
+                    <p>{{ userid.accountName }}</p>
                 </div>
                 <div class="top-vip">
                     <img src="../assets/images/user_vip.png" alt="">
@@ -17,7 +17,7 @@
             </div>
             <!-- 我的主页，消息，收藏，关注 -->
             <div class="user_four">
-                <div>
+                <div @click.stop="gotoHomepage">
                     <van-image width="30" height="30" :src="userHome" />
                     <span class="nav-title">我的主页</span>
                 </div>
@@ -39,7 +39,7 @@
 
         <div class="user-shop">
             <!-- 购物车 -->
-            <div class="left">
+            <div class="left" @click.stop="gotoShop">
                 <van-image :src="uesrGouwuche" />
                 <p>购物车</p>
             </div>
@@ -107,12 +107,14 @@
         <div class="user-button">
             <button @click="escUser">退出登录</button>
         </div>
-
+        <div>
+            <RouterView />
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter, RouterView } from 'vue-router';
 import uesrBg from '../assets/images/user_bg.png'
 import uesrGouwuche from '../assets/images/user_gouwuche.png'
 import userHome from '../assets/icons/user_home.png'
@@ -120,13 +122,25 @@ import userMessage from '../assets/icons/user_message.png'
 import userShoucang from '../assets/icons/user_shoucang.png'
 import userAttention from '../assets/icons/user_attention.png'
 
-const router = useRouter();
+import { accountNumber } from "../stores/counter"
 
+const router = useRouter();
+const userid = accountNumber()
+
+//退出登录
 function escUser() {
     localStorage.token = '';
     router.replace({ name: 'home' });
 }
 
+//跳购物车
+function gotoShop() {
+    router.push({ name: 'shop' })
+}
+//个人信息
+function gotoHomepage() {
+    router.push({ name: 'homepage' })
+}
 
 </script>
 
@@ -417,7 +431,7 @@ function escUser() {
     height: 115px;
     width: 91vw;
     margin: 0px auto;
-    
+
     button {
         width: 100%;
         height: 41px;
