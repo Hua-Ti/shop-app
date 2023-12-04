@@ -31,18 +31,6 @@
     </div>
 </template>
 
-
-<!-- <script lang="ts">
-// 这是为了配置 beforeRouteEnter 而存在的script
-export default {
-    beforeRouteEnter(to, from, next) {
-
-    }
-}
-
-</script> -->
-
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
@@ -87,6 +75,8 @@ function gotoLogin() {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-evenly;
+
+    z-index: 11;
 
     // &::before {
     //     content: "";
