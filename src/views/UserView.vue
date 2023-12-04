@@ -5,11 +5,14 @@
             <div class="top-box">
                 <div class="user-message">
                     <div>
-                        <img @click.stop="gotoHomepage" src="../assets/images/user_touxiang.png" alt="">
+                        <!-- <img v-if="!pictureSrc.picture" class="img-bg" @click.stop="gotoHomepage"
+                            src="../../../public/user_touxiang.png" alt=""> -->
+                        <img class="img-bg" @click.stop="gotoHomepage" :src="pictureSrc.picture || picSrc" alt="">
+                        <!-- <img v-if="picSrc" class="img-bg" @click.stop="gotoHomepage" :src="picSrc" alt=""> -->
                     </div>
                 </div>
                 <div class="user_white">
-                    <p>{{ userid.accountName }}</p>
+                    <p>{{ userid.accountName || nameid }}</p>
                 </div>
                 <div class="top-vip">
                     <img src="../assets/images/user_vip.png" alt="">
@@ -114,18 +117,58 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, } from 'vue'
 import { useRouter, RouterView } from 'vue-router';
+
 import uesrBg from '../assets/images/user_bg.png'
 import uesrGouwuche from '../assets/images/user_gouwuche.png'
 import userHome from '../assets/icons/user_home.png'
 import userMessage from '../assets/icons/user_message.png'
 import userShoucang from '../assets/icons/user_shoucang.png'
 import userAttention from '../assets/icons/user_attention.png'
+import src from "../assets/images/user_touxiang.png"
 
-import { accountNumber } from "../stores/counter"
+import { accountNumber, getPicture } from "../stores/counter"
 
 const router = useRouter();
 const userid = accountNumber()
+
+const nameid = ref('')
+const pictureSrc = getPicture()
+const picSrc = ref('')
+
+
+//获取登录的账号id
+onMounted(() => {
+    let userIDList = localStorage.userIDList || `[]`;
+    userIDList = JSON.parse(userIDList);
+    if (userid.accountName) {
+        userIDList.push({
+            userid: userid.accountName
+        });
+        localStorage.userIDList = JSON.stringify(userIDList);
+    } else {
+        nameid.value = userIDList.slice(-1)[0].userid
+        userid.accountName = userIDList.slice(-1)[0].userid
+    }
+})
+pictureSrc.picture
+//头像url
+onMounted(() => {
+    let pictureList = localStorage.pictureList || `[]`;
+    // pictureList = JSON.parse(pictureList);
+    console.log(Array.isArray(pictureList))
+    if (pictureList == '[]') {
+        console.log(11)
+        return
+    } else {
+        let pictureList = localStorage.pictureList
+        pictureList = JSON.parse(pictureList);
+        // pictureSrc.picture = pictureList.slice(-1)[0].pictureid
+        console.log(pictureList.slice(-1)[0])
+        picSrc.value = pictureList.slice(-1)[0].pictureid
+    }
+})
 
 //退出登录
 function escUser() {
@@ -227,7 +270,7 @@ function gotoHomepage() {
         margin: 0 auto;
         width: 20vw;
 
-        img {
+        .img-bg {
             width: 20vw;
             border-radius: 50%;
         }

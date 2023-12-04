@@ -1,23 +1,18 @@
 <template>
     <div class="page-box">
         <div class="page-top">
-            <span class="back" @click="goback">&lt;</span>
+            <van-icon name="arrow-left" @click="goback" />
             <span class="title">个人资料</span>
         </div>
         <div class="page-bg">
         </div>
         <div class="page-message">
             <div class="base">
-
                 <div class="group_item">
                     <p class="item_l">头像</p>
                     <div class="item_r">
                         <van-uploader v-model="fileList" reupload max-count="1" :deletable="false"
                             :after-read="afterRead" />
-                        <!-- <label>
-                            <img src="../../assets/images/user_touxiang.png" alt="">
-                            <input @change="useChangnAvatar" style="display: none;" type="file" accept="image/*" multiple>
-                        </label> -->
                     </div>
                 </div>
                 <div class="group_item">
@@ -35,9 +30,6 @@
 
             </div>
         </div>
-        <!-- <div class="page-bottom">
-            <div>+新建收获地址</div>
-        </div> -->
     </div>
 </template>
 
@@ -45,11 +37,11 @@
 import { ref, onMounted, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
 import { accountNumber, getPicture } from '../../stores/counter'
-import src from "../../assets/images/user_touxiang.png"
-// const src = ref('../../assets/images/user_touxiang.png')
-const pictureId = getPicture()
+
+const pictureSrc = getPicture()
+const src = ref('../../../public/user_touxiang.png')
 const fileList = ref([
-    { url: src },
+    { url: src.value },
 ]);
 const userid = accountNumber()
 
@@ -58,41 +50,28 @@ const router = useRouter();
 const afterRead = (file: any) => {
     // 此时可以自行将文件上传至服务器
     console.log(file.objectUrl);
-    // src = file.objectUrl
+    let pictureList = localStorage.pictureList || `[]`;
+    pictureList = JSON.parse(pictureList);
+    pictureList.push({
+        pictureid: file.objectUrl
+    });
+    localStorage.pictureList = JSON.stringify(pictureList);
+    pictureSrc.picture = pictureList.slice(-1)[0].pictureid
+    src.value = pictureSrc.picture
+    console.log(src.value)
 };
-// let nicheng = ref('')
-
+// onMounted(() => {
+//     let pictureList = localStorage.pictureList || `[]`;
+//     pictureList = JSON.parse(pictureList);
+//     if (pictureList) {
+//         pictureSrc.picture = pictureList.slice(-1)[0].pictureSrc
+//         src.value = pictureSrc.picture.substring(5)
+//     }
+// })
 
 //返回上一级
 function goback() {
     router.go(-1)
-}
-
-//改变头像
-function useChangnAvatar() {
-    console.log('111')
-    // console.log(proxy)
-    // let file = proxy.files[0]
-
-    // if (/image\/\w+/.test(file.type)) {
-
-    //     console.log('选择的是图片')
-    //     var fr = new FileReader()
-
-    //     //将文件读取为DataURL形式
-    //     fr.readAsDataURL(file)
-
-    //     //数据读取报错时触发
-    //     fr.onerror = function () {
-    //         console.log('图片读取失败');
-    //     }
-    //     fr.onload = function () {
-    //         console.log('图片读取成功', fr.result);
-    //         src.value = fr.result as string
-    //         console.log(src.value)
-
-    //     }
-    // }
 }
 
 

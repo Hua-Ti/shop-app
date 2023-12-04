@@ -20,19 +20,14 @@ export const accountNumber = defineStore('counter', () => {
   const accountName = ref('');
   function changeaccountName(userid: string) {
     accountName.value = userid;
-
-    // console.log(accountName.value)
   }
   return { accountName, changeaccountName }
 })
 
 
 export const getPicture = defineStore('counter', () => {
-  const picture = '../assets/images/user_touxiang.png'
+  const picture = ref('');
   function changePicture() {
-    // accountName.value = userid;
-
-    // console.log(accountName.value)
   }
   return { picture, changePicture }
 })
