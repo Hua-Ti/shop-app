@@ -3,7 +3,7 @@
         <!-- <div class="backImg" :style="{ backgroundImage: `url(${firstFrame})` }">
         </div> -->
         <div class="top-nav">
-            <div class="author-about">
+            <div class="author-about" data-authorId="authorId">
                 <van-image width="35" height="35" :round="true" :src="authorImg" />
                 <div class="author-text">
                     <div class="author-name">
@@ -93,6 +93,10 @@ const props = defineProps({
     authorImg: {
         type: String,
     },
+    authorId:{
+        type:String,
+    }
+    ,
     authorName: {
         type: String,
         default: '小画家style',
