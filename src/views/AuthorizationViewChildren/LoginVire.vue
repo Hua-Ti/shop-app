@@ -2,9 +2,12 @@
     <div class="curLoginBox">
         <div class="inputBox">
             <van-cell-group inset class="myInputGroup">
-                <van-field v-model="userName" left-icon="phone-o" placeholder="请输入手机号" />
-                <van-field v-model="userPaw" center type="password" left-icon="edit" placeholder="请输入密码">
-                </van-field>
+                <van-form>
+                    <van-field v-model="userName" left-icon="phone-o" placeholder="请输入手机号"
+                        :rules="[{ pattern, message: '手机号格式不正确' }]" />
+                    <van-field v-model="userPaw" center type="password" left-icon="edit" placeholder="请输入密码">
+                    </van-field>
+                </van-form>
             </van-cell-group>
 
         </div>
@@ -30,6 +33,7 @@ const userid = accountNumber();
 let userName = ref("");
 let userPaw = ref("");
 let checked = ref(false);
+const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
 
 // 配置对象e
 interface localItem {
@@ -39,6 +43,17 @@ interface localItem {
 
 // 储存账号密码
 function isHasUser() {
+    const regTest = pattern.test(userName.value);
+    // 正则判断
+    if (!regTest) {
+        showDialog({
+            message: "您输入的手机号有误!",
+            confirmButtonColor: "#ff4569",
+            theme: "round-button",
+        }).then(() => { });
+        return;
+    }
+
     if (userName.value && userPaw.value && checked.value) {
         let userList = localStorage.userList || `[]`;
         userList = JSON.parse(userList);

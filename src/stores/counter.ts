@@ -13,7 +13,7 @@ import { defineStore } from 'pinia'
 
 // 修改路由名字辅助跳转(登录跳转)
 export const useRouterNameStore = defineStore('routeFromName', () => {
-  const fromName = ref('');
+  const fromName = ref('home');
   function changeFromName(curName: string) {
     fromName.value = curName;
     // console.log(fromName.value)
