@@ -15,7 +15,7 @@ import mySrc from './assets/icons/my.svg';
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
-          <van-image width="22" height="22" :src="homeSrc" style="margin-left: 2px;" />
+          <van-image width="22" height="22" :src="homeSrc" />
 
           <span class="nav-title">首页</span>
         </div>
@@ -24,7 +24,7 @@ import mySrc from './assets/icons/my.svg';
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
-          <van-image width="22" height="22" :src="attentionSrc" style="margin-left: 2px;" />
+          <van-image width="22" height="22" :src="attentionSrc"/>
 
           <span class="nav-title">关注</span>
         </div>
@@ -44,7 +44,7 @@ import mySrc from './assets/icons/my.svg';
         <div @click="navigate"
           :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active', 'shopCar']">
 
-          <van-image width="22" height="22" :src="shopSrc" style="margin-left: 8px;" />
+          <van-image width="22" height="22" :src="shopSrc" />
 
           <span class="nav-title">购物车</span>
         </div>
@@ -54,7 +54,7 @@ import mySrc from './assets/icons/my.svg';
         <div @click="navigate"
           :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active', 'my']">
 
-          <van-image width="22" height="22" :src="mySrc" style="margin-left: 2px;" />
+          <van-image width="22" height="22" :src="mySrc" />
 
           <span class="nav-title">我的</span>
         </div>
@@ -81,6 +81,7 @@ import mySrc from './assets/icons/my.svg';
   justify-content: space-between;
   align-items: center;
 
+  z-index: 10;
   .router-link-active {
     position: relative;
     // color: var(--subject-color);

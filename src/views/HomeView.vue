@@ -37,7 +37,8 @@
             </div>
         </div>
         <!-- 瀑布流内容 -->
-        <WaterfallFlow :getHomeC="getHomeC"/>
+        <!-- <WaterfallFlow :getHomeC="getHomeC"/> -->
+        <WaterfallFlow />
     </div>
 </template>
 
@@ -54,7 +55,7 @@ let keyWord = ref('');
 const homeNav = ref<Array<HomeTopNav>>([])
 const TimeRob = ref<Array<gettimeRob>>([])
 const timeRobItem = ref<Array<gettimeRobItem>>([])
-const getHomeC = ref<Array<getHomeC>>([])
+// const getHomeC = ref<Array<getHomeC>>([])
 
 
 // 点击跳转相关
@@ -76,17 +77,17 @@ onMounted(async () => {
     let dataArr = await getHomeModuleRow();
     let dataTime = await gettimeLimitedQuickGrab();
     let dataProg: any = await getTimeProg();
-    let HomeContentData: any = await getHomeContent();//第二页数据
+    // let HomeContentData: any = await getHomeContent();//第二页数据
 
     // console.log('首页导航数据', dataArr)
     // console.log('首页好货数据', dataTime)
     // console.log('首页限时抢数据', dataProg.data.itemList)
-    console.log('首页内容', HomeContentData.data.list)
+    // console.log('首页内容', HomeContentData.data.list)
 
     homeNav.value = dataArr
     TimeRob.value = dataTime
     timeRobItem.value = dataProg.data.itemList.splice(0, 3)
-    getHomeC.value = HomeContentData.data.list
+    // getHomeC.value = HomeContentData.data.list
 })
 
 

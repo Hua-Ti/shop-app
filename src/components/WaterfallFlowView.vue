@@ -1,49 +1,90 @@
 <!-- 瀑布流 -->
 <template>
     <div class="waterfallFlow">
-        <div class="item" v-for="(item, index) in getHomeC" :key="index">
-            <div class="picture">
-                <img class="bigPic" :src="item.itemImage" alt="">
-                <div class="liveBroadcastAtTheSamePrice">
-                    <img :src="item.lefttop_taglist[0]?.img" alt="">
+        <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
+
+
+            <div class="item" v-for="(item, index) in getHomeC" :key="index"
+                @click="liveBroadcastPage(item.itemId, item.actorId)">
+                <div class="picture">
+                    <img class="bigPic" :src="item.itemImage" alt="">
+                    <div class="liveBroadcastAtTheSamePrice">
+                        <img :src="item.lefttop_taglist[0]?.img" alt="">
+                    </div>
+                    <!-- 头像 -->
+                    <div class="headImage">
+                        <img :src="item.actorAvatar" alt="">
+                        <span>{{ item.actorName }}</span>
+                    </div>
+                    <!-- 播放 -->
+                    <div class="Play">
+                        <img src="../assets/images/Play.png" alt="">
+                    </div>
                 </div>
-                <!-- 头像 -->
-                <div class="headImage">
-                    <img :src="item.actorAvatar" alt="">
-                    <span>{{ item.actorName }}</span>
-                </div>
-                <!-- 播放 -->
-                <div class="Play">
-                    <img src="https://s10.mogucdn.com/mlcdn/c45406/190717_0a48k9jegh3a0gg2gfgaf3j24bij0_84x84.png" alt="">
-                </div>
-            </div>
-            <p class="title">{{ item.title }}</p>
-            <!-- 价格 -->
-            <div class="price">
-                <div class="livePrice">
-                    <div>
-                        ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
-                        <span v-if="Math.floor(
-                            (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
-                        )">.{{ Math.floor(
+                <p class="title">{{ item.title }}</p>
+                <!-- 价格 -->
+                <div class="price">
+                    <div class="livePrice">
+                        <div>
+                            ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
+                            <span v-if="Math.floor(
+                                (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
+                            )">.{{ Math.floor(
     (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
 ) }}
-                            <span class="decimalTwo"
-                                v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
-                                    10) * 100) }}
+                                <span class="decimalTwo"
+                                    v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
+                                    {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
+                                        10) * 100) }}
+                                </span>
                             </span>
-                        </span>
+                        </div>
+                        <img :src="item.bottomIcon" alt="">
                     </div>
-                    <img :src="item.bottomIcon" alt="">
+                    <div class="sale">{{ item.sale }}</div>
                 </div>
-                <div class="sale">{{ item.sale }}</div>
             </div>
-        </div>
+        </van-list>
     </div>
 </template>
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+import { getHomeContent } from '../apic/homes'
+import { type getHomeC } from '../typings'
+import { ref } from 'vue';
+const router = useRouter();
+
+// const list = ref([]);
+const getHomeC = ref<Array<getHomeC>>([])
+const loading = ref(false);
+const finished = ref(false);
+// const count = ref(Math.random() * 2000)
+
 const props = defineProps(['getHomeC'])
+function liveBroadcastPage(itemId: string, actorId: string) {
+    router.push({
+        name: 'livePlayback',
+        query: {
+            itemId: itemId,
+            actorId: actorId
+        }
+    })
+}
+const onLoad = () => {
+    // 异步更新数据
+    // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+    setTimeout(async () => {
+        // count.value++;
+        let HomeContentData: any = await getHomeContent();//第二页数据
+        getHomeC.value.push(HomeContentData.data.list);
+        // 加载状态结束
+        loading.value = false;
+        // 数据全部加载完成
+        finished.value = true;
+
+    }, 1000);
+};
 
 </script>
 

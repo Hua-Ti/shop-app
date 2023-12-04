@@ -23,10 +23,10 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { showDialog } from 'vant';
-import { useRouterNameStore } from '../../stores/counter';
+import { useRouterNameStore, accountNumber } from '../../stores/counter';
 const store = useRouterNameStore();
 const router = useRouter();
-
+const userid = accountNumber();
 let userName = ref("");
 let userPaw = ref("");
 let checked = ref(false);
@@ -64,8 +64,8 @@ function isHasUser() {
             });
             return;
         }
-
-        localStorage.token = "salkjdklsdfjkg111";
+        userid.accountName = userName.value
+        localStorage.token = "salkjdklsdfjkging";
 
         // 跳转到点击进入的页面
         router.replace({ name: store.fromName })
