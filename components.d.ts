@@ -10,6 +10,7 @@ declare module 'vue' {
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    VanAddressList: typeof import('vant/es')['AddressList']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanCheckbox: typeof import('vant/es')['Checkbox']
     VanField: typeof import('vant/es')['Field']
@@ -18,5 +19,6 @@ declare module 'vue' {
     VanIcon: typeof import('vant/es')['Icon']
     VanImage: typeof import('vant/es')['Image']
     VanSearch: typeof import('vant/es')['Search']
+    VanUploader: typeof import('vant/es')['Uploader']
   }
 }

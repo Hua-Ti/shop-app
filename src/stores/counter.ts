@@ -14,3 +14,25 @@ export const useRouterNameStore = defineStore('routeFromName', () => {
 
   return { fromName, changeFromName }
 })
+
+// 获取用户账号(id)
+export const accountNumber = defineStore('counter', () => {
+  const accountName = ref('');
+  function changeaccountName(userid: string) {
+    accountName.value = userid;
+
+    // console.log(accountName.value)
+  }
+  return { accountName, changeaccountName }
+})
+
+
+export const getPicture = defineStore('counter', () => {
+  const picture = '../assets/images/user_touxiang.png'
+  function changePicture() {
+    // accountName.value = userid;
+
+    // console.log(accountName.value)
+  }
+  return { picture, changePicture }
+})
