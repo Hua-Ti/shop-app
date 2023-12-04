@@ -18,7 +18,6 @@ import { createApp } from 'vue'
 // 引入pinia
 // import { createPinia } from 'pinia'
 import pinia from './stores/store';
-
 import App from './App.vue'
 import router from './router'
 import 'amfe-flexible' // rem 布局适配

@@ -88,6 +88,8 @@ function gotoLogin() {
     flex-flow: column nowrap;
     justify-content: space-evenly;
 
+    z-index: 11;
+
     // &::before {
     //     content: "";
     //     position: absolute;

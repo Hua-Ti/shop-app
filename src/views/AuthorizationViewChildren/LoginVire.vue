@@ -65,7 +65,7 @@ function isHasUser() {
             return;
         }
         userid.accountName = userName.value
-        localStorage.token = "salkjdklsdfjkg111";
+        localStorage.token = "salkjdklsdfjkging";
 
         // 跳转到点击进入的页面
         router.replace({ name: store.fromName })
