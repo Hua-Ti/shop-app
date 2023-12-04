@@ -4,8 +4,14 @@ import './assets/fontIcon2/iconfont.css'
 import 'amfe-flexible' // rem 布局适配
 
 // 引入vant所需样式
-import 'vant/es/dialog/style'
-// import 'vant/es/toast/style'
+// Toast
+import 'vant/es/Toast/style';
+// Dialog
+import 'vant/es/dialog/style';
+// Notify
+import 'vant/es/notify/style';
+// ImagePreview
+import 'vant/es/image-preview/style';
 
 import { createApp } from 'vue'
 

@@ -5,7 +5,7 @@
                 <van-icon name="arrow-left" size="18" color="gray" @click="router.go(-1)" />
             </template>
             <template #right>
-                <van-icon name="search" size="18" color="gray" />
+                <van-icon name="search" size="18" color="gray" @click="router.replace({ name: 'search' })" />
             </template>
         </van-nav-bar>
 
@@ -43,7 +43,7 @@ const curLength = computed(() => {
 // 提交判断
 function theSubmit() {
     if (checkedBox.value.length == 0) {
-       return showToast('请先选择商品哦~');
+        return showToast('请先选择商品哦~');
     }
 }
 
