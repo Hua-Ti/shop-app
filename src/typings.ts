@@ -19,7 +19,7 @@ export interface HomeTopNav {
     // material_start_time: Number
 }
 
-// 首页限时快抢
+// 首页女装尖货榜
 export interface gettimeRob {
     timestamp: number
     _system_record_entry_id: string
@@ -33,6 +33,28 @@ export interface gettimeRob {
     _material_end_time: number
     acm: string
     categoryId?: number
+}
+// 首页限时快抢 
+export interface gettimeRobItem {
+    cover: string
+    actorId: string
+    livePrice:number
+}
+// 首页内容
+export interface getHomeC {
+    itemImage:string 
+    actorName:string
+    showDiscountPrice:number
+    bottomIcon?:string
+    firstFrame:string
+    actorId: string
+    id:number
+    actorAvatar:string
+    sale:string
+    title:string
+    lefttop_taglist:Array<{
+        img:string
+    }>
 }
 
 
