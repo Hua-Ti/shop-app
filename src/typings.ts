@@ -37,7 +37,33 @@ export interface gettimeRob {
 
 
 // live-data相关配置
-export interface liveHomeLivesItem {
+export interface LiveBroadcastSort {
+    api: string
+    v: number
+    ret: string
+    data: LiveSortData
+}
+export interface LiveSortData {
+    banners?: string
+    // tabs: Array<LiveSortTabs>
+    tabs: {
+        items: Array<LiveSortTabs>
+    }
+}
+export interface LiveSortTabs {
+    id: number
+    name: string
+    active: boolean
+    platform: number
+}
+//直播分类项具体数据
+export interface LiveData {
+    data: {
+        lives: Array<LiveList>
+    }
+}
+// 每个直播间的数据
+export interface LiveList {
     "visitorCount": number,
     "shopCarts": {
         "goods": Array<liveHomeShopCartsGoodsItem>
@@ -49,11 +75,11 @@ export interface liveHomeLivesItem {
     "actUserId": string,
     "userName": string,
     "comments": Array<liveHomeShopCartsCommentsItem>,
-    "roomId": 12445518,
+    "roomId": number,
     "living": true,
     "roomTag": ""
 }
-
+// 直播间推荐商品数据
 export interface liveHomeShopCartsGoodsItem {
     "itemId": string,
     "cover": string,
@@ -63,11 +89,65 @@ export interface liveHomeShopCartsGoodsItem {
     "discountPrice": string,
     "isNewItem": number
 }
-
+//直播间评论数据
 export interface liveHomeShopCartsCommentsItem {
     "commentId": string,
     "type": number,
     "content": string,
     "avatar": string,
     "uid": string
+}
+
+// 直播回放相关
+export interface livePlayBackData {
+    "mbook": string,
+    "list": Array<livePlayBackList>
+}
+
+export interface livePlayBackList {
+    "explainItemType": number,
+    "link": string,
+    "itemIdUrl": string,
+    "liveId": number,
+    "itemImage": string,
+    "similarityUrl": string,
+    "actorIdUrl": string,
+    "type": number,
+    "showDiscountPrice": string,
+    "sale": string,
+    "itemId": number,
+    "actorName": string,
+    "videoId": number,
+    "lefttop_taglist": Array<livePlayBackListLefttop_taglistItem>,
+    "firstFrame": string,
+    "id": string,
+    "liveStatus": number,
+    "actorId": number,
+    "videoH265Url": string,
+    "liveLink": string,
+    "actorAvatar": string,
+    "orgPrice": number,
+    "isSecKillItem": number,
+    "hasSimilarity": boolean,
+    "originItemImage": string,
+    "imageAdapt": boolean,
+    "pcLink": string,
+    "discountPrice": string
+    "explainId": number,
+    "itemType": number,
+    "title": string,
+    "showOrgPrice": string,
+    "useVideoUrl": boolean,
+    "clientUrl": string,
+    "itemMarks": string
+}
+
+// 直播的小图标
+export interface livePlayBackListLefttop_taglistItem {
+    "styleType": number,
+    "img": string,
+    "w": number,
+    "h": number,
+    "sort": string,
+    "pagani_system_tagType": string
 }
