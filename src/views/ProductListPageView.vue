@@ -2,15 +2,15 @@
     <div class="shopping-List">
 
         <div class="shoping-list-top">
-            <span>
+            <span @click="$router.go(-1)">
                 <van-icon name="arrow-left" />
             </span>
-            <p>{{ router.currentRoute.value.query.keyWord }}</p>
+            <input type="text" :placeholder="keyWord" class="input">
         </div>
-        <van-tabs v-model:active="active" @click-tab="onClickTab">
+        <van-tabs color="#ff3f78" v-model:active="active" @click-tab="onClickTab" class="tabber-nav">
             <van-tab :title="item.title" :key="item.sortKey" v-for="item in titleList"></van-tab>
 
-            <van-tab title="价格" v-if="priceList.length">
+            <van-tab title="价格" v-if="titleList.length">
                 <van-popup v-model:show="show" round style="width: 100%; height: 50%; padding: 10px;">
                     <div class="price">
                         <span v-for="item in priceList" key="item">{{ item.min }}-{{ item.max }}</span>
@@ -27,6 +27,18 @@
             </van-tab>
         </van-tabs>
 
+        <div v-if="wallList.length" class="shopping-details">
+            <div v-for="item in wallList" :key="item.tradeItemId">
+                <shopping-view :tradeItemId="item.tradeItemId" :img="item.img" :title="item.title"
+                    :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" />
+            </div>
+        </div>
+        <div v-else>
+            <div class="noshopping">
+                <img src="../assets/images/noShopping.png">
+                <p>没有相关的商品结果哦 ~~</p>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -34,7 +46,8 @@
 import { ref, onMounted, reactive } from "vue"
 import { useRouter } from "vue-router";
 import { getKeywordSearch } from "../apic/search"
-import { type sortFilterList, type priceFilterList, type wallDocsList, type leftbottomTagList } from "../typings"
+import { type sortFilterList, type priceFilterList, type wallDocsList } from "../typings"
+import ShoppingView from "../components/ShoppingView.vue"
 
 const router = useRouter();
 const active = ref(0);
@@ -65,9 +78,6 @@ onMounted(async () => {
     titleList.value = data.sortFilter;
     priceList.value = data.priceFilter;
     wallList.value = data.wall.docs;
-    console.log(titleList.value);
-    console.log(wallList.value);
-    console.log(data.priceFilter);
 })
 
 </script>
@@ -75,6 +85,74 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .shopping-List {
     width: 100vw;
+    position: relative;
     background-color: #EFEFEF;
+    padding-top: 100px;
+    z-index: 15;
+
+
+    .shopping-details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+    .keyword {
+        color: #ff3f78;
+    }
+
+    .tabber-nav {
+        position: fixed;
+        width: 100vw;
+        top: 49px;
+        border-bottom: 1px solid #ccc;
+        background-color: #fff;
+        z-index: 10;
+    }
+
+    .shoping-list-top {
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        height: 50px;
+        font-size: 13px;
+        background: linear-gradient(180deg, rgba(255, 69, 105, 1) 34%, rgba(255, 255, 255, 1) 100%);
+        z-index: 10;
+
+        input {
+            display: inline-block;
+            width: 250px;
+            height: 28px;
+            border: none;
+            border-radius: 999px;
+            padding-left: 15px;
+            font-size: 12px;
+        }
+
+        span {
+            font-size: 15px;
+            margin-left: 10px;
+            margin-right: 20px;
+            transform: translateY(-1px);
+            color: #fff;
+            font-weight: bold;
+        }
+    }
+    .noshopping{
+        width: 100vw;
+        height: 87.7vh;
+        text-align: center;
+        padding-top: 50px;
+        img{
+            width: 150px;
+        }
+        p{
+            font-size: 16px;
+            margin-top: 15px;
+            color: #888;
+        }
+    }
 }
 </style>

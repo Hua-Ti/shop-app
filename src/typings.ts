@@ -200,7 +200,7 @@ export interface wallDocsList{
     img:string,
     title:string,
     leftbottom_taglist:Array<leftbottomTagList>
-    orgPrice:number,
+    cfav:number,
     price:69,
 }
 

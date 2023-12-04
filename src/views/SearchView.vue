@@ -52,8 +52,9 @@ let hotSearchList = ref<Array<HotWord>>([])
 let historyLists = ref([] as Array<string>)
 
 const onSearch = (value: string) => {
-    // 先进行去重
-    if (historyLists.value.length > 0) {
+    if(value){
+        // 先进行去重
+        if (historyLists.value.length > 0) {
         historyLists.value = historyLists.value.filter((s) => s != value);
     }
 
@@ -67,6 +68,8 @@ const onSearch = (value: string) => {
 
     // 将数据同步到localStorage中
     localStorage.historyList = JSON.stringify(historyLists.value);
+    inquireKey(value);
+    }
 }
 const clearValue = () => {
     value.value = "";
@@ -75,7 +78,7 @@ const clearValue = () => {
 const keySearch = (keyWord: string) => {
     value.value = keyWord;
     onSearch(keyWord);
-    inquireKey(keyWord);
+    
 }
 const getHistroyList = () => {
     let locationHistoryList = localStorage.historyList || "[]";
