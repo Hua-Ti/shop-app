@@ -6,7 +6,9 @@
             :author-id="itemExplainList?.actorId" :author-img="actorInfoList?.avatar" :author-name="actorInfoList?.name"
             :author-weight="actorInfoList?.weight" :comment-number="itemExplainList?.commentCount"
             :goods-id="itemInfoList?.itemId" :goods-img="itemInfoList?.cover" :goods-name="itemInfoList?.title"
-            :goods-price="itemInfoList?.discountPrice" :is-benefit-point-list="isBenefitPoint">
+            :goods-price="itemInfoList?.discountPrice" :is-benefit-point-list="isBenefitPoint"
+            :sold-count="itemInfoList?.soldCount" :comment-list="comments">
+            <!-- 跳转关键video -->
             <template v-slot:slotVideoKey>
                 <div class="videoKey">
                     <div class="left">
@@ -21,7 +23,7 @@
                     </div>
                 </div>
             </template>
-            <!-- 插槽二 -->
+            <!-- 进度条 -->
             <template v-slot:slotPlay>
                 <div class="slider">
                     <div @click="playVideo">
@@ -47,9 +49,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import LivePlaybackOrPlayComponent from '../../components/LivePlaybackOrPlayComponent.vue';
+import LivePlaybackOrPlayComponent from '../../components/LivePlaybackComponent.vue';
 import { getPlaybackData } from '../../apic/live-data';
-import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem } from '../../typings';
+import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem, getPlaybackCommentsItem } from '../../typings';
 import { useRoute } from 'vue-router';
 const route = useRoute();
 
@@ -73,19 +75,25 @@ const itemExplainList = ref<getPlaybackItemExplainListItem>();
 const actorInfoList = ref<getPlaybackActorInfo>();
 const itemInfoList = ref<getPlaybackItemInfo>();
 const benefitPointList = ref<Array<getPlaybackBenefitPointListItem>>();
+const comments = ref<Array<getPlaybackCommentsItem>>();
 const videoUrl = ref('');
 const coverImg = ref('');
 
 const getData = async () => {
     // console.log('发起请求')
     let { data } = await getPlaybackData(itemUrlId, actorUrlId);
+    console.log(data);
     itemExplainList.value = data.itemExplainList.find(e => e.explainId == Number(curExplainId));
     videoUrl.value = itemExplainList.value?.videoInfo.h265Url as string;
     coverImg.value = itemExplainList.value?.videoInfo.cover as string;
     actorInfoList.value = itemExplainList.value?.actorInfo;
     itemInfoList.value = itemExplainList.value?.itemInfo;
     benefitPointList.value = itemExplainList.value?.videoInfo.benefitPointList;
-    // console.log(data.itemExplainList)
+    comments.value = itemExplainList.value?.comments;
+    console.log(itemExplainList.value)
+
+    console.log(itemUrlId)
+    console.log(actorUrlId)
 }
 
 const isBenefitPoint = computed(() => {
@@ -99,7 +107,6 @@ const isBenefitPoint = computed(() => {
 onMounted(() => {
     getData();
 })
-
 
 // 点击播放暂停
 function playVideo() {
@@ -170,7 +177,6 @@ function clickToTime(startTime: number) {
     video.value.play();
     isPlay.value = true;
 }
-
 
 </script>
 

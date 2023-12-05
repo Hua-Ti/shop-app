@@ -19,7 +19,7 @@ export interface HomeTopNav {
     // material_start_time: Number
 }
 
-// 首页限时快抢
+// 首页女装尖货榜
 export interface gettimeRob {
     timestamp: number
     _system_record_entry_id: string
@@ -33,6 +33,32 @@ export interface gettimeRob {
     _material_end_time: number
     acm: string
     categoryId?: number
+}
+// 首页限时快抢 
+export interface gettimeRobItem {
+    cover: string
+    actorId: string
+    livePrice:number
+}
+// 首页内容
+export interface getHomeC {
+    itemImage:string 
+    actorName:string
+    showDiscountPrice:number
+    bottomIcon?:string
+    firstFrame:string
+    actorId: string
+    id:number
+    actorAvatar:string
+    sale:string
+    title:string
+    itemId:string
+    explainId:string
+    itemIdUrl:string
+    actorIdUrl:string
+    lefttop_taglist:Array<{
+        img:string
+    }>
 }
 
 
@@ -108,6 +134,47 @@ export interface livePlayBackListLefttop_taglistItem {
     "pagani_system_tagType": string
 }
 
+//直播间信息(直播流,码率,主播等信息)
+export interface liveRoom{
+    "data":{
+        "roomId":number,
+        "liveUrl":string,
+        "actorInfo":{
+            "avatar":string,
+            "uid":string,
+            "uname":string
+        },
+        "actorTag":{
+            "icon":string,
+            "listIcon":string,
+        }
+        "noticeContent":string,
+        "actUserId":string,
+        "onlineUserCount":number,
+        "definitions":Array<liveRoomDefinitions>
+    }
+}
+//直播间画质
+export interface liveRoomDefinitions{
+    "auto":boolean,
+    "selected":false,
+    "height":number,
+    "width":number,
+    "label":string,
+    "template":string,
+    "liveUrl":string
+}
+//直播间促销商品
+export interface liveRoomGood{
+    "itemList":Array<liveRoomGoods>
+}
+
+export interface liveRoomGoods{
+    "shopId":number,
+    "image":string,
+    "title":string,
+    "itemId":string,
+}
 // 直播回放相关
 export interface getPlaybackData {
     data: {

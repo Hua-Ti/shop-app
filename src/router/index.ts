@@ -7,15 +7,15 @@ import ShopView from '../views/ShopView.vue'
 import UserView from '../views/UserView.vue'
 import LiveView from '../views/LiveView.vue'
 import SearchView from '../views/SearchView.vue'
-import DressingView from '../views/LiveViewChildren/DressingView.vue'
-import HotView from '../views/LiveViewChildren/HotView.vue'
-import MakeupView from '../views/LiveViewChildren/MakeupView.vue'
 import HomePage from '../views/UserViewChildren/HomePage.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
+import PayView from '../views/PayView.vue'
+import PaySuccess from '../views/PaySuccess.vue'
+import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
 
 // 在路由中引入pinia
-import pinia from '@/stores/store'
+import pinia from '../stores/store'
 import AuthorizationView from '../views/AuthorizationView.vue'
 import { useRouterNameStore } from "../stores/counter";
 const store = useRouterNameStore(pinia);
@@ -59,24 +59,11 @@ const router = createRouter({
       path: '/live',
       name: 'live',
       component: LiveView,
-      redirect: { name: 'hot' },
-      children: [
-        {
-          path: 'dressing',
-          name: 'dressing',
-          component: DressingView,
-        },
-        {
-          path: 'hot',
-          name: 'hot',
-          component: HotView,
-        },
-        {
-          path: 'makeup',
-          name: 'makeup',
-          component: MakeupView,
-        }
-      ]
+    },
+    {
+      path:'/liveroom',
+      name:'liveroom',
+      component:LiveRoomView,
     },
     {
       path: '/livePlayback:itemUrlId&:actorUrlId&:explainId',
@@ -108,10 +95,21 @@ const router = createRouter({
       ]
     },
     {
+      path:'/pay',
+      name:'pay',
+      component:PayView
+    },
+    {
+      path:'/pay-success',
+      name:'paySuccess',
+      component:PaySuccess
+    },
+    {
       path: '/product-list',
       name: "productList",
       component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
     }
+
   ]
 })
 
