@@ -19,7 +19,20 @@
                     <van-image width="70" height="25" :src="roomData.actorTag.icon" />
                 </div>
             </header>
+
+
+            <div class="footer-mask">
+                <!-- 评论区 -->
+                <div class="comments">
+                    <div class="comments-list">
+                        <div class="official-tip">{{ roomData.noticeContent }}</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+
         <div class="videoBox">
             <video ref="videoElement" autoplay style="width: 100vw; height: 100vh; object-fit: fill"></video>
         </div>
@@ -144,11 +157,36 @@ const createVideo = () => {
             justify-content: center !important;
         }
     }
-    .live-tag{
+
+    .live-tag {
         position: absolute;
         top: 15px;
         right: 15px;
     }
 
-}
-</style>
+    .footer-mask {
+        margin-top: 60vh;
+        padding-top: 10px;
+        background-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, .02) 18%, rgba(0, 0, 0, .4));
+    }
+
+    /* 评论区 */
+    .comments {
+        margin-left: 10px;
+        width: 275px;
+        height: 200px;
+        overflow-y: auto;
+        line-height: 1.5;
+        overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        .official-tip {
+            margin-bottom: 5px;
+            font-size: 10px;
+            color: #fff;
+        }
+    }
+}</style>
