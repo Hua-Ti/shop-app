@@ -6,7 +6,7 @@
 
 
             <div class="item" v-for="(item, index) in getHomeC" :key="index"
-                @click="liveBroadcastPage(item.itemId, item.actorId)">
+                @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
                 <div class="picture">
                     <img class="bigPic" :src="item.itemImage" alt="">
                     <div class="liveBroadcastAtTheSamePrice">
@@ -52,7 +52,7 @@
 import { useRouter } from "vue-router";
 import { getHomeContent } from '../apic/homes'
 import { type getHomeC } from '../typings'
-import { ref,nextTick } from 'vue';
+import { ref, nextTick } from 'vue';
 const router = useRouter();
 
 // const list = ref([]);
@@ -62,12 +62,13 @@ const finished = ref(false);
 const count = ref(Math.random() * 2000)
 
 const props = defineProps(['getHomeC'])
-function liveBroadcastPage(itemId: string, actorId: string) {
+function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
     router.push({
         name: 'livePlayback',
-        query: {
-            itemId: itemId,
-            actorId: actorId
+        params: {
+            itemUrlId: itemUrlId,
+            actorUrlId: actorUrlId,
+            explainId: explainId
         }
     })
 }

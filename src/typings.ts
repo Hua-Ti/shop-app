@@ -54,6 +54,8 @@ export interface getHomeC {
     title:string
     itemId:string
     explainId:string
+    itemIdUrl:string
+    actorIdUrl:string
     lefttop_taglist:Array<{
         img:string
     }>

@@ -82,6 +82,7 @@ const coverImg = ref('');
 const getData = async () => {
     // console.log('发起请求')
     let { data } = await getPlaybackData(itemUrlId, actorUrlId);
+    console.log(data);
     itemExplainList.value = data.itemExplainList.find(e => e.explainId == Number(curExplainId));
     videoUrl.value = itemExplainList.value?.videoInfo.h265Url as string;
     coverImg.value = itemExplainList.value?.videoInfo.cover as string;
@@ -90,6 +91,9 @@ const getData = async () => {
     benefitPointList.value = itemExplainList.value?.videoInfo.benefitPointList;
     comments.value = itemExplainList.value?.comments;
     console.log(itemExplainList.value)
+
+    console.log(itemUrlId)
+    console.log(actorUrlId)
 }
 
 const isBenefitPoint = computed(() => {
