@@ -16,7 +16,7 @@
                     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
                         <van-list v-model:loading="loading" :finished="finished" finished-text="我也是有底线的喔o(〃＾▽＾〃)o"
                             @load="onLoad" offset="100">
-                            <LiveComponent :liveData="liveData" />
+                            <LiveComponent :liveData="liveData"/>
                         </van-list>
                     </van-pull-refresh>
                     <!-- <LiveComponent :liveData="liveData" /> -->

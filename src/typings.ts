@@ -151,3 +151,45 @@ export interface livePlayBackListLefttop_taglistItem {
     "sort": string,
     "pagani_system_tagType": string
 }
+
+//直播间信息(直播流,码率,主播等信息)
+export interface liveRoom{
+    "data":{
+        "roomId":number,
+        "liveUrl":string,
+        "actorInfo":{
+            "avatar":string,
+            "uid":string,
+            "uname":string
+        },
+        "actorTag":{
+            "icon":string,
+            "listIcon":string,
+        }
+        "noticeContent":string,
+        "actUserId":string,
+        "onlineUserCount":number,
+        "definitions":Array<liveRoomDefinitions>
+    }
+}
+//直播间画质
+export interface liveRoomDefinitions{
+    "auto":boolean,
+    "selected":false,
+    "height":number,
+    "width":number,
+    "label":string,
+    "template":string,
+    "liveUrl":string
+}
+//直播间促销商品
+export interface liveRoomGood{
+    "itemList":Array<liveRoomGoods>
+}
+
+export interface liveRoomGoods{
+    "shopId":number,
+    "image":string,
+    "title":string,
+    "itemId":string
+}
