@@ -47,7 +47,7 @@ import { ref, onMounted, reactive } from "vue"
 import { useRouter } from "vue-router";
 import { getKeywordSearch } from "../apic/search"
 import { type sortFilterList, type priceFilterList, type wallDocsList } from "../typings"
-import ShoppingView from "../components/ShoppingView.vue"
+import ShoppingView from "../components/Shopping.vue"
 
 const router = useRouter();
 const active = ref(0);
