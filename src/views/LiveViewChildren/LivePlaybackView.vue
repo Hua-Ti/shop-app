@@ -1,34 +1,59 @@
 <template>
     <div class="playBox" v-show="isReady">
-        <video :src="videoUrl" loop :poster="firstFrame" ref="video" @loadedmetadata="getTotalTime"
+        <video :src="videoUrl" loop :poster="coverImg" ref="video" @loadedmetadata="getTotalTime"
             @timeupdate="getCurTime"></video>
-        <LivePlaybackOrPlayComponent>
-            <div class="slider">
-                <div @click="playVideo">
-                    <van-icon name="play" size="20" color="white" class="myPlayBtn" v-show="!isPlay" />
-                    <van-icon name="pause" size="20" color="white" class="myPlayBtn" v-show="isPlay" />
-                </div>
-                <van-slider v-model="sliderValue" class="myslider" active-color="white" inactive-color="#ffffff70"
-                    @drag-start="dragStart" @drag-end="dragEnd">
-                    <template #button>
-                        <div class="custom-button">
-                            <div style="width: 10px;height: 10px;"></div>
+        <LivePlaybackOrPlayComponent :author-height="actorInfoList?.height" :explain-id="itemExplainList?.explainId"
+            :author-id="itemExplainList?.actorId" :author-img="actorInfoList?.avatar" :author-name="actorInfoList?.name"
+            :author-weight="actorInfoList?.weight" :comment-number="itemExplainList?.commentCount"
+            :goods-id="itemInfoList?.itemId" :goods-img="itemInfoList?.cover" :goods-name="itemInfoList?.title"
+            :goods-price="itemInfoList?.discountPrice" :is-benefit-point-list="isBenefitPoint"
+            :sold-count="itemInfoList?.soldCount" :comment-list="comments">
+            <!-- 跳转关键video -->
+            <template v-slot:slotVideoKey>
+                <div class="videoKey">
+                    <div class="left">
+                        <van-icon name="guide-o" size="12" style="margin-left: 9px;margin-bottom: 3px;" />
+                        <p>快进到</p>
+                    </div>
+                    <div class="right">
+                        <div class="timeKey" v-for="e in  benefitPointList " :key="e.doc" @click="clickToTime(e.time)">
+                            <van-icon name="play-circle" size="14" />
+                            <p>{{ e.doc }}</p>
                         </div>
-                    </template>
-                </van-slider>
-                <div class="speed" @click="changePlaySpeed">
-                    <p>{{ speedValue }}</p>
+                    </div>
                 </div>
-            </div>
+            </template>
+            <!-- 进度条 -->
+            <template v-slot:slotPlay>
+                <div class="slider">
+                    <div @click="playVideo">
+                        <van-icon name="play" size="20" color="white" class="myPlayBtn" v-show="!isPlay" />
+                        <van-icon name="pause" size="20" color="white" class="myPlayBtn" v-show="isPlay" />
+                    </div>
+                    <van-slider v-model="sliderValue" class="myslider" active-color="white" inactive-color="#ffffff70"
+                        @drag-start="dragStart" @drag-end="dragEnd">
+                        <template #button>
+                            <div class="custom-button">
+                                <div style="width: 10px;height: 10px;"></div>
+                            </div>
+                        </template>
+                    </van-slider>
+                    <div class="speed" @click="changePlaySpeed">
+                        <p>{{ speedValue }}</p>
+                    </div>
+                </div>
+            </template>
         </LivePlaybackOrPlayComponent>
     </div>
 </template>
 
 <script setup lang="ts">
-import axios from '@/untils/axios';
-import type { livePlayBackList } from '../../typings'
-import { ref, onMounted } from 'vue';
-import LivePlaybackOrPlayComponent from '../../components/LivePlaybackOrPlayComponent.vue';
+import { ref, onMounted, computed } from 'vue';
+import LivePlaybackOrPlayComponent from '../../components/LivePlaybackComponent.vue';
+import { getPlaybackData } from '../../apic/live-data';
+import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem, getPlaybackCommentsItem } from '../../typings';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 
 let sliderValue = ref(0);
 let speedValue = ref('倍速');
@@ -42,23 +67,46 @@ let totalTime = ref(0);
 let isReady = ref(true);
 
 // 获取数据
-const firstFrame = ref('');
-const videoUrl = ref('https://tencentvod.mogucdn.com/vodtranscq1251964405/3270835011844763382/v.f313648.mp4!X3270835011844763382.mp4');
+const itemUrlId = route.params?.itemUrlId as string;
+const actorUrlId = route.params?.actorUrlId as string;
+const curExplainId = route.params?.explainId as string;
+
+const itemExplainList = ref<getPlaybackItemExplainListItem>();
+const actorInfoList = ref<getPlaybackActorInfo>();
+const itemInfoList = ref<getPlaybackItemInfo>();
+const benefitPointList = ref<Array<getPlaybackBenefitPointListItem>>();
+const comments = ref<Array<getPlaybackCommentsItem>>();
+const videoUrl = ref('');
+const coverImg = ref('');
 
 const getData = async () => {
-    console.log('发起请求')
-    let { data } = await axios.get<livePlayBackList>(`https://apis.netstart.cn/mogujie/video/item?page=2`)
-    // firstFrame.value = data.data.list[0].firstFrame;
-    // videoUrl.value = data.data.list[0].videoUrl;
-    // isReady.value = true;
-    // console.log(videoUrl.value)
+    // console.log('发起请求')
+    let { data } = await getPlaybackData(itemUrlId, actorUrlId);
+    console.log(data);
+    itemExplainList.value = data.itemExplainList.find(e => e.explainId == Number(curExplainId));
+    videoUrl.value = itemExplainList.value?.videoInfo.h265Url as string;
+    coverImg.value = itemExplainList.value?.videoInfo.cover as string;
+    actorInfoList.value = itemExplainList.value?.actorInfo;
+    itemInfoList.value = itemExplainList.value?.itemInfo;
+    benefitPointList.value = itemExplainList.value?.videoInfo.benefitPointList;
+    comments.value = itemExplainList.value?.comments;
+    console.log(itemExplainList.value)
+
+    console.log(itemUrlId)
+    console.log(actorUrlId)
 }
+
+const isBenefitPoint = computed(() => {
+    if (benefitPointList.value) {
+        return true;
+    } else {
+        return false;
+    }
+})
 
 onMounted(() => {
     getData();
-    console.log(video.value)
 })
-
 
 // 点击播放暂停
 function playVideo() {
@@ -123,6 +171,12 @@ function changePlaySpeed() {
     speedCount.value > 2 ? speedCount.value = 0 : speedCount.value = speedCount.value;
 }
 
+// 点击跳转
+function clickToTime(startTime: number) {
+    video.value.currentTime = startTime / 1000;
+    video.value.play();
+    isPlay.value = true;
+}
 
 </script>
 
@@ -183,5 +237,42 @@ video {
     text-align: center;
     background-color: white;
     border-radius: 100px;
+}
+
+.videoKey {
+    color: white;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin-top: 3px;
+
+    .right {
+        margin-top: 3px;
+        display: flex;
+        margin-left: 10px;
+    }
+
+    .timeKey {
+        display: flex;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 5px 8px;
+        border-radius: 999px;
+        margin-right: 5px;
+
+        p {
+            margin-left: 5px;
+            width: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    }
+
+    .timeKey:last-child {
+        margin-right: 0;
+    }
 }
 </style>

@@ -88,8 +88,9 @@ const router = createRouter({
       ]
     },
     {
-      path: '/livePlayback',
+      path: '/livePlayback:itemUrlId&:actorUrlId&:explainId',
       name: 'livePlayback',
+      props: true,
       component: LivePlaybackView,
     },
     {
@@ -118,13 +119,15 @@ const router = createRouter({
     {
       path: '/product-list',
       name: "productList",
+      component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
+    }
       component: () => import("../views/ProductListPageView.vue")
     },
-    {
-      path: '/addressmanagement',
-      name: 'addressmanagement',
-      component: AddressManagement
-    },
+  {
+    path: '/addressmanagement',
+    name: 'addressmanagement',
+    component: AddressManagement
+  },
   ]
 })
 

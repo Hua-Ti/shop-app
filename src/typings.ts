@@ -19,7 +19,7 @@ export interface HomeTopNav {
     // material_start_time: Number
 }
 
-// 首页限时快抢
+// 首页女装尖货榜
 export interface gettimeRob {
     timestamp: number
     _system_record_entry_id: string
@@ -33,6 +33,32 @@ export interface gettimeRob {
     _material_end_time: number
     acm: string
     categoryId?: number
+}
+// 首页限时快抢 
+export interface gettimeRobItem {
+    cover: string
+    actorId: string
+    livePrice:number
+}
+// 首页内容
+export interface getHomeC {
+    itemImage:string 
+    actorName:string
+    showDiscountPrice:number
+    bottomIcon?:string
+    firstFrame:string
+    actorId: string
+    id:number
+    actorAvatar:string
+    sale:string
+    title:string
+    itemId:string
+    explainId:string
+    itemIdUrl:string
+    actorIdUrl:string
+    lefttop_taglist:Array<{
+        img:string
+    }>
 }
 
 
@@ -98,50 +124,6 @@ export interface liveHomeShopCartsCommentsItem {
     "uid": string
 }
 
-// 直播回放相关
-export interface livePlayBackData {
-    "mbook": string,
-    "list": Array<livePlayBackList>
-}
-
-export interface livePlayBackList {
-    "explainItemType": number,
-    "link": string,
-    "itemIdUrl": string,
-    "liveId": number,
-    "itemImage": string,
-    "similarityUrl": string,
-    "actorIdUrl": string,
-    "type": number,
-    "showDiscountPrice": string,
-    "sale": string,
-    "itemId": number,
-    "actorName": string,
-    "videoId": number,
-    "lefttop_taglist": Array<livePlayBackListLefttop_taglistItem>,
-    "firstFrame": string,
-    "id": string,
-    "liveStatus": number,
-    "actorId": number,
-    "videoH265Url": string,
-    "liveLink": string,
-    "actorAvatar": string,
-    "orgPrice": number,
-    "isSecKillItem": number,
-    "hasSimilarity": boolean,
-    "originItemImage": string,
-    "imageAdapt": boolean,
-    "pcLink": string,
-    "discountPrice": string
-    "explainId": number,
-    "itemType": number,
-    "title": string,
-    "showOrgPrice": string,
-    "useVideoUrl": boolean,
-    "clientUrl": string,
-    "itemMarks": string
-}
-
 // 直播的小图标
 export interface livePlayBackListLefttop_taglistItem {
     "styleType": number,
@@ -150,6 +132,98 @@ export interface livePlayBackListLefttop_taglistItem {
     "h": number,
     "sort": string,
     "pagani_system_tagType": string
+}
+
+// 直播回放相关
+export interface getPlaybackData {
+    data: {
+        "itemExplainList": Array<getPlaybackItemExplainListItem>,
+        "likePics": Array<string>
+    }
+}
+
+// 直播回放-itemExplainList
+export interface getPlaybackItemExplainListItem {
+    "explainId": number,
+    "commentCount": number,
+    "title": string,
+    "videoId": number,
+    "actorInfo": getPlaybackActorInfo,
+    "actorId": number,
+    "subTitle": string,
+    "videoInfo": getPlaybackVideo,
+    "comments": Array<getPlaybackCommentsItem>,
+    "shareInfo": Array<getPlaybackShareInfo>,
+    "itemInfo": getPlaybackItemInfo,
+    "itemExplainTopPrice_taglist": Array<getPlaybackItemExplainTopPrice_taglistItem>
+}
+
+// 直播回放-itemExplainTopPrice_taglist
+export interface getPlaybackItemExplainTopPrice_taglistItem {
+    "img": string,
+    "w": number,
+    "h": number,
+}
+
+// 直播回放-video
+export interface getPlaybackVideo {
+    "h265Url": string,
+    "videoId": number,
+    "cover": string,
+    "benefitPointList": Array<getPlaybackBenefitPointListItem>
+}
+
+//直播回放-进度条提示
+export interface getPlaybackBenefitPointListItem {
+    "doc": string,
+    "endTime": number,
+    "time": number,
+    "subtitleKeyword": string
+}
+
+// 直播回放-主播详情
+export interface getPlaybackActorInfo {
+    "weight": number,
+    "avatar": string,
+    "daren": boolean,
+    "tag": string,
+    "height": number,
+    "attention": boolean,
+    "living": boolean,
+    "fansCount": string,
+    "actorUserId": string,
+    "name": string
+}
+
+// 直播回放-滚动评论
+export interface getPlaybackCommentsItem {
+    "total": number,
+    "commentId": number,
+    "avatar": string,
+    "time": string,
+    "userName": string,
+    "userId": string,
+    "content": string,
+    "images": Array<string>
+}
+
+// 直播回放-直播间分享
+export interface getPlaybackShareInfo {
+    "shareSuccessText": string,
+    "title": string,
+    "shareBtnTitle": string,
+    "imgUrl": string
+}
+
+// 直播回放-商品详情
+export interface getPlaybackItemInfo {
+    "soldCount": string,
+    "discountPrice": string,
+    "itemId": string,
+    "hotSoldCount": string,
+    "title": string,
+    "fenPrice": number,
+    "cover": string
 }
 
 
@@ -181,8 +255,8 @@ export interface searchByKeyword {
     result: {
         sortFilter: Array<sortFilterList>,
         priceFilter: Array<priceFilterList>,
-        wall:{
-            docs:Array<wallDocsList>
+        wall: {
+            docs: Array<wallDocsList>
         }
     }
 }
@@ -195,17 +269,17 @@ export interface priceFilterList {
     max: string,
     min: string,
 }
-export interface wallDocsList{
-    tradeItemId:string,
-    img:string,
-    title:string,
-    leftbottom_taglist:Array<leftbottomTagList>
-    cfav:number,
-    price:69,
+export interface wallDocsList {
+    tradeItemId: string,
+    img: string,
+    title: string,
+    leftbottom_taglist: Array<leftbottomTagList>
+    cfav: number,
+    price: 69,
 }
 
-export interface leftbottomTagList{
-    color:string,
-    bgColor:string,
-    content:string,
+export interface leftbottomTagList {
+    color: string,
+    bgColor: string,
+    content: string,
 }

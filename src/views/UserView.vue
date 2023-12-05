@@ -83,11 +83,9 @@
                 </div>
                 <div>
                     <i class="iconfont">&#xe6ab;<span class="nav-title">评价</span></i>
-
                 </div>
                 <div>
                     <i class="iconfont">&#xe686;<span class="nav-title">退款售后</span></i>
-
                 </div>
             </div>
 
@@ -212,8 +210,6 @@ function gotoHomepage() {
     &:hover {
         color: var(--subject-color);
     }
-
-
 }
 
 .user-box {

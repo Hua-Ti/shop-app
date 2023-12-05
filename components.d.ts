@@ -7,12 +7,13 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    HomeTwoModule: typeof import('./src/components/homeTwoModule.vue')['default']
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
-    LivePlaybackOrPlayComponent: typeof import('./src/components/LivePlaybackOrPlayComponent.vue')['default']
+    LivePlaybackComponent: typeof import('./src/components/LivePlaybackComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ShopComponent: typeof import('./src/components/ShopComponent.vue')['default']
-    ShoppingView: typeof import('./src/components/ShoppingView.vue')['default']
+    Shopping: typeof import('./src/components/Shopping.vue')['default']
     VanAddressEdit: typeof import('vant/es')['AddressEdit']
     VanAddressList: typeof import('vant/es')['AddressList']
     VanButton: typeof import('vant/es')['Button']
@@ -35,7 +36,7 @@ declare module 'vue' {
     VanSubmitBar: typeof import('vant/es')['SubmitBar']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
-    VanTag: typeof import('vant/es')['Tag']
     VanUploader: typeof import('vant/es')['Uploader']
+    WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
   }
 }
