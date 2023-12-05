@@ -30,8 +30,9 @@
             </div>
         </div>
         <!-- 瀑布流内容 -->
-        <!-- <WaterfallFlow :getHomeC="getHomeC"/> -->
-        <WaterfallFlow />
+        <keep-alive>
+            <WaterfallFlow />
+        </keep-alive>
 
     </div>
 </template>

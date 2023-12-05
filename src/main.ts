@@ -12,9 +12,11 @@ import 'vant/es/dialog/style';
 import 'vant/es/notify/style';
 // ImagePreview
 import 'vant/es/image-preview/style';
+import {VueMasonryPlugin} from 'vue-masonry';
 
-import { createApp } from 'vue'
 
+
+import { createApp } from 'vue';
 
 // 引入pinia
 // import { createPinia } from 'pinia'
@@ -28,6 +30,7 @@ const app = createApp(App)
 
 app.use(pinia)
 app.use(router)
+app.use(VueMasonryPlugin);
 
 
 app.mount('#app')

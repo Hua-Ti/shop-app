@@ -14,7 +14,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     ShopComponent: typeof import('./src/components/ShopComponent.vue')['default']
     Shopping: typeof import('./src/components/Shopping.vue')['default']
-    VanButton: typeof import('vant/es')['Button']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanCheckbox: typeof import('vant/es')['Checkbox']
     VanField: typeof import('vant/es')['Field']
