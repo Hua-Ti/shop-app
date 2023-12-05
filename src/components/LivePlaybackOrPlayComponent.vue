@@ -1,5 +1,5 @@
 <template>
-    <div class="livePlayBack-box">
+    <div class="livePlayBack-box" :data-explainId="explainId">
         <!-- <div class="backImg" :style="{ backgroundImage: `url(${firstFrame})` }">
         </div> -->
         <div class="top-nav">
@@ -10,8 +10,8 @@
                         {{ authorName }}
                     </div>
                     <div class="author-weight">
-                        <p>{{ authorHeight }}</p>
-                        <p>{{ authorWeight }}</p>
+                        <p>{{ authorHeight }}cm</p>
+                        <p>{{ authorWeight }}kg</p>
                     </div>
                 </div>
                 <div class="attention">
@@ -31,7 +31,8 @@
         <div class="bottom">
             <div class="bottom-head">
                 <div class="bottom-left">
-                    我是弹幕模块
+                    <!-- 插槽 -->
+                    <slot name="barrage"></slot>
                 </div>
                 <div class="bottom-right">
                     <div class="comment">
@@ -45,16 +46,21 @@
                     </div>
                 </div>
             </div>
-            <div class="bottom-foot">
+            <div class="videoKey" v-if="isBenefitPointList">
+                <!-- 插槽 -->
+                <slot name="slotVideoKey">
+                </slot>
+            </div>
+            <div class="bottom-foot" :data-goodsId="goodsId">
                 <div class="goods">
                     <van-image width="50" height="50" radius="5" :src="goodsImg" />
                     <div class="goods-text">
                         <div class="goods-name">
-                            {{ goodsName }}
-                            <van-image width="33" height="10" radius="5" :src="goodsLiveImg" />
+                            <p>{{ goodsName }}</p>
+                            <van-image width="33" height="10" radius="5" :src="goodsLiveImg" v-if="goodsLiveImg" />
                         </div>
                         <div class="goods-price">
-                            <p>{{ goodsPrice }}</p>
+                            <p>¥{{ goodsPrice }}</p>
                         </div>
                     </div>
                 </div>
@@ -63,7 +69,7 @@
                 </div>
             </div>
             <!-- 插槽 -->
-            <slot>
+            <slot name="slotPlay">
                 <!-- <div class="slider">
                     <van-icon name="play" size="20" color="white" class="myPlayBtn" v-show="!isPlay" />
                     <van-icon name="pause" size="20" color="white" class="myPlayBtn" v-show="isPlay" />
@@ -90,28 +96,30 @@ const router = useRouter();
 
 // 传参内容
 const props = defineProps({
+    isBenefitPointList: {
+        type: Boolean,
+    },
+    explainId: {
+        type: [String, Number],
+    },
     authorImg: {
         type: String,
     },
-    authorId:{
-        type:String,
+    authorId: {
+        type: Number,
     }
     ,
     authorName: {
         type: String,
-        default: '小画家style',
     },
     authorHeight: {
-        type: String,
-        default: '163cm'
+        type: Number,
     },
     authorWeight: {
-        type: String,
-        default: '45kg'
+        type: Number,
     },
     goodsName: {
         type: String,
-        default: '2023直筒牛仔裤',
     },
     goodsImg: {
         type: String,
@@ -121,15 +129,15 @@ const props = defineProps({
     },
     goodsPrice: {
         type: String,
-        default: '¥39.9',
     },
+    goodsId: {
+        type: [String, Number],
+    }
+    ,
     commentNumber: {
         type: [Number, String],
     }
 });
-
-let sliderValue = ref(0);
-let isPlay = ref(false);
 </script>
 
 <style lang="scss" scoped>
@@ -289,6 +297,14 @@ let isPlay = ref(false);
         display: flex;
         flex-flow: column nowrap;
         color: white;
+
+        p {
+            width: 170px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+        }
     }
 
     .goods-price {
@@ -305,5 +321,13 @@ let isPlay = ref(false);
     border-radius: 999px;
     background-image: linear-gradient(#ff4466, #ff4466);
     transform: translateY(10px) translateX(-10px);
+}
+
+.videoKey {
+    background-color: rgba(0, 0, 0, 0.4);
+    width: calc(100vw - 20px);
+    height: 35px;
+    margin-top: 10px;
+    border-radius: 8px;
 }
 </style>
