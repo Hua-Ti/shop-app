@@ -15,6 +15,7 @@ import 'vant/es/image-preview/style';
 
 import { createApp } from 'vue'
 
+
 // 引入pinia
 // import { createPinia } from 'pinia'
 import pinia from './stores/store';
@@ -27,5 +28,6 @@ const app = createApp(App)
 
 app.use(pinia)
 app.use(router)
+
 
 app.mount('#app')

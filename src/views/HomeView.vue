@@ -37,10 +37,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted  } from "vue";
 import { useRouter } from "vue-router";
 import WaterfallFlow from '@/components/WaterfallFlowView.vue';
 import homeTwoModule from '@/components/homeTwoModule.vue';
+
 
 import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeContent } from '../apic/homes'
 import { type HomeTopNav, type gettimeRob, type gettimeRobItem, type getHomeC } from '../typings'
