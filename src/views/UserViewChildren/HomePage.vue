@@ -1,8 +1,11 @@
 <template>
     <div class="page-box">
         <div class="page-top">
-            <van-icon name="arrow-left" @click="goback" />
-            <span class="title">个人资料</span>
+            <van-nav-bar :title="`个人资料`">
+                <template #left>
+                    <van-icon name="arrow-left" size="18" color="gray" @click="router.go(-1)" />
+                </template>
+            </van-nav-bar>
         </div>
         <div class="page-bg">
         </div>
@@ -38,6 +41,7 @@ import { ref, onMounted, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
 import { accountNumber } from '../../stores/counter'
 import { getPicture } from '../../stores/picture'
+const router = useRouter();
 const pictureSrc = getPicture()
 const src = ref('')
 const fileList = ref([
@@ -45,7 +49,7 @@ const fileList = ref([
 ]);
 const userid = accountNumber()
 
-const router = useRouter();
+
 
 const afterRead = (file: any) => {
     // 此时可以自行将文件上传至服务器
@@ -64,13 +68,13 @@ const afterRead = (file: any) => {
     // console.log(picture.substring(12, 75))
     // src.value = picture.substring(12, 75)
 };
-
+// onMounted(() => {
+//     let picture = localStorage.picture || `[]`;
+//     // pictureList = JSON.parse(picture);
+//     console.log(picture.substring(12, 75))
+//     src.value = picture.substring(12, 75)
+// })
 //返回上一级
-function goback() {
-    router.go(-1)
-}
-
-
 
 </script>
 
@@ -85,10 +89,10 @@ function goback() {
 }
 
 .page-top {
-    padding: 0px 15px;
-    height: 40px;
-    background-color: white;
-    line-height: 40px;
+    // padding: 0px 15px;
+    // height: 40px;
+    // background-color: white;
+    // line-height: 40px;
 
     .back {
         font-size: 20px;

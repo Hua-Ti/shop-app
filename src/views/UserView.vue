@@ -5,8 +5,10 @@
             <div class="top-box">
                 <div class="user-message">
                     <div>
-                        <van-image class="img-bg" @click.stop="gotoHomepage" round width="2.3rem" height="2.3rem"
-                            :src="pictureSrc.picture || picSrc || src" />
+                        <!-- <van-image v-if="pictureSrc.picture" class="img-bg" @click.stop="gotoHomepage" round width="2.3rem"
+                            height="2.3rem" :src="src" /> -->
+                        <van-image v-if="pictureSrc.picture" class="img-bg" @click="gotoHomepage" round width="2.3rem"
+                            height="2.3rem" :src="pictureSrc.picture || picSrc || src" />
                     </div>
                 </div>
                 <div class="user_white">
@@ -18,7 +20,7 @@
             </div>
             <!-- 我的主页，消息，收藏，关注 -->
             <div class="user_four">
-                <div @click.stop="gotoHomepage">
+                <div @click="gotoHomepage">
                     <van-image width="30" height="30" :src="userHome" />
                     <span class="nav-title">我的主页</span>
                 </div>
@@ -35,6 +37,10 @@
                     <van-image width="30" height="30" :src="userAttention" />
                     <span class="nav-title">关注</span>
                 </div>
+                <div @click="router.push({ name: 'addressmanagement' })">
+                    <van-image width="30" height="30" :src="address" />
+                    <span class="nav-title">地址</span>
+                </div>
             </div>
         </div>
 
@@ -43,6 +49,8 @@
             <div class="left" @click.stop="gotoShop">
                 <van-image :src="uesrGouwuche" />
                 <p>购物车</p>
+                <!-- 到时候加个if,有显示，没有不显示 -->
+                <span>xx件商品<van-icon name="arrow" /></span>
             </div>
             <div class="right">
                 <div>
@@ -124,7 +132,8 @@ import userHome from '../assets/icons/user_home.png'
 import userMessage from '../assets/icons/user_message.png'
 import userShoucang from '../assets/icons/user_shoucang.png'
 import userAttention from '../assets/icons/user_attention.png'
-import src from "../../public/user_touxiang.png"
+import address from '../assets/icons/user_address2.png'
+import src from "../assets/images/user_touxiang.png"
 
 import { accountNumber } from "../stores/counter"
 import { getPicture } from '../stores/picture'
@@ -156,15 +165,15 @@ onMounted(() => {
 onMounted(() => {
     let pictureList = localStorage.pictureList || `[]`;
     // pictureList = JSON.parse(pictureList);
-    console.log(Array.isArray(pictureList))
+    // console.log(Array.isArray(pictureList))
     if (pictureList == '[]') {
-        console.log(11)
+        // console.log(11)
         return
     } else {
         let pictureList = localStorage.pictureList
         pictureList = JSON.parse(pictureList);
         // pictureSrc.picture = pictureList.slice(-1)[0].pictureid
-        console.log(pictureList.slice(-1)[0])
+        // console.log(pictureList.slice(-1)[0])
         picSrc.value = pictureList.slice(-1)[0].pictureid
     }
 })
@@ -179,6 +188,8 @@ function escUser() {
 function gotoShop() {
     router.push({ name: 'shop' })
 }
+//
+
 //个人信息
 function gotoHomepage() {
     router.push({ name: 'homepage' })
@@ -213,7 +224,7 @@ function gotoHomepage() {
     background-repeat: no-repeat;
     background-size: 100%;
     background-color: #f1f1f1;
-
+    z-index: 13;
     position: fixed;
     top: 0px;
     bottom: 55px;
@@ -311,20 +322,26 @@ function gotoHomepage() {
     justify-content: space-between;
 
     .left {
-
-        font-size: 20px;
-        color: #333;
-        font-weight: 600;
         height: 120px;
         width: 43.5vw;
-
         border-radius: 6px;
         position: relative;
 
         p {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
             position: absolute;
             top: 10%;
             left: 10%;
+        }
+
+        span {
+            font-size: 12px;
+            position: absolute;
+            top: 30%;
+            left: 10%;
+            color: #999;
         }
     }
 

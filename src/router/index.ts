@@ -13,6 +13,8 @@ import MakeupView from '../views/LiveViewChildren/MakeupView.vue'
 import HomePage from '../views/UserViewChildren/HomePage.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
+import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
+import AddressManagement from '../views/AddressManagement.vue'
 
 // 在路由中引入pinia
 import pinia from '@/stores/store'
@@ -36,7 +38,14 @@ const router = createRouter({
     {
       path: '/shop',
       name: 'shop',
-      component: ShopView
+      component: ShopView,
+      children: [
+        {
+          path: 'confirmorder',
+          name: 'confirmorder',
+          component: ConfirmOrder,
+        },
+      ]
     },
     {
       path: '/user',
@@ -110,7 +119,12 @@ const router = createRouter({
       path: '/product-list',
       name: "productList",
       component: () => import("../views/ProductListPageView.vue")
-    }
+    },
+    {
+      path: '/addressmanagement',
+      name: 'addressmanagement',
+      component: AddressManagement
+    },
   ]
 })
 
