@@ -106,6 +106,11 @@ const router = createRouter({
         }
       ]
     },
+    {
+      path: '/product-list',
+      name: "productList",
+      component: () => import("../views/ProductListPageView.vue")
+    }
   ]
 })
 
