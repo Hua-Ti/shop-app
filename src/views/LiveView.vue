@@ -66,7 +66,7 @@ function gotoShop() {
 
 const getLivesList = (async () => {
     let { data } = await getLiveList(liveId.value, page.value);
-    console.log(data);
+    // console.log(data);
     
     liveData.value = [...data?.lives, ...liveData.value];
     loading.value = false

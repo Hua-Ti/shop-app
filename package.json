@@ -17,6 +17,8 @@
     "flv.js": "^1.6.2",
     "pinia": "^2.1.7",
     "qs": "^6.11.2",
+    "pinia-plugin-persist": "^1.0.0",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "vant": "^4.8.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"

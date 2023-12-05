@@ -1,5 +1,5 @@
-import axios from "@/untils/axios";
-import { type LiveBroadcastSort ,type LiveData,type liveRoom , type liveRoomGood} from '../typings'
+import axios from "axios";
+import { type LiveBroadcastSort ,type LiveData,type liveRoom , type liveRoomGood,type getPlaybackData} from '../typings'
 
 //直播分类
 export async function getLiveBroadcastSort() {
@@ -7,7 +7,7 @@ export async function getLiveBroadcastSort() {
     return data
 }
 //直播列表
-export async function getLiveList(tabId: number,page: number){
+export async function getLiveList(tabId: number, page: number) {
     let { data } = await axios.get<LiveData>(`https://apic.netstart.cn/mogujie/live/tabList?tabId=${tabId}&pageIndex=${page}`)
     return data
 }
@@ -24,5 +24,11 @@ export async function getLiveGoods(roomId:number,actorId:string){
 //直播间评论
 export async function getComment(){
     let { data } = await axios.get(`https://apis.netstart.cn/mogujie/live/comments`)
+}
+
+// 直播回放相关
+export async function getPlaybackData(itemUrlId: string, actorUrlId: string) {
+    let { data } = await axios.get<getPlaybackData>(`https://apis.netstart.cn/mogujie/video/detail?itemId=${itemUrlId}&actorId=${actorUrlId}`)
+
     return data
 }

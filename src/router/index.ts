@@ -7,6 +7,7 @@ import ShopView from '../views/ShopView.vue'
 import UserView from '../views/UserView.vue'
 import LiveView from '../views/LiveView.vue'
 import SearchView from '../views/SearchView.vue'
+import HomePage from '../views/UserViewChildren/HomePage.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
 import PayView from '../views/PayView.vue'
@@ -40,7 +41,14 @@ const router = createRouter({
     {
       path: '/user',
       name: 'user',
-      component: UserView
+      component: UserView,
+      children: [
+        {
+          path: 'homepage',
+          name: 'homepage',
+          component: HomePage,
+        },
+      ]
     },
     {
       path: '/search',
@@ -58,8 +66,9 @@ const router = createRouter({
       component:LiveRoomView,
     },
     {
-      path: '/livePlayback',
+      path: '/livePlayback:itemUrlId&:actorUrlId&:explainId',
       name: 'livePlayback',
+      props: true,
       component: LivePlaybackView,
     },
     {
@@ -95,6 +104,12 @@ const router = createRouter({
       name:'paySuccess',
       component:PaySuccess
     },
+    {
+      path: '/product-list',
+      name: "productList",
+      component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
+    }
+
   ]
 })
 
