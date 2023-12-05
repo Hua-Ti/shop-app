@@ -52,14 +52,14 @@
 import { useRouter } from "vue-router";
 import { getHomeContent } from '../apic/homes'
 import { type getHomeC } from '../typings'
-import { ref } from 'vue';
+import { ref,nextTick,computed } from 'vue';
 const router = useRouter();
 
 // const list = ref([]);
 const getHomeC = ref<Array<getHomeC>>([])
 const loading = ref(false);
 const finished = ref(false);
-// const count = ref(Math.random() * 2000)
+const count = ref(Math.random() * 2000)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemId: string, actorId: string) {
@@ -71,20 +71,31 @@ function liveBroadcastPage(itemId: string, actorId: string) {
         }
     })
 }
-const onLoad = () => {
+const onLoad = async () => {
     // 异步更新数据
     // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    setTimeout(async () => {
-        // count.value++;
-        let HomeContentData: any = await getHomeContent();//第二页数据
-        getHomeC.value.push(HomeContentData.data.list);
-        // 加载状态结束
-        loading.value = false;
-        // 数据全部加载完成
-        finished.value = true;
+    // setTimeout(async () => {
+    // count.value++;
+    let HomeContentData: any = await getHomeContent(count.value);//第二页数据
+    console.log(1111)
+    for (let i = 0; i < HomeContentData.data.list.length; i++) {
+        getHomeC.value.push(HomeContentData.data.list[i]);
+    }
+    // getHomeC.value=HomeContentData.data.list
+    console.log('首页内容', getHomeC.value);
+    // 加载状态结束
+    loading.value = false;
 
-    }, 1000);
+    // 数据全部加载完成
+    nextTick(() => {
+        loading.value = false
+        count.value++;
+    })
+    // finished.value = false;
+    // }, 1000);
 };
+// const f =
+
 
 </script>
 

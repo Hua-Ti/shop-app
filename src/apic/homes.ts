@@ -17,12 +17,12 @@ export async function getTimeProg() {
     return data
 }
 //首页内容数据
-// export async function getHomeContent(count:string | number) {
-//     let { data } = await axios.get<Array<getHomeC>>(`https://apis.netstart.cn/mogujie/video/item?page=${count}`)
-//     return data
-// }
-export async function getHomeContent() {
-    let { data } = await axios.get<Array<getHomeC>>(`https://apis.netstart.cn/mogujie/video/item?page=2`)
+export async function getHomeContent(count:string | number) {
+    let { data } = await axios.get<Array<getHomeC>>(`https://apis.netstart.cn/mogujie/video/item?page=${count}`)
     return data
 }
+// export async function getHomeContent() {
+//     let { data } = await axios.get<Array<getHomeC>>(`https://apis.netstart.cn/mogujie/video/item?page=2`)
+//     return data
+// }
 
