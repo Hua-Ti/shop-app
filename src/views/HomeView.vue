@@ -8,23 +8,16 @@
                 </template>
             </van-search>
         </div>
+
         <!-- 首页二级模块 -->
-        <div class="home-nav">
-            <div class="home-nav-tab">
-                <van-grid square :column-num="7" icon-size="50px">
-                    <van-grid-item class="nav-tab-item" v-for="h in homeNav" :key="h._system_record_entry_id"
-                        :icon="h.image" :text="h.title" :sort="h.sort" :link="h.link" :titlecolor="h.titleColor"
-                        :h5link="h.h5Link" />
-                </van-grid>
-            </div>
-        </div>
+        <homeTwoModule :homeNav="homeNav" />
         <!-- 限时快抢模块 -->
         <div class="goodList">
             <!-- 限时快抢 -->
             <div class="timeLimit">
                 <p>限时快抢 <span>></span></p>
                 <div class="timeLimit-item">
-                    <div v-for="(i,index) in timeRobItem" :key="index">
+                    <div v-for="(i, index) in timeRobItem" :key="index">
                         <img :src="i.cover" alt="111">
                         <p>￥<span>{{ Math.floor(i.livePrice) }}</span>.31</p>
                     </div>
@@ -39,6 +32,7 @@
         <!-- 瀑布流内容 -->
         <!-- <WaterfallFlow :getHomeC="getHomeC"/> -->
         <WaterfallFlow />
+
     </div>
 </template>
 
@@ -46,6 +40,8 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import WaterfallFlow from '@/components/WaterfallFlowView.vue';
+import homeTwoModule from '@/components/homeTwoModule.vue';
+
 import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeContent } from '../apic/homes'
 import { type HomeTopNav, type gettimeRob, type gettimeRobItem, type getHomeC } from '../typings'
 const router = useRouter();
@@ -138,33 +134,6 @@ onMounted(async () => {
 
     }
 
-    // 分类导航
-    .home-nav {
-        // margin-top: 10px;
-        overflow: auto;
-        width: 100vw;
-        // padding: 0 10px;
-        height: 182px;
-        box-sizing: border-box;
-
-        //隐藏滚动条高度
-        &::-webkit-scrollbar {
-            height: 0px;
-        }
-
-        .home-nav-tab {
-            width: 140vw;
-        }
-
-        .nav-tab-item {
-            margin-top: 10px;
-        }
-
-        //去掉导航条边框
-        [class*=van-hairline]:after {
-            border: none;
-        }
-    }
 
     // 限时快抢模块
     .goodList {

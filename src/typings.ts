@@ -53,6 +53,7 @@ export interface getHomeC {
     sale:string
     title:string
     itemId:string
+    explainId:string
     lefttop_taglist:Array<{
         img:string
     }>

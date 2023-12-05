@@ -52,7 +52,7 @@
 import { useRouter } from "vue-router";
 import { getHomeContent } from '../apic/homes'
 import { type getHomeC } from '../typings'
-import { ref,nextTick,computed } from 'vue';
+import { ref, nextTick } from 'vue';
 const router = useRouter();
 
 // const list = ref([]);
