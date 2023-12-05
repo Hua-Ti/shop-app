@@ -12,9 +12,11 @@ import HotView from '../views/LiveViewChildren/HotView.vue'
 import MakeupView from '../views/LiveViewChildren/MakeupView.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
+import PayViewVue from '../views/PayView.vue'
+import PaySuccess from '../views/PaySuccess.vue'
 
 // 在路由中引入pinia
-import pinia from '@/stores/store'
+import pinia from '../stores/store'
 import AuthorizationView from '../views/AuthorizationView.vue'
 import { useRouterNameStore } from "../stores/counter";
 const store = useRouterNameStore(pinia);
@@ -97,6 +99,16 @@ const router = createRouter({
           component: RegisterView
         }
       ]
+    },
+    {
+      path:'/pay',
+      name:'pay',
+      component:PayViewVue
+    },
+    {
+      path:'/pay-success',
+      name:'paySuccess',
+      component:PaySuccess
     },
   ]
 })

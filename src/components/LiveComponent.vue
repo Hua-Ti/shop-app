@@ -36,7 +36,6 @@
 
 
         </div>
-
     </div>
 </template>
 
@@ -50,7 +49,6 @@ const props = defineProps(["liveData"])
 .mona-live-item {
     padding: 0 10px;
     // margin-bottom: 10px;
-
     .actor-info {
         display: flex;
         // align-items: center;
@@ -67,9 +65,9 @@ const props = defineProps(["liveData"])
             transform: translateY(45%);
         }
     }
-
     .main {
         background-size: 100% auto !important;
+        // background-size: cover !important;
         background-position: 50%;
         background-repeat: no-repeat !important;
         display: flex;

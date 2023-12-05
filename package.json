@@ -10,8 +10,12 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false"
   },
   "dependencies": {
+    "@types/qs": "^6.9.10",
+    "alipay-sdk": "^3.6.1",
     "axios": "^1.6.2",
+    "cors": "^2.8.5",
     "pinia": "^2.1.7",
+    "qs": "^6.11.2",
     "vant": "^4.8.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"

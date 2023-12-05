@@ -15,7 +15,7 @@
                     <!-- 下拉刷新,上拉加载 -->
                     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
                         <van-list v-model:loading="loading" :finished="finished" finished-text="我也是有底线的喔o(〃＾▽＾〃)o"
-                            @load="onLoad">
+                            @load="onLoad" offset="100">
                             <LiveComponent :liveData="liveData" />
                         </van-list>
                     </van-pull-refresh>
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import LiveComponent from "@/components/LiveComponent.vue";
 import { getLiveBroadcastSort, getLiveList } from '../apic/live-data';
@@ -72,20 +72,20 @@ const getLivesList = (async () => {
     loading.value = false
     filterShow.value = false
     refreshing.value = false
+    finished.value = true
     if (page.value > 1) {
         liveData.value = [...liveData.value, ...data?.lives];
     }
     if (data.lives.length == 0) {
-        finished.value = true
-        filterShow.value = false
-    }
-    if (liveData.value.length == 0) {
         loading.value = false
         finished.value = false
         filterShow.value = true
     }
-
-    finished.value = true
+    if (liveData.value.length == 0) {
+        loading.value = false
+        finished.value = false
+        filterShow.value = false
+    }
     return
 })
 
@@ -118,7 +118,6 @@ const onRefresh = () => {
 
 <style lang="scss">
 .lives {
-
     margin-bottom: 60px;
 
     .van-tab {
@@ -142,4 +141,10 @@ const onRefresh = () => {
         margin-bottom: 65px;
     }
 }
+// .hh{
+//     height: 70vh;
+//     // margin-bottom: 200px;
+//     // z-index: 1000;
+//     // padding-bottom: 100px;
+// }
 </style>

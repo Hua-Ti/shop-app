@@ -13,7 +13,6 @@ import App from './App.vue'
 import router from './router'
 import 'amfe-flexible' // rem 布局适配
 
-
 const app = createApp(App)
 
 app.use(pinia)
