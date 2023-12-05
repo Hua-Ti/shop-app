@@ -1,11 +1,9 @@
 <template>
     <div class="livingBox">
-        <LivePlaybackOrPlayComponent></LivePlaybackOrPlayComponent>
     </div>
 </template>
 
 <script setup lang="ts">
-import LivePlaybackOrPlayComponent from '../../components/LivePlaybackOrPlayComponent.vue'
 </script>
 
 <style lang="scss" scoped>
