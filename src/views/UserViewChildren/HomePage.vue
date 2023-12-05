@@ -36,12 +36,12 @@
 <script setup lang="ts">
 import { ref, onMounted, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
-import { accountNumber, getPicture } from '../../stores/counter'
-
+import { accountNumber } from '../../stores/counter'
+import { getPicture } from '../../stores/picture'
 const pictureSrc = getPicture()
-const src = ref('../../../public/user_touxiang.png')
+const src = ref('')
 const fileList = ref([
-    { url: src.value },
+    { url: '../../../public/user_touxiang.png' || src },
 ]);
 const userid = accountNumber()
 
@@ -59,15 +59,11 @@ const afterRead = (file: any) => {
     pictureSrc.picture = pictureList.slice(-1)[0].pictureid
     src.value = pictureSrc.picture
     console.log(src.value)
+    // let picture = localStorage.picture || `[]`;
+    // // pictureList = JSON.parse(picture);
+    // console.log(picture.substring(12, 75))
+    // src.value = picture.substring(12, 75)
 };
-// onMounted(() => {
-//     let pictureList = localStorage.pictureList || `[]`;
-//     pictureList = JSON.parse(pictureList);
-//     if (pictureList) {
-//         pictureSrc.picture = pictureList.slice(-1)[0].pictureSrc
-//         src.value = pictureSrc.picture.substring(5)
-//     }
-// })
 
 //返回上一级
 function goback() {

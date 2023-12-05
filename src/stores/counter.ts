@@ -32,9 +32,9 @@ export const accountNumber = defineStore('counter', () => {
 }, { persist: true })
 
 
-export const getPicture = defineStore('counter', () => {
-  const picture = ref('');
-  function changePicture() {
-  }
-  return { picture, changePicture }
-})
+// export const getPicture = defineStore('counter', () => {
+//   const picture = ref('');
+//   function changePicture() {
+//   }
+//   return { picture, changePicture }
+// }, { persist: true })

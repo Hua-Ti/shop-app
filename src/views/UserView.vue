@@ -5,10 +5,8 @@
             <div class="top-box">
                 <div class="user-message">
                     <div>
-                        <!-- <img v-if="!pictureSrc.picture" class="img-bg" @click.stop="gotoHomepage"
-                            src="../../../public/user_touxiang.png" alt=""> -->
-                        <img class="img-bg" @click.stop="gotoHomepage" :src="pictureSrc.picture || picSrc" alt="">
-                        <!-- <img v-if="picSrc" class="img-bg" @click.stop="gotoHomepage" :src="picSrc" alt=""> -->
+                        <van-image class="img-bg" @click.stop="gotoHomepage" round width="2.3rem" height="2.3rem"
+                            :src="pictureSrc.picture || picSrc || src" />
                     </div>
                 </div>
                 <div class="user_white">
@@ -126,9 +124,10 @@ import userHome from '../assets/icons/user_home.png'
 import userMessage from '../assets/icons/user_message.png'
 import userShoucang from '../assets/icons/user_shoucang.png'
 import userAttention from '../assets/icons/user_attention.png'
-import src from "../assets/images/user_touxiang.png"
+import src from "../../public/user_touxiang.png"
 
-import { accountNumber, getPicture } from "../stores/counter"
+import { accountNumber } from "../stores/counter"
+import { getPicture } from '../stores/picture'
 
 const router = useRouter();
 const userid = accountNumber()
@@ -152,7 +151,7 @@ onMounted(() => {
         userid.accountName = userIDList.slice(-1)[0].userid
     }
 })
-pictureSrc.picture
+// pictureSrc.picture
 //头像url
 onMounted(() => {
     let pictureList = localStorage.pictureList || `[]`;
@@ -263,8 +262,8 @@ function gotoHomepage() {
     margin: 0 auto;
     text-align: center;
     position: absolute;
-    top: -32%;
-    left: 41%;
+    top: -36%;
+    left: 38%;
 
     div {
         margin: 0 auto;
@@ -272,6 +271,7 @@ function gotoHomepage() {
 
         .img-bg {
             width: 20vw;
+            height: 9vh;
             border-radius: 50%;
         }
     }
