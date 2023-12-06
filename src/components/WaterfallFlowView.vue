@@ -2,8 +2,6 @@
 <template>
     <div class="waterfallFlow">
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
-
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item" >
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
@@ -75,16 +73,13 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
 }
 const onLoad = async () => {
     // 异步更新数据
-    // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    // setTimeout(async () => {
-    // count.value++;
     let HomeContentData: any = await getHomeContent(count.value);//第二页数据
     console.log(1111)
     for (let i = 0; i < HomeContentData.data.list.length; i++) {
         getHomeC.value.push(HomeContentData.data.list[i]);
     }
     // getHomeC.value=HomeContentData.data.list
-    console.log('首页内容', getHomeC.value);
+    // console.log('首页内容', getHomeC.value);
     // 加载状态结束
     loading.value = false;
 
@@ -93,10 +88,7 @@ const onLoad = async () => {
         loading.value = false
         count.value++;
     })
-    // finished.value = false;
-    // }, 1000);
 };
-// const f =
 
 
 </script>
@@ -106,8 +98,6 @@ const onLoad = async () => {
 .waterfallFlow {
     margin: 10px;
     width: 100vw;
-    // column-count: 2;
-    // column-gap: 10px;
 
     .item {
         margin-bottom: 10px;

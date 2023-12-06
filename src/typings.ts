@@ -4,7 +4,34 @@
         export interface live.....{}
 */
 
-// 首页导航 （数组（字符串））
+// 首页小导航 （数组（字符串））
+export interface HomeNavigation {
+    data: {
+        117330: {
+            list: Array<{
+                _material_end_time: number
+                acm: string
+                title: string
+                miniWallkey: string
+                _material_start_time: number
+                maitKey: number
+                _system_record_entry_id: number
+            }>
+        }
+    }
+}
+export interface List {
+    _material_end_time: number
+    acm: string
+    title: string
+    miniWallkey: string
+    _material_start_time: number
+    maitKey: number
+    _system_record_entry_id: number
+}
+
+
+// 首页小导航 （数组（字符串））
 export interface HomeTopNav {
     image: string
     sort: number
@@ -38,26 +65,26 @@ export interface gettimeRob {
 export interface gettimeRobItem {
     cover: string
     actorId: string
-    livePrice:number
+    livePrice: number
 }
 // 首页内容
 export interface getHomeC {
-    itemImage:string 
-    actorName:string
-    showDiscountPrice:number
-    bottomIcon?:string
-    firstFrame:string
+    itemImage: string
+    actorName: string
+    showDiscountPrice: number
+    bottomIcon?: string
+    firstFrame: string
     actorId: string
-    id:number
-    actorAvatar:string
-    sale:string
-    title:string
-    itemId:string
-    explainId:string
-    itemIdUrl:string
-    actorIdUrl:string
-    lefttop_taglist:Array<{
-        img:string
+    id: number
+    actorAvatar: string
+    sale: string
+    title: string
+    itemId: string
+    explainId: string
+    itemIdUrl: string
+    actorIdUrl: string
+    lefttop_taglist: Array<{
+        img: string
     }>
 }
 

@@ -13,6 +13,7 @@ import MakeupView from '../views/LiveViewChildren/MakeupView.vue'
 import HomePage from '../views/UserViewChildren/HomePage.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
+import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
 
 // 在路由中引入pinia
 import pinia from '@/stores/store'
@@ -26,7 +27,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      children:[
+        {
+          path:'/',
+          name:'homechild',
+          component:HomeChildView
+        }
+      ]
     },
     {
       path: '/attention',
