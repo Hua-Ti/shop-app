@@ -25,20 +25,30 @@
     </div>
 </template>
 <script setup lang="ts">
-const activeIndex={}
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+
+// import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+// import { useRouter } from "vue-router";
 
 import { getHomeNavigation } from '../apic/homes'
-import { type List } from '../typings'
+import { type List, type item } from '../typings'
 const router = useRouter();
+const route = useRoute();
 let keyWord = ref('');
+// 导航下标数据
+const activeIndex: item = {}
 // let count = ref(Math.random() * 2000)
 const homeTwoNav = ref<Array<List>>([])
 
-const active = router.currentRoute.value.query.pid ? ref(router.currentRoute.value.query.pid) : ref(0)
-// const active = ref(0)
-console.log(active)
+let index = ref('');
+console.log(route.query.pid);
+const active = ref(0)
+console.log(333, activeIndex)
+console.log('index', index.value)
+console.log('高亮下标', active.value)
+
 // 点击跳转相关
 //跳购物车页面
 function gotoShop() {
@@ -53,16 +63,25 @@ function gotoSearch() {
 onMounted(async () => {
     //首页数据
     let homeTwoNavMenu: any = await getHomeNavigation();
-
-    homeTwoNav.value = homeTwoNavMenu.data[117330].list
-    let home=homeTwoNav.value
-    for(let i=0;i<homeTwoNav.value.length;i++){
-        activeIndex.home[i]=i;
+    homeTwoNav.value = homeTwoNavMenu.data[117330].list;
+    let home = homeTwoNav.value
+    for (let i = 0; i < home.length; i++) {
+        let list = home[i].maitKey;
+        activeIndex[list] = i;
     }
-    console.log(activeIndex)
-    console.log(homeTwoNav)
-})
+    console.log('下标', activeIndex);
+    // 路由下标
+    let pidd = route.query.pid
 
+})
+watch(() => route.query,
+    (newVa, oldVal) => {
+        index = newVa.pid;
+        console.log(222, active.value)
+        console.log(newVa, oldVal)
+    },
+    { immediate: true }
+)
 
 </script>
 
@@ -105,28 +124,33 @@ onMounted(async () => {
     .van-search__action .van-icon {
         color: #f3e9e9;
     }
-    .van-tabs__line{
-        bottom:0.5rem!important;
-        height:1.5px;
-        width:20px;
-        background-color:white;
+
+    .van-tabs__line {
+        bottom: 0.5rem !important;
+        height: 1.5px;
+        width: 20px;
+        background-color: white;
     }
-    .head-top{
+
+    .head-top {
         font-family: 'Courier New', Courier, monospace;
         font-size: 13px;
-        .van-tab--active{
-            color:white;
+
+        .van-tab--active {
+            color: white;
             font-size: 15px;
-            
+
         }
-        .van-tab{
-            color:rgba(255,255,255,.8)
+
+        .van-tab {
+            color: rgba(255, 255, 255, .8)
         }
+
         .van-tabs__nav--line {
             box-sizing: border-box;
         }
     }
 
-   
+
 }
 </style>

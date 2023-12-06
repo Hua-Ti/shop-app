@@ -30,6 +30,10 @@ export interface List {
     _system_record_entry_id: number
 }
 
+// 首页二级导航条下标
+export interface item{
+    [proName:string]:any
+}
 
 // 首页小导航 （数组（字符串））
 export interface HomeTopNav {

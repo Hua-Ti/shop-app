@@ -30,14 +30,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, watch } from "vue";
+import { useRoute,useRouter } from "vue-router";
 import WaterfallFlow from '@/components/WaterfallFlowView.vue';
 import homeTwoModule from '@/components/homeTwoModule.vue';
 
 import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeNavigation } from '../../apic/homes'
 import { type List, type HomeTopNav, type gettimeRob, type gettimeRobItem, type HomeNavigation } from '../../typings'
 const router = useRouter();
+const route=useRoute();
 let keyWord = ref('');
 // let count = ref(Math.random() * 2000)
 const homeTwoNav = ref<Array<List>>([])
@@ -51,9 +52,9 @@ const active = ref(0)
 function shoping() {
     router.push({ name: 'shop' })
 }
-
+const pid = router.currentRoute.value.query.pid
 onMounted(async () => {
-    console.log('pid',router.currentRoute.value.query.pid)
+    console.log('pid', pid)
     //首页数据
     let homeTwoNavMenu: any = await getHomeNavigation();
     let dataArr = await getHomeModuleRow();
@@ -64,20 +65,24 @@ onMounted(async () => {
     homeNav.value = dataArr
     TimeRob.value = dataTime
     timeRobItem.value = dataProg.data?.itemList.splice(0, 3)
-    console.log(homeTwoNav)
+    // console.log(homeTwoNav)
 })
+
+
+
 
 
 </script>
 
 <style lang="scss" scoped>
 .homeChild {
-    padding-top:10px;
+    padding-top: 10px;
     border-top-right-radius: 14px;
     border-top-left-radius: 14px;
-    background-color:white;
+    background-color: white;
     position: relative;
     top: -12px;
+
     // 限时快抢模块
     .goodList {
         width: 100vw;
@@ -114,10 +119,11 @@ onMounted(async () => {
         .timeLimit-item img {
             width: 100%;
             height: 100%;
+            border-radius: 6px;
         }
 
         .timeLimit-item>div {
-            width: 30%;
+            width: 32%;
             height: 84%;
             background-color: rgb(250, 227, 231);
             border-radius: 10px;
@@ -127,11 +133,11 @@ onMounted(async () => {
             font-size: 12px;
             text-align: center;
             margin-top: 5px;
+            font-weight: 600;
         }
 
         .timeLimit-item span {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
         }
 
         .topGoodsListOfWomen {

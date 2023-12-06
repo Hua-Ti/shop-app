@@ -74,7 +74,7 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
 const onLoad = async () => {
     // 异步更新数据
     let HomeContentData: any = await getHomeContent(count.value);//第二页数据
-    console.log(1111)
+    // console.log(1111)
     for (let i = 0; i < HomeContentData.data.list.length; i++) {
         getHomeC.value.push(HomeContentData.data.list[i]);
     }
