@@ -61,9 +61,9 @@ const router = createRouter({
       component: LiveView,
     },
     {
-      path:'/liveroom',
-      name:'liveroom',
-      component:LiveRoomView,
+      path: '/liveroom',
+      name: 'liveroom',
+      component: LiveRoomView,
     },
     {
       path: '/livePlayback:itemUrlId&:actorUrlId&:explainId',
@@ -95,14 +95,14 @@ const router = createRouter({
       ]
     },
     {
-      path:'/pay',
-      name:'pay',
-      component:PayView
+      path: '/pay',
+      name: 'pay',
+      component: PayView
     },
     {
-      path:'/pay-success',
-      name:'paySuccess',
-      component:PaySuccess
+      path: '/pay-success',
+      name: 'paySuccess',
+      component: PaySuccess
     },
     {
       path: '/product-list',

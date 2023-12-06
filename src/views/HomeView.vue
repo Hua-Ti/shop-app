@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted  } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
 import WaterfallFlow from '@/components/WaterfallFlowView.vue';
 import homeTwoModule from '@/components/homeTwoModule.vue';
 
@@ -85,6 +85,13 @@ onMounted(async () => {
     TimeRob.value = dataTime
     timeRobItem.value = dataProg.data.itemList.splice(0, 3)
     // getHomeC.value = HomeContentData.data.list
+})
+
+// 离开路由后下个路由页面不缓存
+onBeforeRouteLeave((to, from) => {
+    if (to.name == 'livePlayback') {
+        to.meta.keepAlive = false;
+    }
 })
 
 
