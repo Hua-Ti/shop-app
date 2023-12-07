@@ -1,5 +1,5 @@
 <template>
-    <div class="mona-live-item" v-for="(ld, index) in liveData" :key="index">
+    <div class="mona-live-item" v-for="(ld, index) in liveData" :key="index" @click="goLiveRoom(ld.roomId,ld.actUserId)">
         <div class="actor-info">
             <!-- 主播头像 -->
             <van-image round width="45px" height="45px" :src="ld.avatar" />
@@ -36,21 +36,32 @@
 
 
         </div>
-
     </div>
 </template>
 
 <script setup lang="ts">
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const props = defineProps(["liveData"])
+console.log(props.liveData);
 
+
+function goLiveRoom(roomId:number,actUserId:string) {
+    router.push({
+        name: 'liveroom',
+        query: {
+            roomId,
+            actUserId
+        }
+    })
+}
 </script>
 
 <style lang="scss">
 .mona-live-item {
     padding: 0 10px;
-    // margin-bottom: 10px;
 
+    // margin-bottom: 10px;
     .actor-info {
         display: flex;
         // align-items: center;
@@ -70,6 +81,7 @@ const props = defineProps(["liveData"])
 
     .main {
         background-size: 100% auto !important;
+        // background-size: cover !important;
         background-position: 50%;
         background-repeat: no-repeat !important;
         display: flex;

@@ -54,6 +54,7 @@ function gotoSearch() {
 }
 
 onMounted(async () => {
+<<<<<<< HEAD
     //首页数据
     let homeTwoNavMenu: any = await getHomeNavigation();
     homeTwoNav.value = homeTwoNavMenu.data[117330].list;
@@ -70,8 +71,29 @@ onMounted(async () => {
     active.value = index;
     // console.log('index', index)
     // console.log('高亮下标', active.value)
+=======
+    //首页导航
+    let dataArr = await getHomeModuleRow();
+    let dataTime = await gettimeLimitedQuickGrab();
+    let dataProg: any = await getTimeProg();
+    // let HomeContentData: any = await getHomeContent();//第二页数据
+>>>>>>> 819640bc0d4bc7744372b56632e4af3d78009a61
 
+    // console.log('首页导航数据', dataArr)
+    // console.log('首页好货数据', dataTime)
+    // console.log('首页限时抢数据', dataProg.data.itemList)
+    // console.log('首页内容', HomeContentData.data.list)
+
+    homeNav.value = dataArr
+    TimeRob.value = dataTime
+    timeRobItem.value = dataProg.data.itemList.splice(0, 3)
+    // getHomeC.value = HomeContentData.data.list
 })
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 819640bc0d4bc7744372b56632e4af3d78009a61
 </script>
 
 <style lang="scss">
