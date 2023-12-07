@@ -12,7 +12,10 @@
 
             <!-- 二级导航 -->
             <div class="head-top">
-                <van-tabs v-model:active="active" v-if="homeTwoNav">
+                <van-tabs v-model:active="active" v-if="homeTwoNav.length>1">
+                    <template>
+                        <van-tab :to="{ name: 'homechild', query: { pid: 666 } }" title="热门"></van-tab>
+                    </template>
                     <van-tab :to="{ name: 'homechild', query: { pid: h.maitKey } }" v-for="(h, index) in homeTwoNav"
                         :key="index" :title="h.title">
                     </van-tab>
@@ -26,28 +29,19 @@
 </template>
 <script setup lang="ts">
 
-// import { ref, onMounted } from "vue";
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-// import { useRouter } from "vue-router";
-
 import { getHomeNavigation } from '../apic/homes'
 import { type List, type item } from '../typings'
 const router = useRouter();
 const route = useRoute();
 let keyWord = ref('');
 // 导航下标数据
-const activeIndex: item = {}
+const activeIndex: item = {'666':0}
 // let count = ref(Math.random() * 2000)
 const homeTwoNav = ref<Array<List>>([])
 
-let index = ref('');
-console.log(route.query.pid);
 const active = ref(0)
-console.log(333, activeIndex)
-console.log('index', index.value)
-console.log('高亮下标', active.value)
 
 // 点击跳转相关
 //跳购物车页面
@@ -59,7 +53,6 @@ function gotoSearch() {
     router.push({ name: 'search' })
 }
 
-
 onMounted(async () => {
     //首页数据
     let homeTwoNavMenu: any = await getHomeNavigation();
@@ -67,22 +60,18 @@ onMounted(async () => {
     let home = homeTwoNav.value
     for (let i = 0; i < home.length; i++) {
         let list = home[i].maitKey;
-        activeIndex[list] = i;
+        activeIndex[list] = i+1;
     }
-    console.log('下标', activeIndex);
+    // console.log('下标', activeIndex);
     // 路由下标
-    let pidd = route.query.pid
+    let pidd:any = route.query.pid;
+    // console.log('路由下标', pidd)
+    let index = activeIndex[pidd];
+    active.value = index;
+    // console.log('index', index)
+    // console.log('高亮下标', active.value)
 
 })
-watch(() => route.query,
-    (newVa, oldVal) => {
-        index = newVa.pid;
-        console.log(222, active.value)
-        console.log(newVa, oldVal)
-    },
-    { immediate: true }
-)
-
 </script>
 
 <style lang="scss">
@@ -93,6 +82,7 @@ watch(() => route.query,
         background: rgb(220, 157, 167);
         background: linear-gradient(180deg, rgb(232, 188, 195) 0%, rgba(225, 148, 160, 0.978) 100%);
         color: #fff;
+        height:97.99px;
     }
 
     .head-top {

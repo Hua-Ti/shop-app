@@ -3,44 +3,32 @@
     <div class="waterfallFlow">
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item" >
-                <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
-                    @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
+                <div v-masonry-tile class="item" v-for="(item, index) in ContTwoList" :key="index"
+                   >
                     <div class="picture">
-                        <img class="bigPic" :src="item.itemImage" alt="">
-                        <div class="liveBroadcastAtTheSamePrice">
-                            <img :src="item.lefttop_taglist[0]?.img" alt="">
-                        </div>
-                        <!-- 头像 -->
-                        <div class="headImage">
-                            <img :src="item.actorAvatar" alt="">
-                            <span>{{ item.actorName }}</span>
-                        </div>
-                        <!-- 播放 -->
-                        <div class="Play">
-                            <img src="../assets/images/Play.png" alt="">
-                        </div>
+                        <img class="bigPic" :src="item.img" alt="">
+                        <div class="sale">已售{{ item.sale }}件</div>
                     </div>
                     <p class="title">{{ item.title }}</p>
                     <!-- 价格 -->
                     <div class="price">
                         <div class="livePrice">
                             <div>
-                                ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
+                                ￥<span>{{ Math.floor(item.price) }}</span>
                                 <span v-if="Math.floor(
-                                    (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
+                                    (item.price - Math.floor(item.price)) * 10
                                 )">.{{ Math.floor(
-    (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
+    (item.price - Math.floor(item.price)) * 10
 ) }}
                                     <span class="decimalTwo"
-                                        v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
+                                        v-if="Math.floor((item.price - Math.floor(item.price * 10) / 10) * 100)">
+                                        {{ Math.floor((item.price - Math.floor(item.price * 10) /
                                             10) * 100) }}
                                     </span>
                                 </span>
                             </div>
-                            <img :src="item.bottomIcon" alt="">
                         </div>
-                        <div class="sale">{{ item.sale }}</div>
+                        <div class="cafv">{{ item.sale }}</div>
                     </div>
                 </div>
             </div>
@@ -49,37 +37,27 @@
 </template>
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { getHomeContent } from '../apic/homes'
-import { type getHomeC } from '../typings'
-import { ref, nextTick } from 'vue';
+import { getHomeContentTwo } from '../apic/homes'
+import { type ContentTwoList } from '../typings'
+import { ref, nextTick,watch } from 'vue';
 const router = useRouter();
 
 // const list = ref([]);
-const getHomeC = ref<Array<getHomeC>>([])
+const ContTwoList = ref<Array<ContentTwoList>>([])
 const loading = ref(false);
 const finished = ref(false);
-const count = ref(Math.random() * 2000)
+const count = ref(3)
 
-const props = defineProps(['getHomeC'])
-function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
-    router.push({
-        name: 'livePlayback',
-        params: {
-            itemUrlId: itemUrlId,
-            actorUrlId: actorUrlId,
-            explainId: explainId
-        }
-    })
-}
-const onLoad = async () => {
+const props = defineProps(['pid'])
+
+// 获取数据
+async function fuc(pid:string){
     // 异步更新数据
-    let HomeContentData: any = await getHomeContent(count.value);//第二页数据
-    // console.log(1111)
-    for (let i = 0; i < HomeContentData.data.list.length; i++) {
-        getHomeC.value.push(HomeContentData.data.list[i]);
+    let HomeContentData: any = await getHomeContentTwo(pid,count.value);//第二页数据
+    for (let i = 0; i < HomeContentData.result.wall.docs.length; i++) {
+        ContTwoList.value.push(HomeContentData.result.wall.docs[i]);
     }
-    // getHomeC.value=HomeContentData.data.list
-    // console.log('首页内容', getHomeC.value);
+    console.log(ContTwoList)
     // 加载状态结束
     loading.value = false;
 
@@ -88,8 +66,23 @@ const onLoad = async () => {
         loading.value = false
         count.value++;
     })
-};
+}
 
+const onLoad = async () => {
+    console.log(22,props.pid)
+    fuc(props.pid)
+};
+// 监听路由变化，来跳转页面
+watch(() => props.pid,
+    (newVa, oldVal) => {
+        console.log(newVa, oldVal)
+        if (newVa.pid !== '666') {
+            console.log(3333,props.pid)
+            fuc(newVa.pid);
+        }
+    },
+    { immediate: true }
+)
 
 </script>
 
@@ -121,19 +114,8 @@ const onLoad = async () => {
         border-top-left-radius: 5px;
     }
 
-    // 播放
-    .Play {
-        position: absolute;
-        right: 5px;
-        top: 2px;
-    }
-
-    .Play img {
-        width: 25px;
-    }
-
     // 头像部分
-    .headImage {
+    .sale {
         position: absolute;
         left: 10px;
         bottom: 10px;
@@ -141,6 +123,8 @@ const onLoad = async () => {
         display: flex;
         align-items: center;
         font-size: 10px;
+        background-color: #ccc;
+        padding: 5px 10px;
 
         img {
             width: 13%;
@@ -148,17 +132,6 @@ const onLoad = async () => {
             border-radius: 50%;
             margin-right: 5px;
             border: 1px solid #fff;
-        }
-    }
-
-    // 直播同价
-    .liveBroadcastAtTheSamePrice {
-        position: absolute;
-        top: 0;
-        left: 0px;
-
-        img {
-            width: 40px;
         }
     }
 
@@ -211,6 +184,9 @@ const onLoad = async () => {
         .decimalTwo {
             margin-left: -1px;
         }
+    }
+    .cafv{
+        color:black;
     }
 }
 </style>
