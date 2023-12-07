@@ -14,6 +14,7 @@ import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
 import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
 import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
+import ModuleHome from '../views/HomeChildView/ModuleHome.vue'
 
 
 // 在路由中引入pinia
@@ -117,6 +118,11 @@ const router = createRouter({
       path: '/product-list',
       name: "productList",
       component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
+    },
+    {
+      path: '/moduleHome',
+      name: "moduleHome",
+      component: ModuleHome
     }
 
   ]
