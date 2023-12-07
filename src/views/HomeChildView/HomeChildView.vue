@@ -79,6 +79,8 @@ async function fn(pid: string) {
 onMounted(async () => {
     // console.log('pid', pid)
     //首页数据(热门)
+    console.log("pid76",pid);
+    
     if (pid === '666') {
         let homeTwoNavMenu: any = await getHomeNavigation();
         let dataArr = await getHomeModuleRow();
