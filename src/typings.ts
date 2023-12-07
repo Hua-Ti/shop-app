@@ -4,7 +4,7 @@
         export interface live.....{}
 */
 
-// 首页小导航 （数组（字符串））
+// 首页二级导航 （数组（字符串））
 export interface HomeNavigation {
     data: {
         117330: {
@@ -34,7 +34,7 @@ export interface List {
 export interface item{
     [proName:string]:any
 }
-
+// 首页热门模块
 // 首页小导航 （数组（字符串））
 export interface HomeTopNav {
     image: string
@@ -91,6 +91,43 @@ export interface getHomeC {
         img: string
     }>
 }
+
+// 首页除热门模块的其他页面
+//首页推荐模块
+export interface recommend{
+    data:{
+        list:Array<recommendList>
+    }
+}
+export interface recommendList{
+    _material_end_time:string
+    title:string
+    startTime?:number
+    image:string
+    _material_start_time:string
+    sort?:string
+    endTime?:string
+    _system_record_entry_id:string
+}
+// 首页内容模块
+export interface ContentTwo{
+    result:{
+        wall:{
+            docs:Array<ContentTwoList>
+        }
+    }
+}
+export interface ContentTwoList{
+    img:string
+    iid:string
+    title:string
+    price:number
+    sale:number
+    cafv:string
+    //查找类似商品（网页）
+    similarityUrl:string
+}
+
 
 
 // live-data相关配置

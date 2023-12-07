@@ -7,12 +7,12 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    HomeRecommend: typeof import('./src/components/homeRecommend.vue')['default']
     HomeTwoModule: typeof import('./src/components/homeTwoModule.vue')['default']
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
     LivePlaybackComponent: typeof import('./src/components/LivePlaybackComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ShopComponent: typeof import('./src/components/ShopComponent.vue')['default']
     Shopping: typeof import('./src/components/Shopping.vue')['default']
     VanAddressEdit: typeof import('vant/es')['AddressEdit']
     VanAddressList: typeof import('vant/es')['AddressList']
@@ -35,11 +35,10 @@ declare module 'vue' {
     VanSearch: typeof import('vant/es')['Search']
     VanSlider: typeof import('vant/es')['Slider']
     VanSubmitBar: typeof import('vant/es')['SubmitBar']
-    VanSwipeCell: typeof import('vant/es')['SwipeCell']
-    VanSwitch: typeof import('vant/es')['Switch']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
     VanUploader: typeof import('vant/es')['Uploader']
+    WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
   }
 }

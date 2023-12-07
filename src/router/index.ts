@@ -10,10 +10,13 @@ import SearchView from '../views/SearchView.vue'
 import HomePage from '../views/UserViewChildren/HomePage.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
-import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
-import AddressManagement from '../views/AddressManagement.vue'
+import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
+import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
 import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
+import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
+import AddressManagement from '../views/AddressManagement.vue'
+
 
 // 在路由中引入pinia
 import pinia from '../stores/store'

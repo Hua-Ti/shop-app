@@ -1,4 +1,4 @@
-<!-- 首页二级模块(热门模块) -->
+<!-- 首页二级模块(除热门模块之外的页面) -->
 <template>
     <div class="home-nav">
         <div class="home-nav-tab">

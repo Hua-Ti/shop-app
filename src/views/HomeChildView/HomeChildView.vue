@@ -1,6 +1,7 @@
 <template>
-    <!-- 首页二级页面 -->
-    <div class="homeChild">
+    <!-- 首页二级页面（热门模块） -->
+    <!-- 热门 -->
+    <div class="homeChild" v-if="route.query.pid === '666' || route.query.pid==undefined">
         <!-- 首页二级模块 -->
         <homeTwoModule :homeNav="homeNav" />
 
@@ -23,50 +24,88 @@
             </div>
         </div>
         <!-- 瀑布流内容 -->
+        <!-- <keep-alive> -->
+        <WaterfallFlow />
+        <!-- </keep-alive> -->
+    </div>
+    <!-- 除了热门之外的 -->
+    <div class="homeChild" v-if="route.query.pid !== '666'">
+        <!-- 首页二级模块 -->
+        <homeRecommend :homeNav="RecommendNav" />
+        <!-- 瀑布流内容 -->
         <keep-alive>
-            <WaterfallFlow />
+            <waterfallFlowTwo :pid="pid"/>
         </keep-alive>
     </div>
+    <!-- <router-view /> -->
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
-import { useRoute,useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import WaterfallFlow from '@/components/WaterfallFlowView.vue';
 import homeTwoModule from '@/components/homeTwoModule.vue';
+import homeRecommend from '@/components/homeRecommend.vue';
+import waterfallFlowTwo from '@/components/waterfallFlowTwo.vue';
 
-import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeNavigation } from '../../apic/homes'
-import { type List, type HomeTopNav, type gettimeRob, type gettimeRobItem, type HomeNavigation } from '../../typings'
+
+import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeNavigation, getHomeModuleRowTwo } from '../../apic/homes'
+import { type List, type HomeTopNav, type gettimeRob, type gettimeRobItem, type recommendList } from '../../typings'
 const router = useRouter();
-const route=useRoute();
-let keyWord = ref('');
-// let count = ref(Math.random() * 2000)
+const route = useRoute();
+// 热门页面
 const homeTwoNav = ref<Array<List>>([])
 const homeNav = ref<Array<HomeTopNav>>([])
 const TimeRob = ref<Array<gettimeRob>>([])
 const timeRobItem = ref<Array<gettimeRobItem>>([])
-const active = ref(0)
+
+// 非热门页面
+const RecommendNav = ref<Array<recommendList>>([])
 
 // 点击跳转相关
 //跳购买页面
 function shoping() {
     router.push({ name: 'shop' })
 }
-const pid = router.currentRoute.value.query.pid
-onMounted(async () => {
-    console.log('pid', pid)
-    //首页数据
-    let homeTwoNavMenu: any = await getHomeNavigation();
-    let dataArr = await getHomeModuleRow();
-    let dataTime = await gettimeLimitedQuickGrab();
-    let dataProg: any = await getTimeProg();
+const pid = route.query.pid?route.query.pid:'666';
 
-    homeTwoNav.value = homeTwoNavMenu.data[117330].list
-    homeNav.value = dataArr
-    TimeRob.value = dataTime
-    timeRobItem.value = dataProg.data?.itemList.splice(0, 3)
-    // console.log(homeTwoNav)
+// 获取非热门页面数据
+async function fn(pid: string) {
+    let RecommendData = await getHomeModuleRowTwo(pid);
+    RecommendNav.value = RecommendData.data?.list;
+    // console.log(RecommendNav)
+}
+
+onMounted(async () => {
+    // console.log('pid', pid)
+    //首页数据(热门)
+    console.log("pid76",pid);
+    
+    if (pid === '666') {
+        let homeTwoNavMenu: any = await getHomeNavigation();
+        let dataArr = await getHomeModuleRow();
+        let dataTime = await gettimeLimitedQuickGrab();
+        let dataProg: any = await getTimeProg();
+
+        homeTwoNav.value = homeTwoNavMenu.data[117330].list
+        homeNav.value = dataArr
+        TimeRob.value = dataTime
+        timeRobItem.value = dataProg.data?.itemList.splice(0, 3)
+    } else {
+        //首页数据(非热门)
+        fn(pid);
+    }
 })
+// 监听路由变化，来跳转页面
+watch(() => route.query,
+    (newVa, oldVal) => {
+        console.log(newVa, oldVal)
+        if (newVa.pid !== '666') {
+            fn(newVa.pid);
+        }
+    },
+    { immediate: true }
+)
 
 
 
