@@ -1,6 +1,6 @@
 <!-- 瀑布流（热门模块） -->
 <template>
-    <div class="waterfallFlow">
+    <div class="waterfallFlowTwo">
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item" >
                 <div v-masonry-tile class="item" v-for="(item, index) in ContTwoList" :key="index"
@@ -88,7 +88,7 @@ watch(() => props.pid,
 
 <style lang="scss">
 // 瀑布流内容
-.waterfallFlow {
+.waterfallFlowTwo {
     padding: 10px 0px 10px 6px;
     box-sizing: border-box;
     width: 100vw;
@@ -173,20 +173,21 @@ watch(() => props.pid,
             margin-bottom: 1px;
         }
 
-        .sale {
+        .cafv {
             font-size: 10px;
             padding: 3px 6px;
             background-color: #ffecef;
             border-radius: 10px;
             text-align: center;
+            color:black;
         }
 
         .decimalTwo {
             margin-left: -1px;
         }
     }
-    .cafv{
-        color:black;
-    }
+    // .cafv{
+    //     color:black;
+    // }
 }
 </style>

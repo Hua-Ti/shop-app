@@ -182,6 +182,7 @@ const onLoad = async () => {
         padding: 3px 5px 5px;
         color: #ff4668;
         font-size: 12px;
+        width:100%;
 
         .livePrice {
             display: flex;
