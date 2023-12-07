@@ -1,48 +1,47 @@
 <!-- 瀑布流 -->
 <template>
     <div class="waterfallFlow">
-        <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <!-- <van-cell v-for="item in list" :key="item" :title="item" /> -->
-
-
-            <div class="item" v-for="(item, index) in getHomeC" :key="index"
-                @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
-                <div class="picture">
-                    <img class="bigPic" :src="item.itemImage" alt="">
-                    <div class="liveBroadcastAtTheSamePrice">
-                        <img :src="item.lefttop_taglist[0]?.img" alt="">
+        <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item" >
+                <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
+                    @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
+                    <div class="picture">
+                        <img class="bigPic" :src="item.itemImage" alt="">
+                        <div class="liveBroadcastAtTheSamePrice">
+                            <img :src="item.lefttop_taglist[0]?.img" alt="">
+                        </div>
+                        <!-- 头像 -->
+                        <div class="headImage">
+                            <img :src="item.actorAvatar" alt="">
+                            <span>{{ item.actorName }}</span>
+                        </div>
+                        <!-- 播放 -->
+                        <div class="Play">
+                            <img src="../assets/images/Play.png" alt="">
+                        </div>
                     </div>
-                    <!-- 头像 -->
-                    <div class="headImage">
-                        <img :src="item.actorAvatar" alt="">
-                        <span>{{ item.actorName }}</span>
-                    </div>
-                    <!-- 播放 -->
-                    <div class="Play">
-                        <img src="../assets/images/Play.png" alt="">
-                    </div>
-                </div>
-                <p class="title">{{ item.title }}</p>
-                <!-- 价格 -->
-                <div class="price">
-                    <div class="livePrice">
-                        <div>
-                            ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
-                            <span v-if="Math.floor(
-                                (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
-                            )">.{{ Math.floor(
+                    <p class="title">{{ item.title }}</p>
+                    <!-- 价格 -->
+                    <div class="price">
+                        <div class="livePrice">
+                            <div>
+                                ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
+                                <span v-if="Math.floor(
+                                    (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
+                                )">.{{ Math.floor(
     (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
 ) }}
-                                <span class="decimalTwo"
-                                    v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                    {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
-                                        10) * 100) }}
+                                    <span class="decimalTwo"
+                                        v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
+                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
+                                            10) * 100) }}
+                                    </span>
                                 </span>
-                            </span>
+                            </div>
+                            <img :src="item.bottomIcon" alt="">
                         </div>
-                        <img :src="item.bottomIcon" alt="">
+                        <div class="sale">{{ item.sale }}</div>
                     </div>
-                    <div class="sale">{{ item.sale }}</div>
                 </div>
             </div>
         </van-list>
@@ -63,6 +62,7 @@ const count = ref(Math.random() * 2000)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
+    console.log(actorUrlId)
     router.push({
         name: 'livePlayback',
         params: {
@@ -74,16 +74,13 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
 }
 const onLoad = async () => {
     // 异步更新数据
-    // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    // setTimeout(async () => {
-    // count.value++;
     let HomeContentData: any = await getHomeContent(count.value);//第二页数据
-    console.log(1111)
+    // console.log(1111)
     for (let i = 0; i < HomeContentData.data.list.length; i++) {
         getHomeC.value.push(HomeContentData.data.list[i]);
     }
     // getHomeC.value=HomeContentData.data.list
-    console.log('首页内容', getHomeC.value);
+    // console.log('首页内容', getHomeC.value);
     // 加载状态结束
     loading.value = false;
 
@@ -92,10 +89,7 @@ const onLoad = async () => {
         loading.value = false
         count.value++;
     })
-    // finished.value = false;
-    // }, 1000);
 };
-// const f =
 
 
 </script>
@@ -104,12 +98,16 @@ const onLoad = async () => {
 // 瀑布流内容
 .waterfallFlow {
     margin: 10px;
-    column-count: 2;
-    column-gap: 10px;
+    width: 100vw;
 
     .item {
         margin-bottom: 10px;
+        width: 49%;
     }
+    .item:nth-child(n+1){
+        padding-right: 10px;
+    }
+   
 
     .picture {
         position: relative;

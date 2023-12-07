@@ -15,6 +15,7 @@ import AddressManagement from '../views/AddressManagement.vue'
 import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
 import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
+import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
 
 // 在路由中引入pinia
 import pinia from '../stores/store'
@@ -28,7 +29,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      children: [
+        {
+          path: '/',
+          name: 'homechild',
+          component: HomeChildView
+        }
+      ]
     },
     {
       path: '/attention',
