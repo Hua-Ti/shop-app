@@ -27,19 +27,14 @@ export const accountNumber = defineStore('counter', () => {
   const accountName = ref('');
   function changeaccountName(userid: string) {
     accountName.value = userid;
-
-    // console.log(accountName.value)
   }
   return { accountName, changeaccountName }
 }, { persist: true })
 
 
-export const getPicture = defineStore('counter', () => {
-  const picture = '../assets/images/user_touxiang.png'
-  function changePicture() {
-    // accountName.value = userid;
-
-    // console.log(accountName.value)
-  }
-  return { picture, changePicture }
-})
+// export const getPicture = defineStore('counter', () => {
+//   const picture = ref('');
+//   function changePicture() {
+//   }
+//   return { picture, changePicture }
+// }, { persist: true })
