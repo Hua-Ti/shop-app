@@ -1,59 +1,47 @@
 <template>
     <div class="home">
-        <!-- 搜索 -->
-        <div class="search" @click="gotoSearch">
-            <van-search v-model="keyWord" readonly show-action placeholder="冬季连衣裙搭配" shape="round" :clearable="false">
-                <template #action>
-                    <van-icon @click.stop="gotoShop" name="shopping-cart-o" size="20" />
-                </template>
-            </van-search>
-        </div>
-
-        <!-- 首页二级模块 -->
-        <homeTwoModule :homeNav="homeNav" />
-        <!-- 限时快抢模块 -->
-        <div class="goodList">
-            <!-- 限时快抢 -->
-            <div class="timeLimit">
-                <p>限时快抢 <span>></span></p>
-                <div class="timeLimit-item">
-                    <div v-for="(i, index) in timeRobItem" :key="index">
-                        <img :src="i.cover" alt="111">
-                        <p>￥<span>{{ Math.floor(i.livePrice) }}</span>.31</p>
-                    </div>
-                </div>
+        <div class="head">
+            <!-- 搜索 -->
+            <div class="search" @click="gotoSearch">
+                <van-search v-model="keyWord" readonly show-action placeholder="冬季连衣裙搭配" shape="round" :clearable="false">
+                    <template #action>
+                        <van-icon @click.stop="gotoShop" name="shopping-cart-o" size="20" />
+                    </template>
+                </van-search>
             </div>
-            <!-- 女装尖货榜 -->
-            <div @click="shoping" class='topGoodsListOfWomen'>
-                <p>女装尖货榜 <span>></span></p>
-                <img v-if="TimeRob[2]" :src="TimeRob[2]?.backgroundImage">
+
+            <!-- 二级导航 -->
+            <div class="head-top">
+                <van-tabs v-model:active="active" v-if="homeTwoNav.length>=1">
+                    <template>
+                        <van-tab :to="{ name: 'homechild', query: { pid: 666 } }" title="热门"></van-tab>
+                    </template>
+                    <van-tab :to="{ name: 'homechild', query: { pid: h.maitKey } }" v-for="(h, index) in homeTwoNav"
+                        :key="index" :title="h.title">
+                    </van-tab>
+                </van-tabs>
             </div>
         </div>
-        <!-- 瀑布流内容 -->
-        <!-- <WaterfallFlow :getHomeC="getHomeC"/> -->
-        <WaterfallFlow />
 
+
+        <router-view />
     </div>
 </template>
-
 <script setup lang="ts">
-import { ref, onMounted  } from "vue";
-import { useRouter } from "vue-router";
-import WaterfallFlow from '@/components/WaterfallFlowView.vue';
-import homeTwoModule from '@/components/homeTwoModule.vue';
 
-
-import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeContent } from '../apic/homes'
-import { type HomeTopNav, type gettimeRob, type gettimeRobItem, type getHomeC } from '../typings'
+import { ref, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { getHomeNavigation } from '../apic/homes'
+import { type List, type item } from '../typings'
 const router = useRouter();
+const route = useRoute();
 let keyWord = ref('');
+// 导航下标数据
+const activeIndex: item = {'666':0}
 // let count = ref(Math.random() * 2000)
+const homeTwoNav = ref<Array<List>>([])
 
-const homeNav = ref<Array<HomeTopNav>>([])
-const TimeRob = ref<Array<gettimeRob>>([])
-const timeRobItem = ref<Array<gettimeRobItem>>([])
-// const getHomeC = ref<Array<getHomeC>>([])
-
+const active = ref(0)
 
 // 点击跳转相关
 //跳购物车页面
@@ -64,164 +52,106 @@ function gotoShop() {
 function gotoSearch() {
     router.push({ name: 'search' })
 }
-//跳购买页面
-function shoping() {
-    router.push({ name: 'shop' })
-}
 
 onMounted(async () => {
-    //首页导航
-    let dataArr = await getHomeModuleRow();
-    let dataTime = await gettimeLimitedQuickGrab();
-    let dataProg: any = await getTimeProg();
-    // let HomeContentData: any = await getHomeContent();//第二页数据
+    //首页数据
+    let homeTwoNavMenu: any = await getHomeNavigation();
+    homeTwoNav.value = homeTwoNavMenu.data[117330].list;
+    let home = homeTwoNav.value
+    for (let i = 0; i < home.length; i++) {
+        let list = home[i].maitKey;
+        activeIndex[list] = i+1;
+    }
+    // console.log('下标', activeIndex);
+    // 路由下标
+    let pidd:any = route.query.pid;
+    // console.log('路由下标', pidd)
+    let index = activeIndex[pidd];
+    active.value = index;
+    // console.log('index', index)
+    // console.log('高亮下标', active.value)
 
     // console.log('首页导航数据', dataArr)
     // console.log('首页好货数据', dataTime)
     // console.log('首页限时抢数据', dataProg.data.itemList)
     // console.log('首页内容', HomeContentData.data.list)
 
-    homeNav.value = dataArr
-    TimeRob.value = dataTime
-    timeRobItem.value = dataProg.data.itemList.splice(0, 3)
+    // homeNav.value = dataArr
+    // TimeRob.value = dataTime
+    // timeRobItem.value = dataProg.data.itemList.splice(0, 3)
     // getHomeC.value = HomeContentData.data.list
 })
 
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .home {
     font-size: 16px;
 
+    .head {
+        background: rgb(220, 157, 167);
+        background: linear-gradient(180deg, rgb(232, 188, 195) 0%, rgba(225, 148, 160, 0.978) 100%);
+        color: #fff;
+        height:97.99px;
+    }
+
+    .head-top {
+        width: 96vw;
+        // background-color: aqua;
+    }
+
     // 头部搜索
-    .search {
-        //     display: flex;
-        //     justify-content: space-between;
-        //     align-items: center;
-        //     width: 100vw;
-        //     height: 45px;
-        //     padding: 7.5px 8px;
-        //     box-sizing: border-box;
-        //     // background-color: rgb(255, 63, 120);
-        //     // background-color: #d9919a;
-        //     background: rgb(220, 157, 167);
-        //     background: linear-gradient(180deg, rgba(220, 157, 167, 1) 0%, rgba(210, 119, 132, 0.9781162464985994) 100%);
-        //     color: #fff;
+    .van-search,
+    .van-tabs__nav {
+        background-color: transparent;
+        color: #fff;
+    }
 
-        //     .van-search__field {
-        //         align-items: center;
-        //     }
+    .van-tabs--line .van-tabs__wrap {
+        margin-left: -10px !important;
+    }
 
-        //     .van-search {
-        //         padding: 2px 4px;
-        //     }
+    .van-search__field {
+        height: 27px !important;
+    }
 
-        //     .van-search__field {
-        //         padding: 2px 5px;
-        //     }
+    .van-tabs__nav {
+        background: transparent !important;
+        margin-left: 5px;
+        width: 100%;
+    }
 
-        //     .van-search__content--round {
-        //         height: 30px;
-        //     }
+    .van-search__action .van-icon {
+        color: #f3e9e9;
+    }
 
-        //     .search-nav {
-        //         width: 80vw;
-        //     }
+    .van-tabs__line {
+        bottom: 0.5rem !important;
+        height: 1.5px;
+        width: 20px;
+        background-color: white;
+    }
 
-        //     .Sort {
-        //         font-size: 20px;
-        //     }
+    .head-top {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 13px;
 
+        .van-tab--active {
+            color: white;
+            font-size: 15px;
+
+        }
+
+        .van-tab {
+            color: rgba(255, 255, 255, .8)
+        }
+
+        .van-tabs__nav--line {
+            box-sizing: border-box;
+        }
     }
 
 
-    // 限时快抢模块
-    .goodList {
-        width: 100vw;
-        padding: 10px;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: space-between;
-
-        .timeLimit {
-            width: 63vw;
-            height: 142px;
-            background-color: #f7eee2;
-            border-radius: 10px;
-        }
-
-        .timeLimit>p {
-            font-size: 14px;
-            font-weight: 800;
-            padding: 10px;
-        }
-
-        .timeLimit>p>span {
-            font-family: '仿宋';
-            font-size: 13;
-        }
-
-        .timeLimit-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 10px;
-            height: 59%;
-        }
-
-        .timeLimit-item img {
-            width: 100%;
-            height: 100%;
-        }
-
-        .timeLimit-item>div {
-            width: 30%;
-            height: 84%;
-            background-color: rgb(250, 227, 231);
-            border-radius: 10px;
-        }
-
-        .timeLimit-item p {
-            font-size: 12px;
-            text-align: center;
-            margin-top: 5px;
-        }
-
-        .timeLimit-item span {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .topGoodsListOfWomen {
-            width: 30vw;
-            height: 142px;
-            background-color: #f2d2d4;
-            border-radius: 10px;
-        }
-
-        .topGoodsListOfWomen p {
-            font-size: 16px;
-            font-weight: 600;
-            margin: 10px;
-            font-family: '仿宋';
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .topGoodsListOfWomen span {
-            font-size: 13px;
-            margin-left: 5px;
-        }
-
-        .topGoodsListOfWomen img {
-            display: inline-block;
-            border-radius: 5px;
-            width: 90%;
-            height: 66%;
-            // background-color: rgb(250, 152, 230);
-            margin: 0 6px 2px 6px;
-        }
-    }
 }
 </style>

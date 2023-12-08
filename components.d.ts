@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    HomeRecommend: typeof import('./src/components/homeRecommend.vue')['default']
     HomeTwoModule: typeof import('./src/components/homeTwoModule.vue')['default']
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
     LivePlaybackComponent: typeof import('./src/components/LivePlaybackComponent.vue')['default']
@@ -28,6 +29,7 @@ declare module 'vue' {
     VanIcon: typeof import('vant/es')['Icon']
     VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
+    VanLoading: typeof import('vant/es')['Loading']
     VanNavBar: typeof import('vant/es')['NavBar']
     VanPopup: typeof import('vant/es')['Popup']
     VanPullRefresh: typeof import('vant/es')['PullRefresh']
@@ -37,6 +39,7 @@ declare module 'vue' {
     VanTabs: typeof import('vant/es')['Tabs']
     VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
     VanUploader: typeof import('vant/es')['Uploader']
+    WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
   }
 }

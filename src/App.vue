@@ -11,7 +11,7 @@ import mySrc from './assets/icons/my.svg';
 <template>
   <div class="head">
     <div class="nav">
-      <RouterLink :to="{ name: 'home' }" v-slot="{ navigate, isActive, isExactActive }" custom>
+      <RouterLink :to="{ name: 'homechild' }" v-slot="{ navigate, isActive, isExactActive }" custom>
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
@@ -24,7 +24,7 @@ import mySrc from './assets/icons/my.svg';
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
-          <van-image width="22" height="22" :src="attentionSrc"/>
+          <van-image width="22" height="22" :src="attentionSrc" />
 
           <span class="nav-title">关注</span>
         </div>
@@ -82,6 +82,7 @@ import mySrc from './assets/icons/my.svg';
   align-items: center;
 
   z-index: 10;
+
   .router-link-active {
     position: relative;
     // color: var(--subject-color);
