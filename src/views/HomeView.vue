@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <div class="head">
+        <div class="head" :class="{ headTwo: route.query.pid == '3627' }">
             <!-- 搜索 -->
             <div class="search" @click="gotoSearch">
                 <van-search v-model="keyWord" readonly show-action placeholder="冬季连衣裙搭配" shape="round" :clearable="false">
@@ -12,7 +12,7 @@
 
             <!-- 二级导航 -->
             <div class="head-top">
-                <van-tabs v-model:active="active" v-if="homeTwoNav.length>=1">
+                <van-tabs v-model:active="active" v-if="homeTwoNav.length >= 1">
                     <template>
                         <van-tab :to="{ name: 'homechild', query: { pid: 666 } }" title="热门"></van-tab>
                     </template>
@@ -22,7 +22,6 @@
                 </van-tabs>
             </div>
         </div>
-
 
         <router-view />
     </div>
@@ -37,7 +36,7 @@ const router = useRouter();
 const route = useRoute();
 let keyWord = ref('');
 // 导航下标数据
-const activeIndex: item = {'666':0}
+const activeIndex: item = { '666': 0 }
 // let count = ref(Math.random() * 2000)
 const homeTwoNav = ref<Array<List>>([])
 
@@ -60,26 +59,15 @@ onMounted(async () => {
     let home = homeTwoNav.value
     for (let i = 0; i < home.length; i++) {
         let list = home[i].maitKey;
-        activeIndex[list] = i+1;
+        activeIndex[list] = i + 1;
     }
     // console.log('下标', activeIndex);
     // 路由下标
-    let pidd:any = route.query.pid;
+    let pidd: any = route.query.pid;
     // console.log('路由下标', pidd)
     let index = activeIndex[pidd];
     active.value = index;
-    // console.log('index', index)
-    // console.log('高亮下标', active.value)
 
-    // console.log('首页导航数据', dataArr)
-    // console.log('首页好货数据', dataTime)
-    // console.log('首页限时抢数据', dataProg.data.itemList)
-    // console.log('首页内容', HomeContentData.data.list)
-
-    // homeNav.value = dataArr
-    // TimeRob.value = dataTime
-    // timeRobItem.value = dataProg.data.itemList.splice(0, 3)
-    // getHomeC.value = HomeContentData.data.list
 })
 
 
@@ -90,14 +78,20 @@ onMounted(async () => {
     font-size: 16px;
 
     .head {
-        background: rgb(220, 157, 167);
+        // background: rgb(220, 157, 167);
         background: linear-gradient(180deg, rgb(232, 188, 195) 0%, rgba(225, 148, 160, 0.978) 100%);
         color: #fff;
-        height:97.99px;
+        height: 97.99px;
+    }
+
+    .headTwo {
+        // background-color: burlywood !important;
+        // background: linear-gradient(180deg, rgb(233, 213, 136) 0%, #b17f6f 100%);
+        height: 97.99px;
     }
 
     .head-top {
-        width: 96vw;
+        width: 95vw;
         // background-color: aqua;
     }
 

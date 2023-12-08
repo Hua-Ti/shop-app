@@ -35,9 +35,12 @@ declare module 'vue' {
     VanSearch: typeof import('vant/es')['Search']
     VanSlider: typeof import('vant/es')['Slider']
     VanSubmitBar: typeof import('vant/es')['SubmitBar']
+    VanSwipe: typeof import('vant/es')['Swipe']
+    VanSwipeItem: typeof import('vant/es')['SwipeItem']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
     VanUploader: typeof import('vant/es')['Uploader']
+    WaterfallFlowShree: typeof import('./src/components/waterfallFlowShree.vue')['default']
     WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
   }
