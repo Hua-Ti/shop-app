@@ -324,3 +324,29 @@ export interface leftbottomTagList {
     bgColor: string,
     content: string,
 }
+
+export interface detailList {
+    data:{
+        result:{
+            topImages:Array<string>
+            normalPrice:{
+                priceTags:[{
+                    text:string,
+                }],
+                nowPrice:string,
+                currency:string,
+                sales:string,
+            },
+            skuInfo:{
+                title:string,
+            },
+            detailInfo:{
+                desc:string,
+                detailImage:Array<{
+                    key:string,
+                    list:Array<string>,
+                }>, 
+            }
+        }
+    }
+}

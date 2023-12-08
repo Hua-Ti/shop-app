@@ -21,11 +21,12 @@
             </div>
             <div class="section">
                 <span>区间(元)</span>
-                <input type="number" :placeholder="option.minPrice.toString()">
+                <input type="number" v-model="option.minPrice" :placeholder="option.minPrice.toString()">
                 <span>-</span>
-                <input type="number" :placeholder="option.maxPrice.toString()">
+                <input type="number" v-model="option.maxPrice" :placeholder="option.maxPrice.toString()">
             </div>
-            <van-button @click="sendMeyeyCondition" color="linear-gradient(to right, #ff6034, #ee0a24)">
+            <van-button @click="changeMoney(option.minPrice.toString(), option.maxPrice.toString())"
+                color="linear-gradient(to right, #ff6034, #ee0a24)">
                 确认
             </van-button>
         </van-popup>
@@ -34,13 +35,14 @@
                 @load="onLoad">
                 <div v-for="item in wallList" :key="item.tradeItemId">
                     <shopping-view :tradeItemId="item.tradeItemId" :img="item.img" :title="item.title"
-                        :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" />
+                        :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" @click="projectDetailPage(item.tradeItemId)" />
                 </div>
             </van-list>
+            <van-back-top right="13vw" bottom="10vh" />
         </div>
         <div v-else>
             <div class="noshopping">
-                <img src="../assets/images/noShopping.png">
+                <img src="../../assets/images/noShopping.png">
                 <p>没有相关的商品结果哦 ~~</p>
             </div>
         </div>
@@ -77,16 +79,19 @@ let option = reactive({
 const loading = ref(false);
 const finished = ref(false);
 
+// 跳转到商品详情页
+const projectDetailPage = (id:string)=>{
+    router.push({name:"project-detail",query:{id:id}});
+}
 const onLoad = async () => {
     // 异步更新数据
-    option.page=option.page+1;
-    console.log(option.page);
+    option.page = option.page + 1;
     let data = await getKeywordSearch(option);
     wallList.value = [...wallList.value, ...data.wall.docs];
     nextTick(() => {
-        loading.value = false ;
+        loading.value = false;
     });
-    if(data.wall.docs.length==0){
+    if (data.wall.docs.length == 0) {
         finished.value = true;
     }
 };
@@ -112,8 +117,11 @@ onMounted(async () => {
 
 const changeCondition = async (name: string) => {
     if (activeName.value != name) {
-        activeName.value = name;
+        window.scroll({
+            top: 0,
+        })
         wallList.value = [];
+        activeName.value = name;
         option.sort = name;
         option.page = 1;
         let data = await getKeywordSearch(option);
@@ -123,9 +131,6 @@ const changeCondition = async (name: string) => {
     }
 }
 
-const sendMeyeyCondition = async () => {
-    console.log(111);
-}
 </script>
 
 <style lang="scss" scoped>
@@ -189,7 +194,7 @@ const sendMeyeyCondition = async () => {
         top: 0;
         height: 50px;
         font-size: 13px;
-        background: linear-gradient(180deg, rgba(255, 69, 105, 1) 34%, rgba(255, 255, 255, 1) 100%);
+        background: linear-gradient(0deg, rgba(255, 69, 105, 1) 35%, rgba(255, 0, 0, 1) 88%);
         z-index: 10;
 
         input {

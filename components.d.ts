@@ -14,6 +14,10 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     ShopComponent: typeof import('./src/components/ShopComponent.vue')['default']
     Shopping: typeof import('./src/components/Shopping.vue')['default']
+    VanActionBar: typeof import('vant/es')['ActionBar']
+    VanActionBarButton: typeof import('vant/es')['ActionBarButton']
+    VanActionBarIcon: typeof import('vant/es')['ActionBarIcon']
+    VanBackTop: typeof import('vant/es')['BackTop']
     VanButton: typeof import('vant/es')['Button']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanCheckbox: typeof import('vant/es')['Checkbox']
@@ -31,6 +35,7 @@ declare module 'vue' {
     VanSlider: typeof import('vant/es')['Slider']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
+    VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
     VanUploader: typeof import('vant/es')['Uploader']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
   }
