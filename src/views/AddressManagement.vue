@@ -91,6 +91,8 @@ import { ref, computed, onMounted } from 'vue';
 import { listProps, showToast } from 'vant';
 import { areaList } from '@vant/area-data';
 import type { AddressEditInstance } from 'vant';
+import { getAddress } from '../stores/address'
+const addressNeirong = getAddress()
 const router = useRouter();
 const chosenAddressId = ref('');
 const show = ref(false);
@@ -102,12 +104,13 @@ const addressEditRef = ref<AddressEditInstance>();
 addressEditRef.value?.setAddressDetail('');
 const info = ref<Shuju>()
 
-//方法二的数据，没有用
+//方法二的数据
 const tel = ref('');
 const name = ref('');
 const diqu = ref('');
 const address = ref('');
 const checked = ref(false);
+const bianjiId = ref('')
 const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
 
 
@@ -132,43 +135,73 @@ onMounted(() => {
     addressList = JSON.parse(addressList);
     list.value = addressList
 })
-//编辑
+//编辑地址
 const compile = (list: any) => {
     if (list != '[]') {
         show.value = true;
-
         console.log(list)
         tel.value = list.tel
         name.value = list.name
         diqu.value = list.diqu;
         address.value = list.address;
         checked.value = list.isDefault
-        // console.log(chosenAddressId.value)
-        // console.log(list)
-        // info.value = list;
+        bianjiId.value = list.id
+
+        let addressList = localStorage.addressList || `[]`;
+        addressList = JSON.parse(addressList);
+        console.log(addressList)
+        let record = addressList.findIndex(
+            (item: any) => item.id == list.id
+        );
+        addressList = addressList.filter((item: any) => item.id != list.id)
+        list.value = addressList
+        localStorage.addressList = JSON.stringify(addressList);
+
+        console.log(addressList)
+        // console.log(record)
+        // for (let i = 0; i <= addressList.length; i++) {
+        //     const dianjide = addressList[i].id;
+        //     if (list.id == dianjide) {
+        //         console.log(i)
+        //     }
+        // }
+
 
     }
 }
 
-//打勾的默认地址
+//打勾的地址
 onMounted(() => {
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
-    if (addressList != '[]') {
+    if (addressList.length != 0) {
         console.log('我是第二个onMounted', addressList)
-        for (let i = 0; i <= addressList.length; i++) {
-            const last = addressList[addressList.length - 1].isDefault;
-            if (last) {
-                chosenAddressId.value = addressList[addressList.length - 1].id
+        let piniaAddress = localStorage.address || `[]`;
+        piniaAddress = JSON.parse(piniaAddress);
+        console.log('pinia存贮的地址', piniaAddress)
+        if (piniaAddress) {
+            console.log(111)
+            chosenAddressId.value = piniaAddress.id
+        } else {
+            for (let i = 0; i <= addressList.length; i++) {
+                const last = addressList[addressList.length - 1].isDefault;
+                if (last) {
+                    chosenAddressId.value = addressList[addressList.length - 1].id
+                }
             }
         }
+
     }
 })
 
 //切换打勾
 const daGou = (item: any) => {
-    console.log(item.id)
+    console.log(item)
     chosenAddressId.value = item.id
+    addressNeirong.name = item.name
+    addressNeirong.tel = item.tel
+    addressNeirong.address = item.address
+    addressNeirong.id = item.id
 }
 
 
@@ -183,7 +216,7 @@ const goLocation = () => {
 
 }
 
-//方法二的方法，没有用
+//方法二的方法
 const Changeadd = (value: any) => {
     console.log(value)
     changevalue.value = value
@@ -200,15 +233,17 @@ const addSave = () => {
             address: diqu.value + address.value,
             diqu: diqu.value,
             isDefault: changevalue.value,
-
         });
-
         console.log(addressList[addressList.length - 1].isDefault)
         for (let i = 0; i < addressList.length; i++) {
             const last = addressList[addressList.length - 1].isDefault;
 
             if (last) {
                 chosenAddressId.value = addressList[addressList.length - 1].id
+                addressNeirong.name = addressList[addressList.length - 1].name
+                addressNeirong.tel = addressList[addressList.length - 1].tel
+                addressNeirong.address = addressList[addressList.length - 1].address
+                addressNeirong.id = addressList[addressList.length - 1].id
                 for (let j = 0; j < addressList.length - 1; j++) {
                     addressList[j].isDefault = false;
                 }
@@ -228,16 +263,13 @@ const addSave = () => {
         address.value = ''
         diqu.value = ''
         checked.value = false
-
-        // }
-
     } else {
         showToast('信息没有填完整')
     }
 
 }
 
-//获取输入的数据
+//获取输入的数据,没有用
 const onSave = (val: any) => {
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
