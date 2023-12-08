@@ -145,6 +145,10 @@ const router = createRouter({
       path: '/moduleHome',
       name: "moduleHome",
       component: ModuleHome
+    },{
+      path:'/project-detail',
+      name:"project-detail",
+      component:()=>import("../views/ProductDetailsView.vue")
     }
 
   ]

@@ -57,7 +57,7 @@
         </div>
         <!-- 分割图 -->
         <div class="hp1" v-if="route.query.pid === '3627'">
-            <img src="hp1.webp" alt="">
+            <img src="/hp1.webp" alt="">
         </div>
         <!-- 瀑布流内容 -->
         <keep-alive>

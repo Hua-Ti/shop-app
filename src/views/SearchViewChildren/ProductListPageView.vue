@@ -7,35 +7,42 @@
             </span>
             <input type="text" :placeholder="keyWord" class="input">
         </div>
-        <van-tabs color="#ff3f78" v-model:active="active" @click-tab="onClickTab" class="tabber-nav">
-            <van-tab :title="item.title" :key="item.sortKey" v-for="item in titleList"></van-tab>
 
-            <van-tab title="价格" v-if="titleList.length">
-                <van-popup v-model:show="show" round style="width: 100%; height: 50%; padding: 10px;">
-                    <div class="price">
-                        <span v-for="item in priceList" key="item">{{ item.min }}-{{ item.max }}</span>
-                    </div>
-                    <div>
-                        <span>区间(元)</span>
-                        <input type="number">-
-                        <input type="number">
-                        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)">
-                            确认
-                        </van-button>
-                    </div>
-                </van-popup>
-            </van-tab>
-        </van-tabs>
-
-        <div v-if="wallList.length" class="shopping-details">
-            <div v-for="item in wallList" :key="item.tradeItemId">
-                <shopping-view :tradeItemId="item.tradeItemId" :img="item.img" :title="item.title"
-                    :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" />
+        <div class="tabble-nav">
+            <span v-for="item in titleList" @click="changeCondition(item.sortKey)"
+                :class="{ 'active': item.sortKey == activeName }" :key="item.sortKey">{{ item.title
+                }}</span>
+            <span @click="onClickTab" v-if="titleList.length">价格 <van-icon name="arrow-down" /></span>
+        </div>
+        <van-popup class="price-box" v-model:show="show" round style="width: 100%; height: 25%; padding: 10px;">
+            <div class="price">
+                <span v-for="item in priceList" key="item" @click="changeMoney(item.min, item.max)">{{ item.min }} -
+                    {{ item.max }}</span>
             </div>
+            <div class="section">
+                <span>区间(元)</span>
+                <input type="number" v-model="option.minPrice" :placeholder="option.minPrice.toString()">
+                <span>-</span>
+                <input type="number" v-model="option.maxPrice" :placeholder="option.maxPrice.toString()">
+            </div>
+            <van-button @click="changeMoney(option.minPrice.toString(), option.maxPrice.toString())"
+                color="linear-gradient(to right, #ff6034, #ee0a24)">
+                确认
+            </van-button>
+        </van-popup>
+        <div v-if="wallList.length">
+            <van-list v-model:loading="loading" class="shopping-details" :finished="finished" finished-text="没有更多了"
+                @load="onLoad">
+                <div v-for="item in wallList" :key="item.tradeItemId">
+                    <shopping-view :tradeItemId="item.tradeItemId" :img="item.img" :title="item.title"
+                        :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" @click="projectDetailPage(item.tradeItemId)" />
+                </div>
+            </van-list>
+            <van-back-top right="13vw" bottom="10vh" />
         </div>
         <div v-else>
             <div class="noshopping">
-                <img src="../assets/images/noShopping.png">
+                <img src="../../assets/images/noShopping.png">
                 <p>没有相关的商品结果哦 ~~</p>
             </div>
         </div>
@@ -43,19 +50,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from "vue"
+import { ref, onMounted, reactive, nextTick } from "vue"
 import { useRouter } from "vue-router";
 import { getKeywordSearch } from "../../apic/search"
 import { type sortFilterList, type priceFilterList, type wallDocsList } from "../../typings"
 import ShoppingView from "../../components/Shopping.vue"
 
 const router = useRouter();
-const active = ref(0);
 const show = ref(false);
 const onClickTab = () => {
     show.value = true;
 }
 
+const activeName = ref('pop');
 let titleList = ref<Array<sortFilterList>>([]);
 let priceList = ref<Array<priceFilterList>>([]);
 let wallList = ref<Array<wallDocsList>>([]);
@@ -69,6 +76,34 @@ let option = reactive({
 });
 
 
+const loading = ref(false);
+const finished = ref(false);
+
+// 跳转到商品详情页
+const projectDetailPage = (id:string)=>{
+    router.push({name:"project-detail",query:{id:id}});
+}
+const onLoad = async () => {
+    // 异步更新数据
+    option.page = option.page + 1;
+    let data = await getKeywordSearch(option);
+    wallList.value = [...wallList.value, ...data.wall.docs];
+    nextTick(() => {
+        loading.value = false;
+    });
+    if (data.wall.docs.length == 0) {
+        finished.value = true;
+    }
+};
+const changeMoney = async (min: string, max: string) => {
+    wallList.value = [];
+    show.value = false;
+    console.log(option.sort);
+    option.minPrice = Number(min);
+    option.maxPrice = Number(max);
+    let data = await getKeywordSearch(option);
+    wallList.value = data.wall.docs;
+}
 let keyWord = ref("");
 onMounted(async () => {
     keyWord.value = router.currentRoute.value.query.keyWord as string;
@@ -80,6 +115,22 @@ onMounted(async () => {
     wallList.value = data.wall.docs;
 })
 
+const changeCondition = async (name: string) => {
+    if (activeName.value != name) {
+        window.scroll({
+            top: 0,
+        })
+        wallList.value = [];
+        activeName.value = name;
+        option.sort = name;
+        option.page = 1;
+        let data = await getKeywordSearch(option);
+        if (data.wall.docs) {
+            wallList.value = data.wall.docs;
+        }
+    }
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -87,27 +138,52 @@ onMounted(async () => {
     width: 100vw;
     position: relative;
     background-color: #EFEFEF;
-    padding-top: 100px;
+    padding-top: 105px;
     z-index: 15;
 
+    .tabble-nav {
+        display: flex;
+        font-size: 15px;
+        justify-content: space-evenly;
+        align-items: center;
+        position: fixed;
+        top: 49px;
+        width: 100vw;
+        height: 50px;
+        background-color: #fff;
+        border-bottom: 1px solid #ccc;
+        z-index: 10;
+
+        span {
+            position: relative;
+
+            &.active {
+                transform: scale(1.3);
+                font-weight: bold;
+
+                &::after {
+                    display: block;
+                    content: "";
+                    width: 45px;
+                    position: absolute;
+                    border-bottom: 3px solid #f46;
+                    top: 20px;
+                    left: -8px;
+                }
+            }
+
+        }
+
+
+
+    }
 
     .shopping-details {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-evenly;
-    }
-
-    .keyword {
-        color: #ff3f78;
-    }
-
-    .tabber-nav {
-        position: fixed;
-        width: 100vw;
-        top: 49px;
-        border-bottom: 1px solid #ccc;
-        background-color: #fff;
-        z-index: 10;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 8px;
     }
 
     .shoping-list-top {
@@ -118,7 +194,7 @@ onMounted(async () => {
         top: 0;
         height: 50px;
         font-size: 13px;
-        background: linear-gradient(180deg, rgba(255, 69, 105, 1) 34%, rgba(255, 255, 255, 1) 100%);
+        background: linear-gradient(0deg, rgba(255, 69, 105, 1) 35%, rgba(255, 0, 0, 1) 88%);
         z-index: 10;
 
         input {
@@ -140,18 +216,60 @@ onMounted(async () => {
             font-weight: bold;
         }
     }
-    .noshopping{
+
+    .noshopping {
         width: 100vw;
         height: 87.7vh;
         text-align: center;
         padding-top: 50px;
-        img{
+
+        img {
             width: 150px;
         }
-        p{
+
+        p {
             font-size: 16px;
             margin-top: 15px;
             color: #888;
+        }
+    }
+
+    .price-box {
+        font-size: 15px;
+
+        .price {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+
+            span {
+                display: inline-block;
+                width: 100px;
+                height: 40px;
+                text-align: center;
+                line-height: 40px;
+                background-color: #ccc;
+                border-radius: 5px;
+            }
+        }
+
+        .section {
+            display: flex;
+            height: 50px;
+            align-items: center;
+
+            span {
+                margin: 0 5px;
+            }
+
+            input {
+                width: 100px;
+                height: 30px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                padding-left: 10px;
+            }
         }
     }
 }
