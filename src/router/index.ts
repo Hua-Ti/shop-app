@@ -16,6 +16,7 @@ import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
 import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
 import AddressManagement from '../views/AddressManagement.vue'
+import LocationView from '../views/AddressManagementChildren/LocationView.vue'
 
 
 // 在路由中引入pinia
@@ -130,7 +131,14 @@ const router = createRouter({
     {
       path: '/address-anagement',
       name: "addressmanagement",
-      component: AddressManagement
+      component: AddressManagement,
+      children: [
+        {
+          path: 'location',
+          name: 'location',
+          component: LocationView,
+        }
+      ]
     },
   ]
 })

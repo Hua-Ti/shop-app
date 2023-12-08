@@ -8,6 +8,8 @@
             </van-nav-bar>
         </div>
 
+        <van-button type="primary" @click="router.push({ name: 'location' })">跳转按钮</van-button>
+
         <!-- 地址列表 -->
 
 
@@ -54,10 +56,11 @@
             </div>
         </div>
     </div>
+    <router-view />
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter, RouterView } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { listProps, showToast } from 'vant';
 import { areaList } from '@vant/area-data';

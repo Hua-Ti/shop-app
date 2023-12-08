@@ -70,7 +70,7 @@ let draging = ref(false);
 const isPlay = ref(false);
 const video = ref();
 let totalTime = ref(0);
-const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物']
+const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物','正在加载中,请稍候~']
 
 // 解决mounted无法解析ref中dom元素的bug
 let isReady = ref(false);
@@ -198,11 +198,15 @@ function clickToTime(startTime: number) {
     height: 100vh;
     background-color: white;
     background-repeat: no-repeat;
-    background-position: 30% 30%;
+    background-position: 90% 90%;
     background-size: 100% 55%;
+    // margin-top: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .myLoading {
-        margin-top: 25vh;
+        margin-top: -27vh;
     }
 }
 
