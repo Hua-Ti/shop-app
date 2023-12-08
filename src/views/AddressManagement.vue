@@ -88,6 +88,8 @@ import { ref, computed, onMounted } from 'vue';
 import { listProps, showToast } from 'vant';
 import { areaList } from '@vant/area-data';
 import type { AddressEditInstance } from 'vant';
+import { getAddress } from '../stores/address'
+const addressNeirong = getAddress()
 const router = useRouter();
 const chosenAddressId = ref('');
 const show = ref(false);
@@ -133,17 +135,12 @@ onMounted(() => {
 const compile = (list: any) => {
     if (list != '[]') {
         show.value = true;
-
         console.log(list)
         tel.value = list.tel
         name.value = list.name
         diqu.value = list.diqu;
         address.value = list.address;
         checked.value = list.isDefault
-        // console.log(chosenAddressId.value)
-        // console.log(list)
-        // info.value = list;
-
     }
 }
 
@@ -151,21 +148,34 @@ const compile = (list: any) => {
 onMounted(() => {
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
-    if (addressList != '[]') {
+    if (addressList.length != 0) {
         console.log('我是第二个onMounted', addressList)
-        for (let i = 0; i <= addressList.length; i++) {
-            const last = addressList[addressList.length - 1].isDefault;
-            if (last) {
-                chosenAddressId.value = addressList[addressList.length - 1].id
+        let piniaAddress = localStorage.address || `[]`;
+        piniaAddress = JSON.parse(piniaAddress);
+        console.log('pinia存贮的地址', piniaAddress)
+        if (piniaAddress) {
+            console.log(111)
+            chosenAddressId.value = piniaAddress.id
+        } else {
+            for (let i = 0; i <= addressList.length; i++) {
+                const last = addressList[addressList.length - 1].isDefault;
+                if (last) {
+                    chosenAddressId.value = addressList[addressList.length - 1].id
+                }
             }
         }
+
     }
 })
 
 //切换打勾
 const daGou = (item: any) => {
-    console.log(item.id)
+    console.log(item)
     chosenAddressId.value = item.id
+    addressNeirong.name = item.name
+    addressNeirong.tel = item.tel
+    addressNeirong.address = item.address
+    addressNeirong.id = item.id
 }
 
 
@@ -206,6 +216,10 @@ const addSave = () => {
 
             if (last) {
                 chosenAddressId.value = addressList[addressList.length - 1].id
+                addressNeirong.name = addressList[addressList.length - 1].name
+                addressNeirong.tel = addressList[addressList.length - 1].tel
+                addressNeirong.address = addressList[addressList.length - 1].address
+                addressNeirong.id = addressList[addressList.length - 1].id
                 for (let j = 0; j < addressList.length - 1; j++) {
                     addressList[j].isDefault = false;
                 }
@@ -225,9 +239,6 @@ const addSave = () => {
         address.value = ''
         diqu.value = ''
         checked.value = false
-
-        // }
-
     } else {
         showToast('信息没有填完整')
     }

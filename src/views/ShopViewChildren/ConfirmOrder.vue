@@ -22,11 +22,11 @@
                     </template>
                     <template #title>
                         <span class="custom-title">
-                            张三 18685994747
+                            {{ addressNeirong.name }}{{ addressNeirong.tel }}
                         </span>
                     </template>
                     <template #label>
-                        <span class="custom-title">江苏省张家港</span>
+                        <span class="custom-title">{{ addressNeirong.address || '点击选择地址' }}</span>
                     </template>
                 </van-cell>
             </div>
@@ -49,6 +49,8 @@ import { ref, onMounted, } from 'vue'
 import { useRouter, RouterView } from 'vue-router';
 import line from '../../assets/images/shop_line.png'
 import { showToast } from 'vant';
+import { getAddress } from '../../stores/address'
+const addressNeirong = getAddress()
 const router = useRouter();
 const onSubmit = () => showToast('点击按钮');
 </script>
