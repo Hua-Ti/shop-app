@@ -33,11 +33,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      children: [
+      children:  [
         {
-          path: '/',
-          name: 'homechild',
-          component: HomeChildView
+          path:  '/',
+          name:  'homechild',
+          component:  HomeChildView
         }
       ]
     },
