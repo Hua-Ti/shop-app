@@ -104,12 +104,13 @@ const addressEditRef = ref<AddressEditInstance>();
 addressEditRef.value?.setAddressDetail('');
 const info = ref<Shuju>()
 
-//方法二的数据，没有用
+//方法二的数据
 const tel = ref('');
 const name = ref('');
 const diqu = ref('');
 const address = ref('');
 const checked = ref(false);
+const bianjiId = ref('')
 const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
 
 
@@ -134,7 +135,7 @@ onMounted(() => {
     addressList = JSON.parse(addressList);
     list.value = addressList
 })
-//编辑
+//编辑地址
 const compile = (list: any) => {
     if (list != '[]') {
         show.value = true;
@@ -144,10 +145,32 @@ const compile = (list: any) => {
         diqu.value = list.diqu;
         address.value = list.address;
         checked.value = list.isDefault
+        bianjiId.value = list.id
+
+        let addressList = localStorage.addressList || `[]`;
+        addressList = JSON.parse(addressList);
+        console.log(addressList)
+        let record = addressList.findIndex(
+            (item: any) => item.id == list.id
+        );
+        addressList = addressList.filter((item: any) => item.id != list.id)
+        list.value = addressList
+        localStorage.addressList = JSON.stringify(addressList);
+
+        console.log(addressList)
+        // console.log(record)
+        // for (let i = 0; i <= addressList.length; i++) {
+        //     const dianjide = addressList[i].id;
+        //     if (list.id == dianjide) {
+        //         console.log(i)
+        //     }
+        // }
+
+
     }
 }
 
-//打勾的默认地址
+//打勾的地址
 onMounted(() => {
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
@@ -193,7 +216,7 @@ const goLocation = () => {
 
 }
 
-//方法二的方法，没有用
+//方法二的方法
 const Changeadd = (value: any) => {
     console.log(value)
     changevalue.value = value
@@ -210,9 +233,7 @@ const addSave = () => {
             address: diqu.value + address.value,
             diqu: diqu.value,
             isDefault: changevalue.value,
-
         });
-
         console.log(addressList[addressList.length - 1].isDefault)
         for (let i = 0; i < addressList.length; i++) {
             const last = addressList[addressList.length - 1].isDefault;
@@ -248,7 +269,7 @@ const addSave = () => {
 
 }
 
-//获取输入的数据
+//获取输入的数据,没有用
 const onSave = (val: any) => {
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
