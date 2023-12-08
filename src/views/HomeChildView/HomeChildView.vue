@@ -33,31 +33,34 @@
     <div class="homeChild" v-if="route.query.pid !== '666' && route.query.pid != undefined">
         <!-- 首页二级模块 -->
         <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav" />
-        <!-- 轮播图 -->
-        <div class="broadcastMap">
-            <van-swipe :autoplay="3000" lazy-render>
-                <van-swipe-item v-for="image in images" :key="image">
-                    <img :src="image" />
-                </van-swipe-item>
-            </van-swipe>
-        </div>
-        <!-- 秋冬必备模块 -->
-        <div v-if="route.query.pid === '3627'" class="autumnAndWinter">
-            <div class="autu-menu">
-                <div class="autu">
-                    <div class="item" v-for="(item, index) in TypeData" :key="index">
-                        <router-link :to="{name:'moduleHome',query:{keyword:item}}">
-                            <img class="pic" :src="`pic/p${index + 1}.png`">
-                            <p class="content">{{ item }}</p>
-                        </router-link>
+        <!-- 正在流行独有 -->
+        <div v-if="route.query.pid === '3627'">
+            <!-- 轮播图 -->
+            <div class="broadcastMap">
+                <van-swipe :autoplay="3000" lazy-render>
+                    <van-swipe-item v-for="image in images" :key="image">
+                        <img :src="image" />
+                    </van-swipe-item>
+                </van-swipe>
+            </div>
+            <!-- 秋冬必备模块 -->
+            <div class="autumnAndWinter">
+                <div class="autu-menu">
+                    <div class="autu">
+                        <div class="item" v-for="(item, index) in TypeData" :key="index">
+                            <router-link :to="{name:'moduleHome',query:{keyword:item}}">
+                                <img class="pic" :src="`pic/p${index + 1}.png`">
+                                <p class="content">{{ item }}</p>
+                            </router-link>
+                        </div>
+                        <!-- 潮流，休闲区， -->
                     </div>
-                    <!-- 潮流，休闲区， -->
                 </div>
             </div>
-        </div>
-        <!-- 分割图 -->
-        <div class="hp1" v-if="route.query.pid === '3627'">
-            <img src="hp1.webp" alt="">
+            <!-- 分割图 -->
+            <div class="hp1">
+                <img src="hp1.webp" alt="">
+            </div>
         </div>
         <!-- 瀑布流内容 -->
         <keep-alive>
@@ -70,7 +73,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Swipe, SwipeItem } from 'vant';
 import homeTwoModule from '@/components/homeTwoModule.vue';
 import homeRecommend from '@/components/homeRecommend.vue';
 import WaterfallFlow from '@/components/WaterfallFlowView.vue';

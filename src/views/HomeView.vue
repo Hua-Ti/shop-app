@@ -12,7 +12,7 @@
 
             <!-- 二级导航 -->
             <div class="head-top">
-                <van-tabs v-model:active="active" v-if="homeTwoNav.length >= 1">
+                <van-tabs v-model:active="active" v-if="homeTwoNav?.length >= 1">
                     <template>
                         <van-tab :to="{ name: 'homechild', query: { pid: 666 } }" title="热门"></van-tab>
                     </template>

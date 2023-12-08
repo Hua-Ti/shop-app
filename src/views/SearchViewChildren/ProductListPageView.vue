@@ -35,7 +35,7 @@
         </div>
         <div v-else>
             <div class="noshopping">
-                <img src="../assets/images/noShopping.png">
+                <img src="../../assets/images/noShopping.png">
                 <p>没有相关的商品结果哦 ~~</p>
             </div>
         </div>

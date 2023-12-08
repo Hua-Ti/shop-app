@@ -3,7 +3,7 @@
     <div class="home-nav">
         <div class="home-nav-tab">
             <van-grid square :column-num="7" icon-size="50px">
-                <van-grid-item  class="nav-tab-item" v-for="h in homeNav" :key="h._system_record_entry_id" :icon="h.image"
+                <van-grid-item :to="{name:'productList',query:{keyWord:h.title}}"  class="nav-tab-item" v-for="h in homeNav" :key="h._system_record_entry_id" :icon="h.image"
                     :text="h.title" :sort="h.sort" :link="h.link" :titlecolor="h.titleColor" :h5link="h.h5Link" />
             </van-grid>
         </div>
