@@ -13,6 +13,7 @@ import LivingView from '../views/LiveViewChildren/LivingView.vue'
 import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
 import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
+import LiveTest from '../views/LiveViewChildren/LiveTest.vue'
 
 // 在路由中引入pinia
 import pinia from '../stores/store'
@@ -108,6 +109,11 @@ const router = createRouter({
       path: '/product-list',
       name: "productList",
       component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
+    },
+    {
+      path:'/livetest',
+      name:'livetest',
+      component:LiveTest
     }
 
   ]

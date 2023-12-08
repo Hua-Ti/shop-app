@@ -166,7 +166,9 @@ export interface liveRoomDefinitions{
 }
 //直播间促销商品
 export interface liveRoomGood{
-    "itemList":Array<liveRoomGoods>
+    "data":{
+        "itemList":Array<liveRoomGoods>
+    }
 }
 
 export interface liveRoomGoods{
@@ -174,7 +176,17 @@ export interface liveRoomGoods{
     "image":string,
     "title":string,
     "itemId":string,
+    "defaultPrice":number,
+    "historySale":number,
+    "stock":number,
+    "seckill":boolean,//是否秒杀中
 }
+//直播间评论
+export interface liveComment{
+    "username":string
+    "action":string
+}
+
 // 直播回放相关
 export interface getPlaybackData {
     data: {
