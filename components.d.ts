@@ -8,7 +8,6 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     HomeTwoModule: typeof import('./src/components/homeTwoModule.vue')['default']
-    LikeAnimation: typeof import('./src/components/LikeAnimation.vue')['default']
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
     LiveGoods: typeof import('./src/components/LiveGoods.vue')['default']
     LivePlaybackComponent: typeof import('./src/components/LivePlaybackComponent.vue')['default']
@@ -27,6 +26,7 @@ declare module 'vue' {
     VanIcon: typeof import('vant/es')['Icon']
     VanImage: typeof import('vant/es')['Image']
     VanList: typeof import('vant/es')['List']
+    VanLoading: typeof import('vant/es')['Loading']
     VanNavBar: typeof import('vant/es')['NavBar']
     VanPopup: typeof import('vant/es')['Popup']
     VanPullRefresh: typeof import('vant/es')['PullRefresh']

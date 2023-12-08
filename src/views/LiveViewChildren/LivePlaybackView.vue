@@ -1,4 +1,9 @@
 <template>
+    <div class="loadingBox" :style="{ backgroundImage: `url(${loadingSrc})` }" v-show="!isReady">
+        <van-loading class="myLoading" vertical type="spinner" size="50" color="#ff5967" text-size="16">
+            {{ randomText }}
+        </van-loading>
+    </div>
     <div class="playBox" v-show="isReady">
         <video :src="videoUrl" loop :poster="coverImg" ref="video" @loadedmetadata="getTotalTime"
             @timeupdate="getCurTime"></video>
@@ -16,7 +21,7 @@
                         <p>快进到</p>
                     </div>
                     <div class="right">
-                        <div class="timeKey" v-for="e in  benefitPointList " :key="e.doc" @click="clickToTime(e.time)">
+                        <div class="timeKey" v-for=" e  in   benefitPointList  " :key="e.doc" @click="clickToTime(e.time)">
                             <van-icon name="play-circle" size="14" />
                             <p>{{ e.doc }}</p>
                         </div>
@@ -47,12 +52,15 @@
     </div>
 </template>
 
+
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import LivePlaybackOrPlayComponent from '../../components/LivePlaybackComponent.vue';
 import { getPlaybackData } from '../../apic/live-data';
 import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem, getPlaybackCommentsItem } from '../../typings';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import loadingSrc from '../../assets/images/shopingGirl.png'
+const router = useRouter();
 const route = useRoute();
 
 let sliderValue = ref(0);
@@ -62,9 +70,10 @@ let draging = ref(false);
 const isPlay = ref(false);
 const video = ref();
 let totalTime = ref(0);
+const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物']
 
 // 解决mounted无法解析ref中dom元素的bug
-let isReady = ref(true);
+let isReady = ref(false);
 
 // 获取数据
 const itemUrlId = route.params?.itemUrlId as string;
@@ -80,9 +89,9 @@ const videoUrl = ref('');
 const coverImg = ref('');
 
 const getData = async () => {
-    // console.log('发起请求')
+    console.log('发起请求')
     let { data } = await getPlaybackData(itemUrlId, actorUrlId);
-    console.log(data);
+    // console.log(data);
     itemExplainList.value = data.itemExplainList.find(e => e.explainId == Number(curExplainId));
     videoUrl.value = itemExplainList.value?.videoInfo.h265Url as string;
     coverImg.value = itemExplainList.value?.videoInfo.cover as string;
@@ -90,10 +99,7 @@ const getData = async () => {
     itemInfoList.value = itemExplainList.value?.itemInfo;
     benefitPointList.value = itemExplainList.value?.videoInfo.benefitPointList;
     comments.value = itemExplainList.value?.comments;
-    console.log(itemExplainList.value)
-
-    console.log(itemUrlId)
-    console.log(actorUrlId)
+    isReady.value = true;
 }
 
 const isBenefitPoint = computed(() => {
@@ -102,6 +108,12 @@ const isBenefitPoint = computed(() => {
     } else {
         return false;
     }
+})
+
+const randomText = computed(() => {
+    const index = String(Math.random() * 3);
+    const res = textArr[parseInt(index)];
+    return res;
 })
 
 onMounted(() => {
@@ -181,6 +193,19 @@ function clickToTime(startTime: number) {
 </script>
 
 <style lang="scss" scoped>
+.loadingBox {
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: 30% 30%;
+    background-size: 100% 55%;
+
+    .myLoading {
+        margin-top: 25vh;
+    }
+}
+
 .playBox {
     position: fixed;
     top: 0;

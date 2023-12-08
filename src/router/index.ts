@@ -14,6 +14,7 @@ import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
 import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
 import LiveTest from '../views/LiveViewChildren/LiveTest.vue'
+import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
 
 // 在路由中引入pinia
 import pinia from '../stores/store'
@@ -27,7 +28,14 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      children:[
+        {
+          path:'/',
+          name:'homechild',
+          component:HomeChildView
+        }
+      ]
     },
     {
       path: '/attention',
@@ -62,9 +70,9 @@ const router = createRouter({
       component: LiveView,
     },
     {
-      path:'/liveroom',
-      name:'liveroom',
-      component:LiveRoomView,
+      path: '/liveroom',
+      name: 'liveroom',
+      component: LiveRoomView,
     },
     {
       path: '/livePlayback:itemUrlId&:actorUrlId&:explainId',
@@ -96,14 +104,14 @@ const router = createRouter({
       ]
     },
     {
-      path:'/pay',
-      name:'pay',
-      component:PayView
+      path: '/pay',
+      name: 'pay',
+      component: PayView
     },
     {
-      path:'/pay-success',
-      name:'paySuccess',
-      component:PaySuccess
+      path: '/pay-success',
+      name: 'paySuccess',
+      component: PaySuccess
     },
     {
       path: '/product-list',

@@ -23,6 +23,7 @@
     "qs": "^6.11.2",
     "vant": "^4.8.0",
     "vue": "^3.3.4",
+    "vue-masonry": "^0.16.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
