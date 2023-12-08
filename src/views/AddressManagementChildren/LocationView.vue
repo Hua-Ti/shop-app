@@ -8,7 +8,7 @@
                 <button @click="sumbit">提交</button>
             </template>
         </van-nav-bar>
-        <div class="loadingBox" v-show="isFinish">
+        <div class="loadingBox" v-show="isFinish" ref="loadingBox">
             <p>获取位置中</p>
             <p>请稍后~</p>
         </div>
@@ -16,7 +16,7 @@
         <div class="main">
             <div id="r-result" v-show="!isFinish">
                 <div class="location-content">
-                    <p class="nothing" v-show="isShow">附近没有驿站哦,要不试试手动输入?</p>
+                    <p class="nothing" v-show="isShow">附近没有驿站哦,要不手动输入?</p>
                     <div class="location-item" v-for="(e, i) in locationArr" :key="i" @click="addActive(i)">
                         <div class="location-text">
                             <p class="title" ref="locationTitle">{{ e.title }}</p>
@@ -51,6 +51,7 @@ let isFinish = ref(true);
 const isShow = computed(() => {
     return locationArr.value.length == 0
 })
+let loadingBox = ref();
 
 // 获取地址信息
 let locationArr = ref<Array<getLocationItem>>([]);
@@ -126,11 +127,13 @@ const initMap = () => {
             // local.search("菜鸟驿站");
             local.searchNearby('菜鸟驿站', r.point, 1000);
 
+
             // 禁止缩放
             map.disableDoubleClickZoom();
         }
         else {
             console.log('failed' + this.getStatus());
+            loadingBox.value.innerText = '请求超时,请重试'
         }
     });
 
@@ -237,11 +240,12 @@ button {
 }
 
 .main {
-    padding: 0 20px;
+    padding: 0 10px;
+    height: 250px;
 }
 
 #r-result {
-    width: calc(100vw - 40px);
+    width: calc(100vw - 20px);
     margin: 0 auto;
     background-color: white;
     overflow: hidden;
@@ -250,6 +254,7 @@ button {
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 999;
 
     .location-content {
         padding-bottom: 55px;
