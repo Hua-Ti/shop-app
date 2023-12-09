@@ -414,6 +414,22 @@ export interface detailList {
                     key:string,
                     list:Array<string>,
                 }>, 
+            },
+            rateInfoV2:{
+                list:Array<{
+                    user:{
+                        uname:string,
+                        avatar:string,
+                    },
+                    created:number,
+                    content:string,
+                }>,
+                cRate:number,
+                rateTags:Array<{
+                    value:string,
+                    num:number,
+                }>,
+                cScore:string,
             }
         }
     }

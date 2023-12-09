@@ -10,7 +10,7 @@
         <van-popup v-model:show="show" position="center">
             <div class="wrapper1" :ref="el => scrollEl1 = el as HTMLElement">
                 <ul :style="{ width: topImagesList.length * 100 + 'vw' }">
-                    <li v-for="(item, index) in topImagesList" :key="item">
+                    <li v-for="item in topImagesList" :key="item">
                         <img :src="item">
                     </li>
                 </ul>
@@ -20,9 +20,9 @@
             <van-action-bar-icon icon="shop-o" text="店铺" />
             <van-action-bar-icon icon="cart-o" text="购物车" />
             <van-action-bar-icon icon="star-o" @click="onClickIcon" v-show="flag" text="未收藏" />
-            <van-action-bar-icon icon="star" @click="onClickIcon" v-show="!flag" text="已收藏" color="#ff5000" />
-            <van-action-bar-button type="warning" text="加入购物车" />
-            <van-action-bar-button type="danger" text="立即购买" />
+            <van-action-bar-icon icon="star" @click="onClickIcon" v-show="!flag" text="已收藏" color="#f46" />
+            <van-action-bar-button color="#FFE6E8" class="left-attow" type="warning" text="加入购物车" />
+            <van-action-bar-button color="#FF4689" class="right-arrow" type="danger" text="立即购买" />
         </van-action-bar>
     </div>
     <div class="price-box" v-if="price.nowPrice">
@@ -34,9 +34,35 @@
             <span>已售{{ price.sales }}</span>
         </div>
         <div class="title">{{ skuInfoList.title }}</div>
+        <div class="evaluate">
+            <div class="evaluate-title">
+                <span class="evaluate-arctial">评价({{ rateInfoV2List.cRate }})</span>
+                <p>评分<span class="evaluate-score">{{ rateInfoV2List.cScore }}</span></p>
+            </div>
+            <div>
+                <ul class="evaluate-button">
+                    <li v-for="item in rateInfoV2List.rateTags">
+                        <span>{{ item.value }}({{ item.num }})</span>
+                    </li>
+                </ul>
+            </div>
+            <ul class="evaluation-area">
+                <li v-for="item in rateInfoV2List.list" :key="item.content">
+                    <div class="evaluation-area-title">
+                        <img :src="item.user.avatar">
+                        <div>
+                            <p class="name">{{ item.user.uname }}</p>
+                            <p class="data">{{ formatDate(item.created) }}</p>
+                        </div>
+                    </div>
+                    <p>{{ item.content }}</p>
+                </li>
+            </ul>
+        </div>
         <div class="detailInfo">
             <p class="article-title">{{ detailInfoList.detailImage[0].key }}</p>
-            <van-text-ellipsis class="article-text" rows="3" :content="detailInfoList.desc" expand-text="展开" collapse-text="收起" />
+            <van-text-ellipsis class="article-text" rows="3" :content="detailInfoList.desc" expand-text="展开"
+                collapse-text="收起" />
             <div class="detailImage">
                 <img v-for="item in detailInfoList.detailImage[0].list" :src="item">
             </div>
@@ -49,6 +75,7 @@ import { ref, onMounted, nextTick, reactive } from "vue"
 import { useRouter } from "vue-router";
 import { getProdectDetails } from "../apic/search";
 import BScroll from '@better-scroll/core';
+
 // import {type detailList} from "../typings"
 
 
@@ -83,12 +110,45 @@ let skuInfoList = reactive({
 })
 
 let detailInfoList = reactive({
-    desc:"",
-    detailImage:[{
-        key:"",
-        list:[""],
+    desc: "",
+    detailImage: [{
+        key: "",
+        list: [""],
     }],
 })
+
+let rateInfoV2List = reactive({
+    list: [{
+        user: {
+            uname: "",
+            avatar: "",
+        },
+        created: 0,
+        content: "",
+    }],
+    cRate: 0,
+    rateTags: [{
+        value: "",
+        num: 0,
+    }],
+    cScore: "",
+})
+
+// 将时间戳转化为日期的格式
+const formatDate = (created: number) => {
+    // 由于这里的时间戳是10位，所以要补0，改成13位
+    created = Number(created + "000");
+    const date = new Date(created);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // 月份从0开始，需要加1
+    const day = date.getDate();
+    return `${year}-${addZero(month)}-${addZero(day)}`
+}
+
+// 若当前的数字小于0，则补0
+const addZero = (num: number) => {
+    return num < 10 ? "0" + num : num;
+}
 onMounted(async () => {
     id.value = router.currentRoute.value.query.id as string;
 
@@ -96,7 +156,8 @@ onMounted(async () => {
     topImagesList.value = data.topImages;
     skuInfoList = data.skuInfo;
     price = data.normalPrice;
-    detailInfoList=data.detailInfo;
+    detailInfoList = data.detailInfo;
+    rateInfoV2List = data.rateInfoV2;
 
     // 页面更新渲染完毕,实例化BetterScroll
     nextTick(initScroll);
@@ -133,7 +194,6 @@ const initScroll1 = (index: number) => {
         })
 
         bs1Value.on("scrollStart", () => {
-            console.log("index=", index)
             screenWidth.value = window.innerWidth;
             let direction = bs1Value.movingDirectionX;
             bs1Value.once('scrollEnd', () => {
@@ -152,33 +212,115 @@ const initScroll1 = (index: number) => {
 </script>
 
 <style lang="scss">
+.left-attow {
+    .van-button__text {
+        color: #f46;
+    }
+}
+
 .price-box {
     font-size: 12px;
     padding: 10px 10px 50px;
     box-sizing: border-box;
 
-    .article-title{
-        font-size: 20px;
+    .evaluate-title {
+        font-size: 14px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 0;
+        border-top: 8px solid #F9F9F9;
+
+        .evaluate-arctial {
+            font-size: 16px;
+        }
+
+        .evaluate-score {
+            color: #f25;
+        }
+    }
+
+    .evaluate-button {
+        display: flex;
+        padding: 0 0 15px;
+        flex-wrap: wrap;
+
+        li {
+            padding: 5px 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-right: 5px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .evaluation-area {
+        overflow: auto;
+        display: flex;
+        white-space: nowrap;
+
+        li {
+            display: inline-block;
+            // width: 100vw;
+            background-color: #FAFAFA;
+            padding: 15px;
+            margin-right: 15px;
+            flex: 1;
+
+            .evaluation-area-title {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin-right: 10px;
+                }
+
+                .name {
+                    font-size: 14px;
+                    font-weight: bolder;
+                    margin-bottom: 10px;
+                }
+
+                .data {
+                    font-size: 10px;
+                    color: #aaa;
+                }
+            }
+        }
+    }
+
+    .article-title {
+        font-size: 16px;
         font-weight: bold;
         padding: 10px 0;
     }
-    .article-text{
+
+    .article-text {
         padding-bottom: 10px;
     }
+
     .title {
         margin-top: 10px;
         font-size: 16px;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        margin-bottom: 15px;
     }
-    .detailImage{
+
+    .detailImage {
         width: 100%;
-        img{
+
+        img {
             width: 100%;
             vertical-align: middle;
         }
     }
+
     .detailTitle {
         display: flex;
         justify-content: space-between;
@@ -258,5 +400,4 @@ const initScroll1 = (index: number) => {
             }
         }
     }
-}
-</style>
+}</style>
