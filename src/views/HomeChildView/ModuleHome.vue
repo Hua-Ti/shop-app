@@ -23,7 +23,6 @@ import { useRouter, useRoute } from "vue-router";
 import WaterfallFlowShree from '@/components/WaterfallFlowShree.vue';
 const router = useRouter()
 const route = useRoute()
-<<<<<<< HEAD
 const title = route.query.keyword;
 const index = {
     '棒球服': 'bqf',
@@ -40,11 +39,6 @@ const index = {
     '针织衫': 'zzs'
 }
 const bg = index[title];
-=======
-const bg = route.query.keyword;
-
-
->>>>>>> ed26cbd1df36c6c1f29e2d042bf99b6a2127b3b8
 
 </script>
 
@@ -70,7 +64,6 @@ const bg = route.query.keyword;
         border: none;
     }
 
-<<<<<<< HEAD
     .bqf {
         background-color: #6888a4;
     }
@@ -116,53 +109,6 @@ const bg = route.query.keyword;
     }
 
     .zzs {
-=======
-    .棒球服 {
-        background-color: #6888a4;
-    }
-
-    .棉服 {
-        background-color: #b27160;
-    }
-
-    .百变潮流裤 {
-        background-color: #b18f56;
-    }
-
-    .宽松卫衣 {
-        background-color: #5f5657;
-    }
-
-    .毛呢大衣 {
-        background-color: #86a9b1;
-    }
-
-    .毛衣 {
-        background-color: #8aa062;
-    }
-
-    .皮草 {
-        background-color: #be8d77;
-    }
-
-    .气质风衣 {
-        background-color: #af7f68;
-    }
-
-    .少女感马甲 {
-        background-color: #aaa968;
-    }
-
-    .小个子精选 {
-        background-color: #98b0b8;
-    }
-
-    .羽绒服 {
-        background-color: #a897af;
-    }
-
-    .针织衫 {
->>>>>>> ed26cbd1df36c6c1f29e2d042bf99b6a2127b3b8
         background-color: #a36b67;
     }
 }</style>

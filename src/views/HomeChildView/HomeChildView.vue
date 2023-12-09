@@ -32,7 +32,6 @@
     <!-- 除了热门之外的 -->
     <div class="homeChild" v-if="route.query.pid !== '666' && route.query.pid != undefined">
         <!-- 首页二级模块 -->
-<<<<<<< HEAD
         <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav"/>
         <!-- 正在流行独有 -->
         <div v-if="route.query.pid === '3627'">
@@ -54,40 +53,14 @@
                                 <p class="content">{{ item }}</p>
                             </router-link>
                         </div>
-=======
-        <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav" />
-        <!-- 轮播图 -->
-        <div class="broadcastMap">
-            <van-swipe :autoplay="3000" lazy-render>
-                <van-swipe-item v-for="image in images" :key="image">
-                    <img :src="image" />
-                </van-swipe-item>
-            </van-swipe>
-        </div>
-        <!-- 秋冬必备模块 -->
-        <div v-if="route.query.pid === '3627'" class="autumnAndWinter">
-            <div class="autu-menu">
-                <div class="autu">
-                    <div class="item" v-for="(item, index) in TypeData" :key="index">
-                        <router-link :to="{ name: 'moduleHome', query: { keyword: item } }">
-                            <img class="pic" :src="`pic/p${index + 1}.png`">
-                            <p class="content">{{ item }}</p>
-                        </router-link>
->>>>>>> ed26cbd1df36c6c1f29e2d042bf99b6a2127b3b8
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
             <!-- 分割图 -->
             <div class="hp1">
-                <img src="hp1.webp" alt="">
+                <!-- 有问题 -->
+                <img src="/hp1.webp" alt="">
             </div>
-=======
-        </div>
-        <!-- 分割图 -->
-        <div class="hp1" v-if="route.query.pid === '3627'">
-            <img src="/hp1.webp" alt="">
->>>>>>> ed26cbd1df36c6c1f29e2d042bf99b6a2127b3b8
         </div>
         <!-- 瀑布流内容 -->
         <keep-alive>
@@ -123,7 +96,6 @@ const images = [
     'projectTitle/百变潮流裤bg.png',
     'projectTitle/棒球服bg.png',
     'projectTitle/宽松卫衣bg.png',
-<<<<<<< HEAD
     'projectTitle/毛呢大衣bg.png',
     'projectTitle/毛衣bg.png',
     'projectTitle/棉服bg.png',
@@ -136,9 +108,6 @@ const images = [
 ];
 
 const bgChange = useBgColor();
-=======
-];
->>>>>>> ed26cbd1df36c6c1f29e2d042bf99b6a2127b3b8
 
 // 点击跳转相关
 //跳购买页面
@@ -163,12 +132,7 @@ const onChange = (index: string) => {
 
 onMounted(async () => {
     //首页数据(热门)
-<<<<<<< HEAD
     console.log("pid76", pid);
-=======
-    // console.log("pid76", pid);
-
->>>>>>> ed26cbd1df36c6c1f29e2d042bf99b6a2127b3b8
     if (pid === '666' || pid == undefined) {
         let homeTwoNavMenu: any = await getHomeNavigation();
         let dataArr = await getHomeModuleRow();

@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     <van-image width="30" height="30" :src="userAttention" />
-                    <span class="nav-title">关注</span>
+                    <span @click="attention" class="nav-title">关注</span>
                 </div>
                 <div @click="router.push({ name: 'addressmanagement' })">
                     <van-image width="30" height="30" :src="address" />
@@ -192,6 +192,13 @@ function gotoShop() {
 function gotoHomepage() {
     router.push({ name: 'homepage' })
 }
+
+//跳关注页面
+function attention(){
+    console.log(2222)
+    router.push({ name: 'attention' })
+}
+
 
 </script>
 

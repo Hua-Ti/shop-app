@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AttentionChild: typeof import('./src/components/attentionChild.vue')['default']
     HomeRecommend: typeof import('./src/components/homeRecommend.vue')['default']
     HomeTwoModule: typeof import('./src/components/homeTwoModule.vue')['default']
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
@@ -14,8 +15,11 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Shopping: typeof import('./src/components/Shopping.vue')['default']
-    VanAddressEdit: typeof import('vant/es')['AddressEdit']
+    VanActionBar: typeof import('vant/es')['ActionBar']
+    VanActionBarButton: typeof import('vant/es')['ActionBarButton']
+    VanActionBarIcon: typeof import('vant/es')['ActionBarIcon']
     VanAddressList: typeof import('vant/es')['AddressList']
+    VanBackTop: typeof import('vant/es')['BackTop']
     VanButton: typeof import('vant/es')['Button']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
@@ -30,7 +34,6 @@ declare module 'vue' {
     VanLoading: typeof import('vant/es')['Loading']
     VanNavBar: typeof import('vant/es')['NavBar']
     VanNoticeBar: typeof import('vant/es')['NoticeBar']
-    VanPagination: typeof import('vant/es')['Pagination']
     VanPopup: typeof import('vant/es')['Popup']
     VanPullRefresh: typeof import('vant/es')['PullRefresh']
     VanSearch: typeof import('vant/es')['Search']
@@ -41,6 +44,7 @@ declare module 'vue' {
     VanSwitch: typeof import('vant/es')['Switch']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
+    VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
     VanUploader: typeof import('vant/es')['Uploader']
     WaterfallFlowShree: typeof import('./src/components/waterfallFlowShree.vue')['default']
     WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']

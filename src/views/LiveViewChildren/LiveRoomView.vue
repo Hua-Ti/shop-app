@@ -11,8 +11,9 @@
                         <div class="online-num">热度 {{ roomData.onlineUserCount }}</div>
                     </div>
 
-                    <div class="actor-fans">
-                        <div class="focus-btn f-center">关注</div>
+                    <div class="actor-fans" @click="attentionData(roomData)">
+                        <div v-show="flag" class="focus-btn f-center">关注</div>
+                        <div  v-show="!flag"  class="focus-btn f-center">已关注</div>
                     </div>
                 </div>
                 <div class="live-tag" v-if="roomData.actorTag">
@@ -29,7 +30,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
 
@@ -44,11 +44,28 @@ import flvjs from "flv.js"
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { getLiveRoom } from "../../apic/live-data"
+import { useAttention } from '../../stores/bgChange';
 const route = useRoute();
 const videoElement = ref(null);
 const roomData = ref();
 
 const flvPlayer = ref();
+let flag=ref(true)
+// 关注数据
+const attentionlist = useAttention()
+
+// 点击关注
+function attentionData(data: any) {
+    // console.log(data)
+    if(flag.value){
+        attentionlist.addAttention(data)
+        flag.value=false;
+    }else if(!flag.value){
+        flag.value=true;
+        attentionlist.removeAttention(roomData.value.actUserId)
+    }
+    console.log('关注列表', attentionlist.attention)
+}
 
 onMounted(async () => {
     let roomId = route.query.roomId;
@@ -56,9 +73,17 @@ onMounted(async () => {
     let { data } = await getLiveRoom(roomId, actUserId);
     roomData.value = data;
 
-    createVideo()
+    createVideo();
     console.log(roomData.value);
+    // 显示是否关注
+    attentionlist.attention.map((item:any)=>{
+        console.log('列表',item.actUserId)
+        if(roomData.value.actUserId==item.actUserId){
+            flag.value=false;
+        }
+    })
 })
+
 const createVideo = () => {
 
     if (flvjs.isSupported()) {
@@ -189,4 +214,5 @@ const createVideo = () => {
             color: #fff;
         }
     }
-}</style>
+}
+</style>

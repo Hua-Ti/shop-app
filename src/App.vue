@@ -20,7 +20,7 @@ import mySrc from './assets/icons/my.svg';
           <span class="nav-title">首页</span>
         </div>
       </RouterLink>
-      <RouterLink :to="{ name: 'attention' }" v-slot="{ navigate, isActive, isExactActive }" custom>
+      <RouterLink :to="{ name: 'collection' }" v-slot="{ navigate, isActive, isExactActive }" custom>
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
