@@ -33,49 +33,36 @@
                     <div class="address-bianji2">
                         <div>
 
-
-                            <van-cell-group inset class="goLocation-fu">
-                                <van-field class="inputclass" v-model="name" placeholder="张三" label="姓名"
-                                    label-width="4em" />
-                            </van-cell-group>
-
-                            <van-cell-group inset class="goLocation-fu">
-                                <van-field class="inputclass" placeholder="180xxxxyyyy" v-model="tel" type="tel" label="电话"
-                                    label-width="4em" />
-
-                            </van-cell-group>
-
-                            <van-cell-group inset class="goLocation-fu">
-                                <van-field class="inputclass" v-model="diqu" label="地区" label-width="4em"
-                                    placeholder="浙江省杭州市西湖区" />
-
-                            </van-cell-group>
-
-                            <van-cell-group inset class="goLocation-fu">
-                                <van-field class="inputclass" placeholder="景湖街道新华路xxx号" v-model="address" type="text"
-                                    label="详细地址" label-width="4em" />
-                            </van-cell-group>
+                            <van-form>
+                                <van-cell-group inset class="form-from">
+                                    <van-field v-model="name" name="用户名" label="用户名" placeholder="用户名" label-width="4.5em"
+                                        :rules="[{ required: true, message: '请填写用户名' }]" />
+                                    <van-field v-model="tel" type="tel" name="电话" label="电话" placeholder="手机号"
+                                        label-width="4.5em" :rules="[{ pattern, message: '请输入正确手机号' }]" />
+                                    <van-field v-model="diqu" name="地区" label="地区" placeholder="地区" label-width="4.5em"
+                                        :rules="[{ required: true, message: '请填写地区' }]" />
+                                    <van-field v-model="address" name="详细地址" label="详细地址" placeholder="详细地址"
+                                        label-width="4.5em" :rules="[{ required: true, message: '请填写详细地址' }]" />
+                                    <div class="moren">
+                                        <p>设为默认地址</p>
+                                        <van-switch class="kaiguan" v-model="checked" active-color="#ff4569"
+                                            inactive-color="#dcdee0" />
+                                    </div>
+                                </van-cell-group>
+                            </van-form>
                         </div>
-                        <div class="three-bottom">
-                            <div class="moren">
-                                <p>设为默认地址</p>
-                                <van-switch v-model="checked" active-color="#ff4569" inactive-color="#dcdee0" />
-                            </div>
 
-
-                            <div class="moresmores">
-                                <van-button class="mores" type="primary" @click="addSave" block
-                                    color="linear-gradient(to right, #f4becf, #ff4569)">保存</van-button>
-
-                                <van-button class="mores" type="primary" @click="getdelete" block
-                                    color="linear-gradient(to right, #ff4569, #f4becf)">删除</van-button>
-                            </div>
+                        <div class="moresmores">
+                            <van-button class="mores" type="primary" @click="addSave" block
+                                color="linear-gradient(to right, #f4becf, #ff4569)">保存</van-button>
+                            <van-button class="mores" type="primary" @click="getdelete" block
+                                color="linear-gradient(to right, #ff4569, #f4becf)">删除</van-button>
                         </div>
+
 
                     </div>
                 </van-popup>
             </div>
-
         </div>
     </div>
     <router-view />
@@ -101,13 +88,15 @@ const list = ref([])
 const searchResult = ref([]);
 const addressEditRef = ref<AddressEditInstance>();
 addressEditRef.value?.setAddressDetail('');
-const info = ref<Shuju>()
+
 
 const themeVars = {
     tagPrimaryColor: '#ff4569',
     addressListRadioColor: '#ff4569',
     radioLabelColor: '#000',
-    addressListItemTextColor: '#727272'
+    addressListItemTextColor: '#727272',
+    cellGroupBackground: '#727272'
+    // --van-cell-group-background
 };
 
 //方法二的数据
@@ -124,22 +113,25 @@ const bianjiId = ref('')
 const dianjiid = ref('')
 
 const showPopup = () => {
-    info.value = [] as any;
     show.value = true;
     tel.value = ''
     name.value = ''
     diqu.value = ''
     address.value = ''
     checked.value = false
-    console.log('我是更改前', checked.value)
+    // console.log('我是更改前', checked.value)
 }
-interface Shuju {
-    name: string
-    tel: string
-    addressDetail: string
-    isDefault: boolean
-}
+
 onMounted(() => {
+
+    let size = 0;
+    let storage = window.localStorage;
+    for (let props in storage) {
+        if (props === "length") continue;
+        size += storage[props].length;
+    }
+    console.log('使用了localStorage的大小,单位kb', (size / 1024).toFixed(2))
+
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
     list.value = addressList
@@ -149,7 +141,7 @@ onMounted(() => {
 const compile = (list: any) => {
     if (list != '[]') {
         show.value = true;
-        console.log(list)
+        // console.log(list)
         tel.value = list.tel
         name.value = list.name
         diqu.value = list.diqu;
@@ -168,7 +160,7 @@ const getdelete = (() => {
     list.value = addressList
     localStorage.addressList = JSON.stringify(addressList);
     show.value = false;
-    console.log('我是删除还剩', addressList)
+    // console.log('我是删除还剩', addressList)
     if (addressList.length == 0) {
         addressNeirong.name = ''
         addressNeirong.tel = ''
@@ -211,7 +203,7 @@ const daGou = (item: any) => {
     addressNeirong.id = item.id
 }
 
-
+//跳转定位页面
 const goLocation = () => {
     router.push({ name: 'location' })
     getLocation.changeLocationShow(false);
@@ -248,7 +240,7 @@ const addSave = () => {
 
         for (let i = 0; i < addressList.length; i++) {
             const last = addressList[0].isDefault;
-            console.log(addressList[0])
+            // console.log(addressList[0])
 
             if (last) {
                 chosenAddressId.value = addressList[0].id
@@ -264,8 +256,7 @@ const addSave = () => {
 
         list.value = addressList
         localStorage.addressList = JSON.stringify(addressList);
-
-        console.log(addressList)
+        // console.log(addressList)
         showToast({
             message: '保存成功',
             icon: 'success',
@@ -282,11 +273,9 @@ const addSave = () => {
 
 }
 
-
+//路由更新
 onBeforeRouteUpdate(() => {
-
     if (getLocation.locationShow == true) {
-
         diqu.value = getLocation.userLocation!.address
         address.value = getLocation.userLocation!.title
     }
@@ -348,12 +337,18 @@ onBeforeRouteUpdate(() => {
 }
 
 .address-bianji2 {
-    padding-top: 1%;
+    padding-top: 5%;
     margin-top: 15%;
     // height: 100vh;
     height: 89%;
     width: 100vw;
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(255, 255, 255);
+    border-top: 1px solid #e3e1e1;
+}
+
+.form-from {
+    // border: 1px solid #ff4569;
+    box-shadow: 0px 2px 5px #cac9c9;
 }
 
 .three-bottom {
@@ -366,9 +361,10 @@ onBeforeRouteUpdate(() => {
     font-size: 14.5px;
     display: flex;
     justify-content: space-between;
-    // background-color: burlywood;
+    background-color: rgb(255, 255, 255);
     margin: 0 auto;
     margin-top: 2%;
+    margin-bottom: 2%;
 
     p {
         padding-left: 4.5%;
@@ -377,62 +373,24 @@ onBeforeRouteUpdate(() => {
     }
 }
 
+.kaiguan {
+    margin-right: 2%;
+}
+
 .moresmores {
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .mores {
     margin: 0 auto;
-    margin-top: 6%;
+    margin-top: 5%;
     width: 75vw;
     border-radius: 999px;
-}
-
-.inputclass {
-    padding-top: 4%;
-    // padding-bottom: 2%;
-    height: 6vh;
-
-    background-color: rgb(255, 255, 255);
-}
-
-.goLocation-fu {
-    position: relative;
-    margin-top: 3%;
-
-    // height: 20%;
-    // padding-top: 10%;
-
-
-    .goLocation {
-        background-color: rgb(255, 255, 255);
-        position: absolute;
-        top: 10%;
-        right: 10%;
-    }
 }
 
 
 .address-bianji {
     margin-top: 15%;
-
-}
-
-//定位
-
-.popup-box {
-    // position: relative;
-
-
-}
-
-
-.van-cell--clickable {
-    background-color: rgb(255, 253, 127);
-    position: relative;
-
-
-
 
 }
 </style>
