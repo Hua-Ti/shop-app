@@ -11,7 +11,7 @@ import mySrc from './assets/icons/my.svg';
 <template>
   <div class="head">
     <div class="nav">
-      <RouterLink :to="{ name: 'home' }" v-slot="{ navigate, isActive, isExactActive }" custom>
+      <RouterLink :to="{ name: 'homechild' }" v-slot="{ navigate, isActive, isExactActive }" custom>
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
@@ -61,7 +61,15 @@ import mySrc from './assets/icons/my.svg';
       </RouterLink>
     </div>
   </div>
-  <RouterView />
+  <div>
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" />
+    </router-view>
+    <!-- <RouterView /> -->
+  </div>
 </template>
 
 <style lang="scss" scoped>

@@ -1,4 +1,4 @@
-<!-- 瀑布流 -->
+<!-- 瀑布流（热门模块） -->
 <template>
     <div class="waterfallFlow">
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
@@ -6,6 +6,8 @@
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
                     <div class="picture">
+                        <!-- 幕布 -->
+                        <div class="curtain"></div>
                         <img class="bigPic" :src="item.itemImage" alt="">
                         <div class="liveBroadcastAtTheSamePrice">
                             <img :src="item.lefttop_taglist[0]?.img" alt="">
@@ -62,7 +64,7 @@ const count = ref(Math.random() * 2000)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
-    console.log(actorUrlId)
+    // console.log(actorUrlId)
     router.push({
         name: 'livePlayback',
         params: {
@@ -97,7 +99,8 @@ const onLoad = async () => {
 <style lang="scss">
 // 瀑布流内容
 .waterfallFlow {
-    margin: 10px;
+    padding: 10px 0px 10px 6px;
+    box-sizing: border-box;
     width: 100vw;
 
     .item {
@@ -105,19 +108,25 @@ const onLoad = async () => {
         width: 49%;
     }
     .item:nth-child(n+1){
-        padding-right: 10px;
+        padding:0 6px;
     }
+    
    
 
     .picture {
         position: relative;
     }
 
-    .bigPic {
+    .bigPic,.curtain {
         width: 100%;
         height: 100%;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
+    }
+    .curtain{
+        z-index:99999!important;
+        height: 100%;
+        background-color: #ff4668;
     }
 
     // 播放
@@ -154,7 +163,7 @@ const onLoad = async () => {
     .liveBroadcastAtTheSamePrice {
         position: absolute;
         top: 0;
-        left: 0px;
+        left: 5px;
 
         img {
             width: 40px;

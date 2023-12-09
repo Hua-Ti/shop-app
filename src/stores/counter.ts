@@ -1,5 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+// 引入stores的配置
+import type { userLocationItem } from './stores-typings'
 
 // pinia数据持久化
 /* //作为第三个参数配置
@@ -27,19 +29,20 @@ export const accountNumber = defineStore('counter', () => {
   const accountName = ref('');
   function changeaccountName(userid: string) {
     accountName.value = userid;
-
-    // console.log(accountName.value)
   }
   return { accountName, changeaccountName }
 }, { persist: true })
 
+// 获取用户定位
+export const useUserGeolocationStore = defineStore('userGeolocation', () => {
 
-export const getPicture = defineStore('counter', () => {
-  const picture = '../assets/images/user_touxiang.png'
-  function changePicture() {
-    // accountName.value = userid;
-
-    // console.log(accountName.value)
+  const userLocation = ref<userLocationItem>();
+  const locationShow = ref(false)
+  function getUserGeolocation(curLocation: userLocationItem) {
+    userLocation.value = curLocation;
   }
-  return { picture, changePicture }
-})
+  function changeLocationShow(show: boolean) {
+    locationShow.value = show
+  }
+  return { userLocation, locationShow, getUserGeolocation, changeLocationShow }
+}, { persist: true })

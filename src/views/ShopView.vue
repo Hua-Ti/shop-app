@@ -1,5 +1,6 @@
 <template>
     <div class="shopBox">
+
         <van-nav-bar :title="`购物车${curLength}`">
             <template #left>
                 <van-icon name="arrow-left" size="18" color="gray" @click="router.go(-1)" />
@@ -19,13 +20,16 @@
                 <button class="allPrice-btn" @click="theSubmit">结算</button>
             </div>
         </div>
+        <div>
+            <RouterView />
+        </div>
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="shop">
 import { ref, computed } from 'vue';
 import { showToast } from 'vant';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterView } from 'vue-router';
 const router = useRouter();
 
 let length = ref(0);
@@ -39,13 +43,16 @@ const curLength = computed(() => {
     }
     return res;
 })
-
 // 提交判断
 function theSubmit() {
+    router.push({ name: 'confirmorder' })
     if (checkedBox.value.length == 0) {
         return showToast('请先选择商品哦~');
+
     }
+
 }
+
 
 </script>
 

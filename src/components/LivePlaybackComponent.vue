@@ -38,7 +38,7 @@
                     <div class="comment" @click="changeShowBtn">
                         <van-icon class="myIcon comment-icon" color="white" size="16" name="comment" />
                         <p>买家评论</p>
-                        <span class="num">{{ commentNumber }}</span>
+                        <span class="num">{{ totalNum }}</span>
                     </div>
                     <div class="collection">
                         <van-icon class="myIcon" color="white" size="16" name="star" />
@@ -51,13 +51,16 @@
                 <slot name="slotVideoKey">
                 </slot>
             </div>
-            <div class="bottom-foot" :data-goodsId="goodsId">
+            <div class="bottom-foot" :data-goodsId="goodsId" @click="changeShopShowBottom">
                 <div class="goods">
                     <van-image width="50" height="50" radius="5" :src="goodsImg" />
                     <div class="goods-text">
                         <div class="goods-name">
                             <p>{{ goodsName }}</p>
-                            <van-image width="33" height="10" radius="5" :src="goodsLiveImg" v-if="goodsLiveImg" />
+                            <div class="goods-live-imgBox">
+                                <van-image width="41" height="15" class="myGoodsImg" radius="5" :src="e.img"
+                                    v-for="(e, i) in goodsLiveImgArr" :key="i" />
+                            </div>
                         </div>
                         <div class="goods-price">
                             <p>¥{{ goodsPrice }}</p>
@@ -97,27 +100,29 @@
                     </div>
                 </div>
             </div>
-            <div class="">
+            <div>
+                <p class="reminder" v-if="commentList.length == 0">暂时还没有人购买哦~</p>
                 <div class="comment-count">
                     <div class="item" v-for="e in commentList" :key="e.userId">
                         <van-image round width="30" height="30" :src="e.avatar" />
                         <div class="customer-text">
                             <div class="customer-about">
                                 <p class="name">{{ e.userName }}</p>
-                                <van-image class="lvImg" round width="18" height="18"
-                                    src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
-                                <span class="back-customer">回头客</span>
+                                <van-image v-if="e.userVipLevelInfo?.cover" class="lvImg" round width="14" height="14"
+                                    :src="e.userVipLevelInfo.cover" />
+                                <span class="back-customer" v-if="e.isRepeatConsumer">回头客</span>
                             </div>
                             <p class="customer-comment">
                                 {{ e.content }}
                             </p>
-                            <div class="imgBox" v-for="(imgSrc, i) in e.images" :key="i">
-                                <van-image radius="10" width="100" height="100" :src="imgSrc" />
+                            <div class="imgBox">
+                                <van-image radius="10" width="100" height="100" :src="imgSrc"
+                                    v-for="(imgSrc, i) in e.images" :key="i" class="customer-img" />
                             </div>
                             <p class="buy-things">
                                 <span class="buy-time">{{ e.time }}</span>
                                 <span class="buy-goods">
-                                    颜色:AG黑白色2 尺码:均码
+                                    {{ e.style }}
                                 </span>
                             </p>
                         </div>
@@ -125,17 +130,103 @@
                 </div>
             </div>
         </van-popup>
+
+        <!-- 购买商品弹出框 -->
+        <van-popup v-model:show="shopShowBottom" position="bottom"
+            :style="{ height: '70%', width: '94%', backgroundColor: 'rgba(0, 0, 0, 0.7)', marginLeft: '3%', borderRadius: '8px', padding: '10px', color: 'white' }"
+            :overlay-style="{ backgroundColor: 'rgba(0, 0, 0, 0.55)' }">
+            <div class="goods-top">
+                <div class="goods-top-head">
+                    <van-image width="80" height="80" radius="10" :src="shopGoodsData?.webImOptionInfo.option.img" />
+                    <div class="goods-top-right">
+                        <div class="top-imgBox">
+                            <div class="reputation" :style="{ backgroundImage: `url(${dsrBgImg})` }">
+                                <p>主播口碑<span>{{ dsrScore }}</span></p>
+                            </div>
+                            <div class="reputation-imgBox">
+                                <van-image width="35" height="15" class="myReputationImg" radius="3" :src="e.img"
+                                    v-for="(e, i) in goodsLiveImgArr" :key="i" />
+                            </div>
+                        </div>
+                        <div class="top-title">
+                            <p class="top-goods-name">{{ shopGoodsData?.skuInfo.title }}</p>
+                            <p class="top-goods-price">¥{{ goodsPrice }}</p>
+                            <div class="icon-box">
+                                <div class="thecomment">
+                                    <van-icon name="comment-o" size="14" />
+                                    <p>评论<span>{{}}</span></p>
+                                </div>
+                                <div class="help">
+                                    <van-icon name="service-o" size="14" />
+                                    <p>客服</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <van-image width="100%" height="27" radius="10" :src="shopGoodsData?.priceBannerOnly.imageURL" />
+            </div>
+            <div class="goods-middle">
+                <div class="goods-color">
+                    <p class="goods-middle-title">颜色</p>
+                    <div class="goods-content">
+                        <!-- 如果颜色为空的占位↓ -->
+                        <div class="goods-item" v-if="!shopGoodsData?.skuBarInfo.list">
+                            <van-image width="28" height="28" radius="4" :src="shopGoodsData?.webImOptionInfo.option.img" />
+                            <span>主播同款</span>
+                        </div>
+                        <!-- 有数据的情况↓ -->
+                        <div class="goods-item" v-for="e in shopGoodsData?.skuBarInfo.list">
+                            <van-image width="28" height="28" radius="4" :src="e.image" />
+                            <span>{{ e.label }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="size">
+                    <p class="goods-middle-title">尺码</p>
+                    <div class="goods-content">
+                        <div class="goods-item" v-for="e in shopGoodsData?.skuInfo.props[1].list">
+                            <p>{{ e.name }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="howNum">
+                    <p class="goods-middle-title">数量</p>
+                    <div class="myStepper">
+                        <div class="stepper-left" @click="clickLeft">
+                            <van-icon name="minus" />
+                        </div>
+                        <div class="mynumber">{{ goodsHowNum }}</div>
+                        <div class="stepper-right" @click="goodsHowNum++">
+                            <van-icon name="plus" />
+                        </div>
+                    </div>
+                    <!-- <van-stepper v-model="goodsHowNum" integer input-width="22" button-size="22" class="myStepper" /> -->
+                </div>
+            </div>
+            <div class="goods-bottom">
+                <button class="addShop">加入购物车</button>
+                <button class="gotoShop">立即购买</button>
+            </div>
+        </van-popup>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { getPlaybackCommentsItem } from '../typings';
+import { getPlaybackComment, getPlaybackGoodsShop } from '../apic/live-data'
+import type { getPlaybackCommentItem, getPlaybackBuyData, getPlaybackItemExplainSkuTopTitle_taglist } from '../typings';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
 // 传参内容
 const props = defineProps({
+    itemUrlId: {
+        type: String,
+    },
+    actorUrlId: {
+        type: String,
+    },
     isBenefitPointList: {
         type: Boolean,
     },
@@ -154,9 +245,11 @@ const props = defineProps({
     },
     authorHeight: {
         type: Number,
+        default: 163
     },
     authorWeight: {
         type: Number,
+        default: 44
     },
     goodsName: {
         type: String,
@@ -164,8 +257,8 @@ const props = defineProps({
     goodsImg: {
         type: String,
     },
-    goodsLiveImg: {
-        type: String,
+    goodsLiveImgArr: {
+        type: Array<getPlaybackItemExplainSkuTopTitle_taglist>,
     },
     goodsPrice: {
         type: String,
@@ -180,20 +273,61 @@ const props = defineProps({
     soldCount: {
         type: String
     },
-    commentList: {
-        type: Array<getPlaybackCommentsItem>
+    dsrScore: {
+        type: String,
+        default: "4.04"
+    },
+    dsrBgImg: {
+        type: String,
+        default: "https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
     }
 });
 
+const commentList = ref<Array<getPlaybackCommentItem>>([]);
+const totalNum = ref(0);
+const goodsHowNum = ref(1);
+
+// 限制数量
+function clickLeft() {
+    if (goodsHowNum.value > 1) {
+        goodsHowNum.value--
+    }
+}
+
+// 请求评论区数据
+async function getCommentsData() {
+    let { data } = await getPlaybackComment(props.itemUrlId!, props.actorUrlId!);
+    commentList.value = data.commentList;
+    totalNum.value = data.total;
+    // console.log(commentList.value);
+}
+
+const shopGoodsData = ref<getPlaybackBuyData>();
+
+// 请求购物数据
+async function getShopGoodsData() {
+    let { data } = await getPlaybackGoodsShop(props.itemUrlId!);
+    shopGoodsData.value = data.result;
+    // console.log(data.result);
+}
+
 onMounted(() => {
-    console.log(props.commentList);
+    getCommentsData();
+    getShopGoodsData();
+    // console.log(props.itemUrlId, props.actorUrlId);
 })
 
 // 评论区弹出框
 let showBottom = ref(false);
+// 商品购物弹出框
+let shopShowBottom = ref(false);
 
 function changeShowBtn() {
     showBottom.value = true;
+}
+
+function changeShopShowBottom() {
+    shopShowBottom.value = true;
 }
 </script>
 
@@ -289,6 +423,7 @@ function changeShowBtn() {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 5px;
 
     .myIcon {
         padding: 6px;
@@ -498,7 +633,8 @@ function changeShowBtn() {
     }
 
     .lvImg {
-        margin: 0 5px;
+        align-self: center;
+        margin: -2px 0 0 5px;
     }
 
     .back-customer {
@@ -507,6 +643,8 @@ function changeShowBtn() {
         color: #b07923;
         padding: 0 5px;
         border-radius: 999px;
+        margin-top: -1px;
+        margin-left: 5px;
     }
 
     .customer-comment {
@@ -519,12 +657,216 @@ function changeShowBtn() {
     margin-bottom: 8px;
     width: 300px;
     display: flex;
-    justify-content: space-between;
+    flex-flow: row wrap;
+    // justify-content: space-between;
     // background-color: pink;
+
+    .customer-img {
+        margin-left: 5px;
+    }
+
+    .customer-img:nth-child(3n) {
+        margin-right: 0;
+    }
+
+    .customer-img:nth-child(3n-2) {
+        margin-left: 0;
+    }
+
+    .customer-img:nth-child(n + 4) {
+        margin-top: 5px;
+    }
 }
+
+.myReputationImg {
+    margin-right: 3px;
+}
+
+.goods-live-imgBox {
+    margin-bottom: 3px;
+
+    .myGoodsImg {
+        margin-right: 5px;
+    }
+}
+
 
 .buy-things {
     font-size: 11px;
     color: rgb(162, 162, 162);
+
+    .buy-goods {
+        display: inline-block;
+        width: 250px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+.goods-top {
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgb(220, 220, 220, 0.3);
+}
+
+.goods-top-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.goods-top-right {
+    display: flex;
+    flex-flow: column nowrap;
+    color: white;
+
+    .top-title {
+        width: 248px;
+        font-size: 11px;
+    }
+
+    .top-goods-name {
+        width: 248px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .top-goods-price {
+        font-size: 13px;
+        line-height: 13px;
+        color: var(--subject-color);
+        margin: 8px 0;
+    }
+
+    .top-imgBox {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .reputation {
+        font-size: 10px;
+        width: 85px;
+        text-indent: 5px;
+        height: 15px;
+        border-radius: 3px;
+        line-height: 15px;
+        margin-right: 5px;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+}
+
+.icon-box {
+    display: flex;
+
+    div {
+        display: flex;
+        align-items: center;
+        margin-right: 25px;
+
+        p {
+            font-size: 10px;
+            margin-left: 3px;
+        }
+
+        span {
+            margin-left: 2px;
+        }
+    }
+}
+
+.goods-middle {
+    .goods-middle-title {
+        font-size: 11px;
+        padding-top: 10px;
+    }
+
+    .goods-content {
+        width: 94%;
+        flex-flow: row wrap;
+        align-items: center;
+        display: flex;
+    }
+}
+
+.goods-item {
+    display: flex;
+    align-items: center;
+    background-color: #413a3a;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+
+    p,
+    span {
+        font-size: 11px;
+        padding: 10px;
+    }
+
+    span {
+        padding: 8px;
+        margin: 0 5px;
+    }
+}
+
+.myStepper {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    .stepper-left,
+    .stepper-right {
+        width: 22px;
+        height: 22px;
+        background-color: #413a3a;
+        font-size: 13px;
+        line-height: 23px;
+        color: gainsboro;
+        text-align: center;
+    }
+
+    .mynumber {
+        margin: 0 2px;
+        padding: 0;
+        font-size: 13px;
+        text-indent: 7.5px;
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        outline: none;
+        border: none;
+        background-color: #413a3a;
+    }
+}
+
+.goods-bottom {
+    transform: translateY(180px);
+    display: flex;
+    justify-content: space-between;
+
+    button {
+        font-size: 11px;
+        width: 49%;
+        height: 25px;
+        border-radius: 999px;
+        border: none;
+        outline: none;
+    }
+
+    .addShop {
+        color: var(--subject-color);
+    }
+
+    .gotoShop {
+        background-image: linear-gradient(90deg, #ff4367, #ff2889);
+    }
+}
+
+.reminder {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 12px;
+    color: rgb(165, 165, 165);
 }
 </style>

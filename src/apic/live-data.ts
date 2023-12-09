@@ -1,5 +1,5 @@
 import axios from "axios";
-import { type LiveBroadcastSort, type LiveData, type liveRoom, type liveRoomGood, type getPlaybackData, type liveComment, type LiveDetailList} from '../typings'
+import { type LiveBroadcastSort, type LiveData, type liveRoom, type liveRoomGood, type getPlaybackData, type getPlaybackCommentItem, type getPlaybackBuyData,type liveComment, type LiveDetailList } from '../typings'
 
 //直播分类
 export async function getLiveBroadcastSort() {
@@ -36,4 +36,28 @@ export async function getPlaybackData(itemUrlId: string, actorUrlId: string) {
 export async function getGood(itemId:string){
     let { data } = await axios.get<LiveDetailList>(`https://apis.netstart.cn/mogujie/goods/detail?itemId=${itemId}`)
     return data
+}
+
+// 直播回放的评论(弹窗)
+export async function getPlaybackComment(itemUrlId: string, actorUrlId: string) {
+    let { data } = await axios.get<{
+        data: {
+            "end": boolean,
+            "total": number,
+            "commentList": Array<getPlaybackCommentItem>
+        }
+    }>(` https://apis.netstart.cn/mogujie/video/comment?itemId=${itemUrlId}&actorId=${actorUrlId}`);
+
+    return data;
+}
+
+// 直播回放的购物(弹窗)
+export async function getPlaybackGoodsShop(itemUrlId: string) {
+    let { data } = await axios.get<{
+        data: {
+            result: getPlaybackBuyData
+        }
+    }>(`https://apis.netstart.cn/mogujie/goods/detail?itemId=${itemUrlId}`)
+
+    return data;
 }
