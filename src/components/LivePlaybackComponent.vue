@@ -111,8 +111,9 @@
                             <p class="customer-comment">
                                 {{ e.content }}
                             </p>
-                            <div class="imgBox" v-for="(imgSrc, i) in e.images" :key="i">
-                                <van-image radius="10" width="100" height="100" :src="imgSrc" />
+                            <div class="imgBox">
+                                <van-image radius="10" width="100" height="100" :src="imgSrc"
+                                    v-for="(imgSrc, i) in e.images" :key="i" class="customer-img" />
                             </div>
                             <p class="buy-things">
                                 <span class="buy-time">{{ e.time }}</span>
@@ -519,8 +520,13 @@ function changeShowBtn() {
     margin-bottom: 8px;
     width: 300px;
     display: flex;
+    flex-flow: row wrap;
     justify-content: space-between;
     // background-color: pink;
+
+    .customer-img:nth-child(n + 4) {
+        margin-top: 5px;
+    }
 }
 
 .buy-things {

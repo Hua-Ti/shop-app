@@ -32,11 +32,12 @@
                                     <span v-if="Math.floor(
                                         (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
                                     )">.{{ Math.floor(
-        (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
-    ) }}
+    (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
+) }}
                                         <span class="decimalTwo"
                                             v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                            {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
+                                            {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10)
+                                                /
                                                 10) * 100) }}
                                         </span>
                                     </span>
@@ -65,7 +66,7 @@ const loading = ref(false);
 const finished = ref(false);
 const count = ref(1)
 let keyword: string = route.query.keyword;
-console.log('keyword',keyword)
+console.log('keyword', keyword)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
@@ -190,9 +191,9 @@ const onLoad = async () => {
         line-height: 1.2;
     }
 
-    .information{
+    .information {
         background-color: #fff;
-        margin-top:-5px;
+        margin-top: -5px;
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
     }
@@ -235,4 +236,5 @@ const onLoad = async () => {
             margin-left: -1px;
         }
     }
-}</style>
+}
+</style>

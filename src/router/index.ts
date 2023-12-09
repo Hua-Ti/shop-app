@@ -14,6 +14,9 @@ import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
 import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
 import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
+import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
+import AddressManagement from '../views/AddressManagement.vue'
+import LocationView from '../views/AddressManagementChildren/LocationView.vue'
 import ModuleHome from '../views/HomeChildView/ModuleHome.vue'
 
 
@@ -30,11 +33,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      children:[
+      children:  [
         {
-          path:'/',
-          name:'homechild',
-          component:HomeChildView
+          path:  '/',
+          name:  'homechild',
+          component:  HomeChildView
         }
       ]
     },
@@ -46,7 +49,14 @@ const router = createRouter({
     {
       path: '/shop',
       name: 'shop',
-      component: ShopView
+      component: ShopView,
+      children: [
+        {
+          path: 'confirmorder',
+          name: 'confirmorder',
+          component: ConfirmOrder,
+        },
+      ]
     },
     {
       path: '/user',
@@ -120,9 +130,25 @@ const router = createRouter({
       component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
     },
     {
+      path: '/address-anagement',
+      name: "addressmanagement",
+      component: AddressManagement,
+      children: [
+        {
+          path: 'location',
+          name: 'location',
+          component: LocationView,
+        }
+      ]
+    },
+    {
       path: '/moduleHome',
       name: "moduleHome",
       component: ModuleHome
+    },{
+      path:'/project-detail',
+      name:"project-detail",
+      component:()=>import("../views/ProductDetailsView.vue")
     }
 
   ]
