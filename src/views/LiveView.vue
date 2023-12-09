@@ -16,7 +16,7 @@
                     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
                         <van-list v-model:loading="loading" :finished="finished" finished-text="我也是有底线的喔o(〃＾▽＾〃)o"
                             @load="onLoad" offset="100">
-                            <LiveComponent :liveData="liveData"/>
+                            <LiveComponent :liveData="liveData" />
                         </van-list>
                     </van-pull-refresh>
                     <!-- <LiveComponent :liveData="liveData" /> -->
@@ -55,7 +55,7 @@ onMounted(async () => {
     liveList.value = data.tabs.items;
     page.value = 1;
     getLivesList();
-    
+
 });
 
 // 点击跳转相关
@@ -67,12 +67,13 @@ function gotoShop() {
 const getLivesList = (async () => {
     let { data } = await getLiveList(liveId.value, page.value);
     // console.log(data);
-    
+
     liveData.value = [...data?.lives, ...liveData.value];
     loading.value = false
     filterShow.value = false
     refreshing.value = false
     finished.value = true
+
     if (page.value > 1) {
         liveData.value = [...liveData.value, ...data?.lives];
     }
@@ -84,25 +85,28 @@ const getLivesList = (async () => {
     if (liveData.value.length == 0) {
         loading.value = false
         finished.value = false
-        filterShow.value = false
+        filterShow.value = true
     }
-    return
 })
 
 
-const onNavHadle = function (i: any) {
+const onNavHadle = function (i: number) {
     //点击事件切换nav改变直播类型ID并传值
     page.value = 1;
     liveId.value = i;
     liveData.value = [];
     getLivesList();
+
+    // if (liveId.value != 60) {
+    //     getLivesList();
+    // }
 }
 
 //上拉加载
 
 const onLoad = async () => {
-        page.value++
-        await getLivesList()
+    page.value++
+    await getLivesList()
 }
 // 下拉刷新
 const onRefresh = () => {
@@ -141,6 +145,7 @@ const onRefresh = () => {
         margin-bottom: 65px;
     }
 }
+
 // .hh{
 //     height: 70vh;
 //     // margin-bottom: 200px;

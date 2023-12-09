@@ -31,8 +31,8 @@ export interface List {
 }
 
 // 首页二级导航条下标
-export interface item{
-    [proName:string]:any
+export interface item {
+    [proName: string]: any
 }
 
 // 首页小导航 （数组（字符串））
@@ -166,56 +166,83 @@ export interface livePlayBackListLefttop_taglistItem {
 }
 
 //直播间信息(直播流,码率,主播等信息)
-export interface liveRoom{
-    "data":{
-        "roomId":number,
-        "liveUrl":string,
-        "actorInfo":{
-            "avatar":string,
-            "uid":string,
-            "uname":string
+export interface liveRoom {
+    "data": {
+        "roomId": number,
+        "liveUrl": string,
+        "actorInfo": {
+            "avatar": string,
+            "uid": string,
+            "uname": string
         },
-        "actorTag":{
-            "icon":string,
-            "listIcon":string,
+        "actorTag": {
+            "icon": string,
+            "listIcon": string,
         }
-        "noticeContent":string,
-        "actUserId":string,
-        "onlineUserCount":number,
-        "definitions":Array<liveRoomDefinitions>
+        "noticeContent": string,
+        "actUserId": string,
+        "onlineUserCount": number,
+        "definitions": Array<liveRoomDefinitions>
     }
 }
 //直播间画质
-export interface liveRoomDefinitions{
-    "auto":boolean,
-    "selected":false,
-    "height":number,
-    "width":number,
-    "label":string,
-    "template":string,
-    "liveUrl":string
+export interface liveRoomDefinitions {
+    "auto": boolean,
+    "selected": false,
+    "height": number,
+    "width": number,
+    "label": string,
+    "template": string,
+    "liveUrl": string
 }
 //直播间促销商品
-export interface liveRoomGood{
-    "data":{
-        "itemList":Array<liveRoomGoods>
+export interface liveRoomGood {
+    "data": {
+        "itemList": Array<liveRoomGoods>
     }
 }
 
-export interface liveRoomGoods{
-    "shopId":number,
-    "image":string,
-    "title":string,
-    "itemId":string,
-    "defaultPrice":number,
-    "historySale":number,
-    "stock":number,
-    "seckill":boolean,//是否秒杀中
+export interface liveRoomGoods {
+    "shopId": number,
+    "image": string,
+    "title": string,
+    "itemId": string,
+    "defaultPrice": number,
+    "historySale": number,
+    "stock": number,
+    "seckill": boolean,//是否秒杀中
 }
+
 //直播间评论
-export interface liveComment{
-    "username":string
-    "action":string
+export interface liveComment {
+    "username": string
+    "action": string
+}
+
+//直播间商品详情
+export interface LiveDetailList {
+    data: {
+        result: {
+            skuInfo: {
+                props: Array<{
+                    label: string,
+                    list: Array<{
+                        index: number,
+                        name: string,
+                        isDefault: boolean,
+                        type:string
+                    }>
+                }>
+            },
+            skuBarInfo: {
+                list: Array<{
+                    color: string,
+                    label: string,
+                    image: string
+                }>
+            }
+        }
+    }
 }
 
 // 直播回放相关

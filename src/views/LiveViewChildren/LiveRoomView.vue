@@ -1,7 +1,8 @@
 <template>
     <div class="live-box">
         <!-- 返回 -->
-        <van-floating-bubble axis="xy" icon="revoke" magnetic="x" :gap="5" v-model:offset="offset" @click="goBack" />
+        <van-floating-bubble axis="xy" icon="revoke" magnetic="x" :gap="5" v-model:offset="offset" @click="goBack"
+            v-if="definitions.length >= 1"/>
 
         <div class="handle" v-if="roomData">
             <header class="head-section">
@@ -36,17 +37,28 @@
                     </div>
                 </div>
                 <!-- 底部栏 -->
-                <div class="foot-section flex">
+                <div class="foot-section flex" v-if="!showBottom">
                     <div class="flex">
-                        <div class="icon-sell-bag">
+                        <div class="icon-sell-bag" @click="goodsShow = true">
                             <div class="sell-bag-num">{{ goods.length }}</div>
                         </div>
                         <div class="comment-box" @click="showBottom = true">
                             说点什么...
                         </div>
                     </div>
+
+
                     <!-- 右侧点赞转发 -->
                     <div class="flex fans-click">
+                        <!-- 清晰度 -->
+                        <div class="clarity" @click="showDefin = true" v-if="definitions.length > 0">{{ definitions[definitionsIndex].label }}
+                            <div class="ropover" v-show="showDefin">
+                                <div class="clarityItem" v-for="(d, index) in definitions" :key="index"
+                                    :class="{ active: index == definitionsIndex }" @click.stop="handover(index)">{{ d.label
+                                    }}
+                                </div>
+                            </div>
+                        </div>
                         <div class="icon-Share" @click="showShare = true">
                         </div>
                         <van-share-sheet v-model:show="showShare" :options="options" @select="onSelect" />
@@ -54,28 +66,37 @@
                     </div>
                     <!-- 点赞画布 -->
                     <canvas id="thumsCanvas" width="200" height="500" style="width: 100px;height: 250px;"></canvas>
-                    <!-- 发送评论 -->
-                    <van-popup v-model:show="showBottom" round position="bottom" :style="{ paddingTop: '10px' }">
-                        <div class="onInput">
-                            <var-input variant="outlined" placeholder="请输入您的评论" clearable v-model="commentValue"
-                                :autofocus="true" maxlength="100" />
-                        </div>
 
-                        <div class="btn-send" @click="onSend">
-                            <van-button square type="success">发送</van-button>
-                        </div>
-                    </van-popup>
                 </div>
+                <div class="foot-zw" v-else></div>
             </div>
         </div>
+        <!-- 发送评论 -->
+        <van-popup v-model:show="showBottom" round position="bottom" :style="{ paddingTop: '10px' }"
+            :overlay-style="{ backgroundColor: 'transparent' }">
+            <div class="onInput">
+                <var-input variant="outlined" placeholder="请输入您的评论" clearable v-model="commentValue" :autofocus="true"
+                    maxlength="100" />
+            </div>
+
+            <div class="btn-send" @click="onSend">
+                <van-button square type="success">发送</van-button>
+            </div>
+        </van-popup>
+
+        <!-- 商品栏 -->
+        <van-popup v-model:show="goodsShow" position="bottom" :overlay-style="{
+            backgroundColor: 'transparent'
+        }" duration="0">
+            <LiveGoods :goods="goods" />
+        </van-popup>
 
 
         <div class="videoBox">
             <video ref="videoElement" muted autoplay style="width: 100vw; height: 100vh; object-fit: fill"></video>
         </div>
 
-        <!-- 商品栏 -->
-        <LiveGoods :goods="goods" />
+
     </div>
 </template>
 
@@ -85,9 +106,10 @@ import BScroll from '@better-scroll/core'
 import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import { getLiveRoom, getComment, getLiveGoods } from "../../apic/live-data"
-import type { liveComment, liveRoomGoods } from "../../typings"
+import type { liveRoomDefinitions, liveRoomGoods } from "../../typings"
 import ThumbsUpAni from './canvas.js'
 import LiveGoods from '../../components/LiveGoods.vue'
+import { showLoadingToast } from 'vant';
 // import { reactive } from "vue";
 
 const width = ref(window.innerWidth);
@@ -100,9 +122,9 @@ const list = ref();
 const wrapper = ref();
 const roomData = ref();
 // const comment = ref<Array<liveComment>>([]);
-const comment = ref();
+const comment = ref([] as any);
 // const commentArr = ref<Array<liveComment>>([]);
-const commentArr = ref();
+const commentArr = ref([] as any);
 const goods = ref<Array<liveRoomGoods>>([]);
 const flvPlayer = ref();
 const count = ref(0);
@@ -114,6 +136,11 @@ let actUserId = ref();
 let thumbsUpAni = '';
 const showBottom = ref(false);
 const showShare = ref(false);
+const goodsShow = ref(false);
+//直播画质
+const definitionsIndex = ref(0);
+const definitions = ref<Array<liveRoomDefinitions>>([]);
+const showDefin = ref(false);
 const options = [
     { name: '微信', icon: 'wechat' },
     { name: '微博', icon: 'weibo' },
@@ -132,6 +159,9 @@ onMounted(async () => {
     comment.value = await getComment();
     comment.value = comment.value.slice(0, 5)
     commentArr.value = await getComment();
+    definitions.value = data.definitions;
+    console.log(definitions.value);
+
     createVideo();
     //创建BS对象
     nextTick(() => {
@@ -146,13 +176,14 @@ onMounted(async () => {
         thumbsUpAni = new ThumbsUpAni();
     });
     getGoods()
+
 })
 const createVideo = () => {
 
     if (flvjs.isSupported()) {
         flvPlayer.value = flvjs.createPlayer({
             type: 'flv',
-            url: roomData.value.definitions[0].liveUrl,
+            url: definitions.value[definitionsIndex.value].liveUrl,
             isLive: true,
             hasAudio: true,
         });
@@ -194,8 +225,9 @@ const muted = setTimeout(() => {
 
 const getGoods = async () => {
     let { data } = await getLiveGoods(roomId.value, actUserId.value);
-    console.log("asas", data);
     goods.value = data.itemList.reverse();
+    console.log(goods.value);
+
 }
 
 const onSelect = () => {
@@ -223,13 +255,42 @@ const onSend = () => {
     commentValue.value = '';
 }
 
+const destroy = () => {
+    flvPlayer.value.pause(); //暂停播放数据流
+    flvPlayer.value.unload(); //取消数据流加载
+    flvPlayer.value.detachMediaElement(); //将播放实例从节点中取出
+    flvPlayer.value.destroy(); //销毁播放实例
+    flvPlayer.value = null;
+};
+// 切换清晰度
+const handover = (index: number) => {
+    definitionsIndex.value = index;
+    destroy();
+    createVideo();
+    showDefin.value = false;
+    showLoadingToast({
+        message: '切换中,请稍后...',
+        forbidClick: true,
+    });
+}
+
 onUnmounted(() => {
     clearInterval(setComment)
     clearInterval(muted)
 })
 </script>
 
-<style scoped>
+<style>
+ .van-floating-bubble {
+        background-color: rgba(0, 0, 0, .1) !important;
+    }
+.live-box {
+    .var-input__input {
+        color: #fff;
+    }
+}
+</style>
+<style lang="scss" scoped>
 .live-box {
     position: fixed;
     left: 0;
@@ -238,6 +299,7 @@ onUnmounted(() => {
     bottom: 0;
     background-color: #fff;
     z-index: 999;
+
 
 
     .handle {
@@ -382,6 +444,11 @@ onUnmounted(() => {
         }
     }
 
+    .foot-zw {
+        height: 70px;
+        width: 100%;
+    }
+
     .flex {
         display: flex;
     }
@@ -450,8 +517,10 @@ onUnmounted(() => {
 
     .van-popup--bottom {
         display: flex;
-        background-color: #d0cff1;
-        /* background-color: rgba(204, 204, 204, .9); */
+        /* background-color: #ccc; */
+
+        /* background-color: #d0cff1; */
+        background-color: rgba(1, 1, 1, .3);
         /* background-image: url('https://mlogin.vip.com/asserts/img/login_bg.3a93a8bf.jpg'); */
     }
 
@@ -459,6 +528,40 @@ onUnmounted(() => {
         margin-left: 10px;
         height: 55px;
         width: 70px;
+    }
+
+    .clarity {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        color: #fff;
+        line-height: 36px;
+        margin-right: 10px;
+        position: relative;
+    }
+
+    .ropover {
+        width: 70px;
+        position: absolute;
+        bottom: 40px;
+        left: -18px;
+        text-align: center;
+    }
+
+    .clarityItem {
+        padding: 5px 15px;
+        background-color: rgba(0, 0, 0, .5);
+        border-bottom: 1px solid #ccc;
+
+        &:last-of-type {
+            border-bottom: none
+        }
+
+        &.active {
+            color: #00a1d6;
+            /* background-color: rgba(204, 204, 204, .8); */
+            /* background-color: #ccc; */
+        }
     }
 }
 </style>

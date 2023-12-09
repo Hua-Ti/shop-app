@@ -1,5 +1,5 @@
 import axios from "axios";
-import { type LiveBroadcastSort, type LiveData, type liveRoom, type liveRoomGood, type getPlaybackData, type liveComment } from '../typings'
+import { type LiveBroadcastSort, type LiveData, type liveRoom, type liveRoomGood, type getPlaybackData, type liveComment, type LiveDetailList} from '../typings'
 
 //直播分类
 export async function getLiveBroadcastSort() {
@@ -30,5 +30,10 @@ export async function getComment() {
 // 直播回放相关
 export async function getPlaybackData(itemUrlId: string, actorUrlId: string) {
     let { data } = await axios.get<getPlaybackData>(`https://apis.netstart.cn/mogujie/video/detail?itemId=${itemUrlId}&actorId=${actorUrlId}`)
+    return data
+}
+//商品数据
+export async function getGood(itemId:string){
+    let { data } = await axios.get<LiveDetailList>(`https://apis.netstart.cn/mogujie/goods/detail?itemId=${itemId}`)
     return data
 }

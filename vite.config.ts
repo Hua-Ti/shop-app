@@ -6,15 +6,16 @@ import vue from '@vitejs/plugin-vue'
 import postCssPxToRem from 'postcss-pxtorem'
 import autoImport from 'unplugin-auto-import/vite'
 import { VarletUIResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
   plugins: [
     vue(),
     Components({
-      resolvers: [VantResolver(),VarletUIResolver()],
+      resolvers: [VantResolver(),VarletUIResolver(),ElementPlusResolver()],
     }),
     autoImport({
-      resolvers: [VarletUIResolver({ autoImport: true })]
+      resolvers: [VarletUIResolver({ autoImport: true }),ElementPlusResolver()],
     })
   ],
   resolve: {
