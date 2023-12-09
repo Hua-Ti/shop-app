@@ -14,4 +14,5 @@ const router = useRouter();
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

@@ -32,14 +32,14 @@
     <!-- 除了热门之外的 -->
     <div class="homeChild" v-if="route.query.pid !== '666' && route.query.pid != undefined">
         <!-- 首页二级模块 -->
-        <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav" />
+        <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav"/>
         <!-- 正在流行独有 -->
         <div v-if="route.query.pid === '3627'">
             <!-- 轮播图 -->
             <div class="broadcastMap">
-                <van-swipe :autoplay="3000" lazy-render>
-                    <van-swipe-item v-for="image in images" :key="image">
-                        <img :src="image" />
+                <van-swipe :autoplay="3000" lazy-render @change="onChange" >
+                    <van-swipe-item v-for="(image,a) in images" :key="image" >
+                        <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }"/>
                     </van-swipe-item>
                 </van-swipe>
             </div>
@@ -48,12 +48,11 @@
                 <div class="autu-menu">
                     <div class="autu">
                         <div class="item" v-for="(item, index) in TypeData" :key="index">
-                            <router-link :to="{name:'moduleHome',query:{keyword:item}}">
+                            <router-link :to="{ name: 'moduleHome', query: { keyword: item } }">
                                 <img class="pic" :src="`pic/p${index + 1}.png`">
                                 <p class="content">{{ item }}</p>
                             </router-link>
                         </div>
-                        <!-- 潮流，休闲区， -->
                     </div>
                 </div>
             </div>
@@ -80,6 +79,7 @@ import waterfallFlowTwo from '@/components/waterfallFlowTwo.vue';
 
 import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeNavigation, getHomeModuleRowTwo } from '../../apic/homes'
 import { type List, type HomeTopNav, type gettimeRob, type gettimeRobItem, type recommendList } from '../../typings'
+import { useBgColor } from '../../stores/bgChange';
 const router = useRouter();
 const route = useRoute();
 // 热门页面
@@ -92,10 +92,21 @@ const timeRobItem = ref<Array<gettimeRobItem>>([])
 const RecommendNav = ref<Array<recommendList>>([])
 const TypeData = ['百变潮流裤', '棒球服', '宽松卫衣', '毛呢大衣', '毛衣', '棉服', '皮草', '气质风衣', '少女感马甲', '小个子精选', '羽绒服', '针织衫'];
 const images = [
-      'projectTitle/百变潮流裤bg.png',
-      'projectTitle/棒球服bg.png',
-      'projectTitle/宽松卫衣bg.png',
-    ];
+    'projectTitle/百变潮流裤bg.png',
+    'projectTitle/棒球服bg.png',
+    'projectTitle/宽松卫衣bg.png',
+    'projectTitle/毛呢大衣bg.png',
+    'projectTitle/毛衣bg.png',
+    'projectTitle/棉服bg.png',
+    'projectTitle/皮草bg.png',
+    'projectTitle/气质风衣bg.png',
+    'projectTitle/少女感马甲bg.png',
+    'projectTitle/小个子精选bg.png',
+    'projectTitle/羽绒服bg.png',
+    'projectTitle/针织衫bg.png',
+];
+
+const bgChange = useBgColor();
 
 // 点击跳转相关
 //跳购买页面
@@ -108,23 +119,24 @@ const pid = route.query.pid ? route.query.pid : '666';
 async function fn(pid: string) {
     let RecommendData = await getHomeModuleRowTwo(pid);
     RecommendNav.value = RecommendData.data?.list;
-    if (RecommendNav.value.length < 12) {
+    if (RecommendNav.value?.length < 12) {
         RecommendNav.value = RecommendNav.value.splice(0, 7)
     }
     // console.log(RecommendNav)
 }
+const onChange = (index: string) => {
+    console.log('当前 Swipe 索引：' + index);
+    bgChange.changeColor(index);
+}
 
 onMounted(async () => {
-    // console.log('pid', pid)
     //首页数据(热门)
     console.log("pid76", pid);
-
     if (pid === '666' || pid == undefined) {
         let homeTwoNavMenu: any = await getHomeNavigation();
         let dataArr = await getHomeModuleRow();
         let dataTime = await gettimeLimitedQuickGrab();
         let dataProg: any = await getTimeProg();
-
         homeTwoNav.value = homeTwoNavMenu.data[117330].list
         homeNav.value = dataArr
         TimeRob.value = dataTime
@@ -292,7 +304,7 @@ watch(() => route.query,
             padding: 10px 0;
             box-sizing: border-box;
             text-align: center;
-            color:#333;
+            color: #333;
         }
     }
 
@@ -300,18 +312,20 @@ watch(() => route.query,
         width: 100vw;
         padding: 0 12px;
     }
-    .broadcastMap{
+
+    .broadcastMap {
         width: 100vw;
         // padding: 0 10px;
         padding: 0 2px;
         box-sizing: border-box;
         border-radius: 12px;
         overflow: hidden;
-        
-        img{
+
+        img {
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
         }
     }
-}</style>
+}
+</style>

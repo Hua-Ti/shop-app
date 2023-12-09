@@ -115,6 +115,8 @@ const onLoad = async () => {
 
     .picture {
         position: relative;
+        // min-height: 157.76px;
+        // background-color: #ff4668;
     }
 
     .bigPic,.curtain {
