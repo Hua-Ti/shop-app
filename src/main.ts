@@ -1,4 +1,5 @@
 import './assets/base.scss';
+
 import './assets/fontIcon/iconfont.css'
 import './assets/fontIcon2/iconfont.css'
 import 'amfe-flexible' // rem 布局适配
@@ -12,7 +13,7 @@ import 'vant/es/dialog/style';
 import 'vant/es/notify/style';
 // ImagePreview
 import 'vant/es/image-preview/style';
-import {VueMasonryPlugin} from 'vue-masonry';
+import { VueMasonryPlugin } from 'vue-masonry';
 
 
 
