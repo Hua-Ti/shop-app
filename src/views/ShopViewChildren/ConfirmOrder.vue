@@ -13,30 +13,30 @@
                 温馨提示：请及时跟进订单信息哟！
             </van-notice-bar>
             <div class="address-box" :style="{ backgroundImage: `url(${line})` }">
-                <van-cell @click="router.push({ name: 'addressmanagement' })" value="" class="address">
-                    <template #icon>
-                        <van-icon name="location-o" size="22" class="location" />
-                    </template>
-                    <template #right-icon>
-                        <van-icon name="arrow" class="location" size="20" color="#999" />
-                    </template>
-                    <template #title>
-                        <span class="custom-title">
+                <div class="address" @click="router.push({ name: 'addressmanagement' })">
+                    <div class="address-one">
+                        <van-icon name="location-o" class="location" size="25" color="gray" />
+                    </div>
+                    <div class="address-two">
+                        <p class="custom-title">
                             {{ addressNeirong.name }}{{ addressNeirong.tel }}
-                        </span>
-                    </template>
-                    <template #label>
-                        <span class="custom-title">{{ addressNeirong.address || '点击选择地址' }}</span>
-                    </template>
-                </van-cell>
+                        </p>
+                        <p class="custom-span">{{ addressNeirong.address || '点击选择地址' }}</p>
+                    </div>
+                    <div class="address-three">
+                        <van-icon name="arrow" class="location" size="25" color="gray" />
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 确认内容 -->
+        <!-- 确认提交的内容 -->
         <div class="confirm-center">
             <!-- 举个例子占位 -->
-            <img style="width: 100vw;" src="../../assets/images/例子.png" alt="">
+            、
         </div>
+
+
 
         <div class="confirm-bottom">
             <van-submit-bar :price="3050" text-align="left" button-text="提交订单" button-color="#ff468a" @submit="onSubmit" />
@@ -52,12 +52,19 @@ import { showToast } from 'vant';
 import { getAddress } from '../../stores/address'
 const addressNeirong = getAddress()
 const router = useRouter();
-const onSubmit = () => showToast('点击按钮');
+
+
+const onSubmit = () => {
+    if (!addressNeirong.address) {
+        showToast('请选择地址');
+    } else { showToast('跳到支付'); }
+}
+
 </script>
 
 <style lang="scss" scoped>
 .confirm-order {
-    background-color: #fff5cf;
+    background-color: #f6f6f6;
     position: fixed;
     top: 0px;
     bottom: 0px;
@@ -70,14 +77,55 @@ const onSubmit = () => showToast('点击按钮');
     padding-top: 2px;
     background-repeat: repeat-x;
     background-size: 10%;
+}
 
-    .address {
-        line-height: 120%;
+.address {
+    // line-height: 120%;
+    background-color: rgb(255, 255, 255);
+    // width: 90vw;
+    display: flex;
+    justify-content: space-between;
+
+    div {
+        // padding: 2%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+    }
+
+}
+
+.address-one {
+    background-color: white;
+    width: 9vw;
+    text-align: right;
+}
+
+.address-two {
+    background-color: rgb(255, 255, 255);
+    width: 82vw;
+
+    // padding: 1%;
+    p {
+        margin-top: 2%;
+        padding-left: 1%;
+        padding-right: 1%;
     }
 }
 
+.custom-span {
+
+    color: rgb(126, 125, 125);
+    line-height: 1.1;
+}
+
+.address-three {
+    background-color: rgb(255, 255, 255);
+    width: 9vw;
+    text-align: left;
+}
+
 .location {
-    line-height: 150%;
-    margin-right: 1%;
+    line-height: 200%;
+
 }
 </style>
