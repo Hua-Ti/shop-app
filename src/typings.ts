@@ -258,13 +258,15 @@ export interface getPlaybackItemExplainListItem {
     "title": string,
     "videoId": number,
     "actorInfo": getPlaybackActorInfo,
+    "dsrInfo": getPlaybackDsrInfo,
     "actorId": number,
     "subTitle": string,
     "videoInfo": getPlaybackVideo,
     "comments": Array<getPlaybackCommentsItem>,
     "shareInfo": Array<getPlaybackShareInfo>,
     "itemInfo": getPlaybackItemInfo,
-    "itemExplainTopPrice_taglist": Array<getPlaybackItemExplainTopPrice_taglistItem>
+    "itemExplainTopPrice_taglist": Array<getPlaybackItemExplainTopPrice_taglistItem>,
+    "itemExplainSkuTopTitle_taglist": Array<getPlaybackItemExplainSkuTopTitle_taglist>
 }
 
 // 直播回放-itemExplainTopPrice_taglist
@@ -272,6 +274,24 @@ export interface getPlaybackItemExplainTopPrice_taglistItem {
     "img": string,
     "w": number,
     "h": number,
+}
+
+// 直播回放-商品的live图片-itemExplainSkuTopTitle_taglist
+export interface getPlaybackItemExplainSkuTopTitle_taglist {
+    "styleType": number,
+    "img": string,
+    "w": number,
+    "h": number
+}
+
+// 直播回放-主播口碑
+export interface getPlaybackDsrInfo {
+    "dsrDesc": string,
+    "showLevel": boolean,
+    "dsrScoreColor": string,
+    "dsrDescColor": string,
+    "dsrScore": string,
+    "dsrBgImg": string
 }
 
 // 直播回放-video
@@ -346,7 +366,7 @@ export interface getPlaybackCommentItem {
     "commentId": number,
     "userVipLevelInfo": getPlaybackCommentUserVipLevelInfo,
     "avatar": string,
-    "content": string 
+    "content": string
 }
 
 // 直播回放-商品评论中的userVipLevelInfo
@@ -356,6 +376,69 @@ export interface getPlaybackCommentUserVipLevelInfo {
         "level": number
     },
     "cover": string
+}
+
+// 直播回放-购买详情
+export interface getPlaybackBuyData {
+    "priceBannerOnly": getPlaybackPriceBannerOnly,
+    "skuInfo": getPlaybackSkuInfo,
+    "skuBarInfo": getPlaybackSkuBarInfoImg,
+    "webImOptionInfo": getPlaybackwebImOptionInfo
+}
+
+// 直播回放-购买广告图片-priceBannerOnly
+export interface getPlaybackPriceBannerOnly {
+    "w": number,
+    "h": number,
+    "imageURL": string
+}
+
+// 直播回放-skuInfo
+export interface getPlaybackSkuInfo {
+    "props": Array<getPlaybackSkuInfoProps>
+    "styleKey": string,
+    "sizeKey": string,
+    "defaultPrice": string,
+    "title": string
+}
+
+// 直播回放-购买尺码等-skuInfo-props
+export interface getPlaybackSkuInfoProps {
+    "label": string,
+    "list": Array<getPlaybackSkuInfoPropsListItem>,
+    "isDefault": boolean
+}
+
+// 直播回放-购买-webImOptionInfo
+export interface getPlaybackwebImOptionInfo {
+    "option": {
+        "shopId": string,
+        "userId": string,
+        "goodsId": string,
+        "img": string
+    }
+}
+
+// 直播回放-购买-skuInfo-props-list
+export interface getPlaybackSkuInfoPropsListItem {
+    "index": number,
+    "type": string,
+    "name": string,
+    "isDefault": boolean,
+    "styleId": number
+}
+
+// 直播回放-购买图片-skuBarInfo
+export interface getPlaybackSkuBarInfoImg {
+    list: Array<getPlaybackSkuBarInfoListImgItem>
+}
+
+
+export interface getPlaybackSkuBarInfoListImgItem {
+    "color": string,
+    "label": string,
+    "image": string,
+    "stockId": string
 }
 
 

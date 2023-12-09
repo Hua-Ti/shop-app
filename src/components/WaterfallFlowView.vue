@@ -64,7 +64,7 @@ const count = ref(Math.random() * 2000)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
-    console.log(actorUrlId)
+    // console.log(actorUrlId)
     router.push({
         name: 'livePlayback',
         params: {

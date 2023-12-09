@@ -43,7 +43,7 @@
 import { useRouter } from "vue-router";
 const router = useRouter();
 const props = defineProps(["liveData"])
-console.log(props.liveData);
+// console.log(props.liveData);
 
 
 function goLiveRoom(roomId:number,actUserId:string) {

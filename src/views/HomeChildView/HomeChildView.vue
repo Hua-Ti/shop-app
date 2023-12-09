@@ -67,7 +67,7 @@
     <!-- <router-view /> -->
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="homechild">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Swipe, SwipeItem } from 'vant';
@@ -105,7 +105,9 @@ const pid = route.query.pid ? route.query.pid : '666';
 // 获取非热门页面数据
 async function fn(pid: string) {
     let RecommendData = await getHomeModuleRowTwo(pid);
-    RecommendNav.value = RecommendData.data?.list;
+    if (RecommendData.data?.list) {
+        RecommendNav.value = RecommendData.data?.list;
+    }
     if (RecommendNav.value.length < 12) {
         RecommendNav.value = RecommendNav.value.splice(0, 7)
     }

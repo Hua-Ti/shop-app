@@ -120,7 +120,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="user">
 import { ref, onMounted, } from 'vue'
 import { useRouter, RouterView } from 'vue-router';
 
@@ -484,7 +484,7 @@ function gotoHomepage() {
 }
 
 .user-button {
-    height: 115px;
+    height: 76px;
     width: 91vw;
     margin: 0px auto;
 

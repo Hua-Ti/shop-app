@@ -58,7 +58,7 @@ async function fuc(pid:string){
     for (let i = 0; i < HomeContentData.result.wall.docs.length; i++) {
         ContTwoList.value.push(HomeContentData.result.wall.docs[i]);
     }
-    console.log(ContTwoList)
+    // console.log(ContTwoList)
     // 加载状态结束
     loading.value = false;
 
@@ -70,15 +70,15 @@ async function fuc(pid:string){
 }
 
 const onLoad = async () => {
-    console.log(22,props.pid)
+    // console.log(22,props.pid)
     fuc(props.pid)
 };
 // 监听路由变化，来跳转页面
 watch(() => route.query.pid,
     (newVa, oldVal) => {
-        console.log(newVa, oldVal)
+        // console.log(newVa, oldVal)
         if (newVa !== '666') {
-            console.log(3333,props.pid)
+            // console.log(3333,props.pid)
             ContTwoList.value.length=0
             fuc(newVa);
         }

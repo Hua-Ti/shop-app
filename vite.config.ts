@@ -4,10 +4,12 @@ import { VantResolver } from '@vant/auto-import-resolver';
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import postCssPxToRem from 'postcss-pxtorem'
+import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus'
 
 export default defineConfig({
   plugins: [
     vue(),
+    vueSetupExtend(),
     Components({
       resolvers: [VantResolver()],
     }),

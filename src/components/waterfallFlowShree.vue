@@ -66,11 +66,11 @@ const loading = ref(false);
 const finished = ref(false);
 const count = ref(1)
 let keyword: string = route.query.keyword;
-console.log('keyword', keyword)
+// console.log('keyword', keyword)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
-    console.log(actorUrlId)
+    // console.log(actorUrlId)
     router.push({
         name: 'livePlayback',
         params: {

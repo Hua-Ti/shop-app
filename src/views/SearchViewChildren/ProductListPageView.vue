@@ -20,13 +20,13 @@
                     {{ item.max }}</span>
             </div>
             <div class="section">
-                <span>区间(元)</span>
+                <span>区间 (元)</span>
                 <input type="number" v-model="option.minPrice" :placeholder="option.minPrice.toString()">
-                <span>-</span>
+                <span>—</span>
                 <input type="number" v-model="option.maxPrice" :placeholder="option.maxPrice.toString()">
             </div>
-            <van-button @click="changeMoney(option.minPrice.toString(), option.maxPrice.toString())"
-                color="linear-gradient(to right, #ff6034, #ee0a24)">
+            <van-button class="myBtn" @click="changeMoney(option.minPrice.toString(), option.maxPrice.toString())"
+            color="linear-gradient(to right, #ff4268, #ff2989)">
                 确认
             </van-button>
         </van-popup>
@@ -35,7 +35,8 @@
                 @load="onLoad">
                 <div v-for="item in wallList" :key="item.tradeItemId">
                     <shopping-view :tradeItemId="item.tradeItemId" :img="item.img" :title="item.title"
-                        :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" @click="projectDetailPage(item.tradeItemId)" />
+                        :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price"
+                        @click="projectDetailPage(item.tradeItemId)" />
                 </div>
             </van-list>
             <van-back-top right="13vw" bottom="10vh" />
@@ -80,8 +81,8 @@ const loading = ref(false);
 const finished = ref(false);
 
 // 跳转到商品详情页
-const projectDetailPage = (id:string)=>{
-    router.push({name:"project-detail",query:{id:id}});
+const projectDetailPage = (id: string) => {
+    router.push({ name: "project-detail", query: { id: id } });
 }
 const onLoad = async () => {
     // 异步更新数据
@@ -138,45 +139,8 @@ const changeCondition = async (name: string) => {
     width: 100vw;
     position: relative;
     background-color: #EFEFEF;
-    padding-top: 105px;
+    padding-top: 95px;
     z-index: 15;
-
-    .tabble-nav {
-        display: flex;
-        font-size: 15px;
-        justify-content: space-evenly;
-        align-items: center;
-        position: fixed;
-        top: 49px;
-        width: 100vw;
-        height: 50px;
-        background-color: #fff;
-        border-bottom: 1px solid #ccc;
-        z-index: 10;
-
-        span {
-            position: relative;
-
-            &.active {
-                transform: scale(1.3);
-                font-weight: bold;
-
-                &::after {
-                    display: block;
-                    content: "";
-                    width: 45px;
-                    position: absolute;
-                    border-bottom: 3px solid #f46;
-                    top: 20px;
-                    left: -8px;
-                }
-            }
-
-        }
-
-
-
-    }
 
     .shopping-details {
         display: flex;
@@ -234,43 +198,95 @@ const changeCondition = async (name: string) => {
         }
     }
 
-    .price-box {
-        font-size: 15px;
+}
 
-        .price {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
+.tabble-nav {
+    display: flex;
+    font-size: 14px;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    top: 49px;
+    width: 100vw;
+    height: 35px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+    z-index: 10;
 
-            span {
-                display: inline-block;
-                width: 100px;
-                height: 40px;
-                text-align: center;
-                line-height: 40px;
-                background-color: #ccc;
-                border-radius: 5px;
-            }
-        }
+    span {
+        position: relative;
 
-        .section {
-            display: flex;
-            height: 50px;
-            align-items: center;
+        &.active {
+            // transform: scale(1.3);
+            // font-weight: bold;
 
-            span {
-                margin: 0 5px;
-            }
-
-            input {
-                width: 100px;
-                height: 30px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                padding-left: 10px;
+            &::after {
+                display: block;
+                content: "";
+                width: 40px;
+                position: absolute;
+                border-bottom: 2px solid #f46;
+                top: 18px;
+                left: -6px;
             }
         }
     }
+}
+
+.price-box {
+    font-size: 15px;
+
+    .price {
+        width: 330px;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        margin-bottom: 15px;
+
+        span {
+            display: inline-block;
+            width: 90px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            background-color: gainsboro;
+            border: 1px solid rgb(160, 160, 160);
+            border-radius: 5px;
+        }
+    }
+
+    .section {
+        display: flex;
+        height: 50px;
+        align-items: center;
+
+        span {
+            margin-left: 11px;
+            margin-right: 8px;
+        }
+
+        input {
+            width: 85px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding-left: 10px;
+            margin-left: 11px;
+        }
+
+        input:last-child {
+            margin-left: 0;
+        }
+    }
+}
+
+.myBtn {
+    font-size: 13px;
+    position: absolute;
+    right: 16px;
+    bottom: 20px;
+    width: 70px;
+    height: 35px;
 }
 </style>

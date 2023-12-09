@@ -26,7 +26,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="shop">
 import { ref, computed } from 'vue';
 import { showToast } from 'vant';
 import { useRouter, RouterView } from 'vue-router';
