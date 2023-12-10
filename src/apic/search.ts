@@ -1,7 +1,7 @@
 // 引入axios
 import axios from "@/untils/axios";
 
-import { type HotWords,type Optain,type searchByKeyword,type detailList } from "../typings"
+import {type popovers, type HotWords,type Optain,type searchByKeyword,type detailList } from "../typings"
 
 export const getHotSearch = async () => {
     let {data} = await axios.get<HotWords>(`https://apis.netstart.cn/mogujie/hotSearch.json`);
@@ -16,4 +16,9 @@ export const getKeywordSearch = async (optain:Optain)=>{
 export const getProdectDetails = async (id:string)=>{
     let {data} =await axios.get<detailList>(`https://apis.netstart.cn/mogujie/goods/detail?itemId=${id}`);
     return data.data.result;
+}
+
+export const getPopoversList = async (id:string)=>{
+    let {data} = await axios.get<popovers>(`https://apis.netstart.cn/mogujie/goods/getPromotionList?itemId=${id}`)
+    return data;
 }

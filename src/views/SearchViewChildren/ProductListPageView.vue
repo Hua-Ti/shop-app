@@ -40,7 +40,7 @@
                         :leftbottom_taglist="item.leftbottom_taglist" :cfav="item.cfav" :price="item.price" @click="projectDetailPage(item.tradeItemId)" />
                 </div>
             </van-list>
-            <van-back-top  right="13vw" bottom="10vh" />
+            <van-back-top  class="buttonTop" right="13vw" bottom="10vh" />
         </div>
         <div v-else>
             <div class="noshopping">
@@ -135,7 +135,11 @@ const changeCondition = async (name: string) => {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.buttonTop{
+    background-color: #ff4466;
+    opacity: .8;
+}
 .shopping-List {
     width: 100vw;
     position: relative;

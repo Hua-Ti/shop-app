@@ -21,19 +21,99 @@
             <van-action-bar-icon icon="cart-o" text="购物车" />
             <van-action-bar-icon icon="star-o" @click="onClickIcon" v-show="flag" text="未收藏" />
             <van-action-bar-icon icon="star" @click="onClickIcon" v-show="!flag" text="已收藏" color="#f46" />
-            <van-action-bar-button color="#FFE6E8" class="left-attow" type="warning" text="加入购物车" />
-            <van-action-bar-button color="#FF4689" class="right-arrow" type="danger" text="立即购买" />
+            <van-action-bar-button color="#FFE6E8" @click="selectColor = true" class="left-attow" type="warning"
+                text="加入购物车" />
+            <van-action-bar-button color="#FF4689" @click="selectColor = true" class="right-arrow" type="danger"
+                text="立即购买" />
         </van-action-bar>
     </div>
     <div class="price-box" v-if="price.nowPrice">
         <div class="detailTitle">
             <div class="price-num">
                 <span class="price">{{ price.currency }} {{ price.nowPrice }}</span>
-                <span class="active" v-if="price.priceTags">{{ price.priceTags[0].text }}</span>
+                <span class="active" v-if="price.priceTags.length">{{ price.priceTags[0].text }}</span>
             </div>
             <span>已售{{ price.sales }}</span>
         </div>
+
+        <div v-if="popoversList.popovers.length" class="coupon" @click="couponShow = true">
+            <p class="coupon-title">{{ popoversList.outers[0].text }}</p>
+            <p>领券<van-icon name="arrow" /></p>
+        </div>
+        <van-popup class="buoy-item-box" round v-model:show="couponShow" position="bottom" :style="{ height: '80%' }">
+            <h2>优惠</h2>
+            <div class="buoy-item" v-for="item in popoversList.popovers" :key="item.data.effect">
+                <div class="buoy-box">
+                    <p class="buoy">店铺券</p>
+                    <div class="left-area">
+                        <p class="left-area-title">￥{{ item.data.effect }} <span>{{ item.data.limitDesc }}</span></p>
+                        <p class="left-area-data">{{ item.data.validTime }}</p>
+                    </div>
+                    <div class="right-area">
+                        <button>立即领取</button>
+                    </div>
+                </div>
+                <div v-if="item.data.highlightCouponDesc" class="remind">
+                    {{ item.data.highlightCouponDesc.content }}
+                </div>
+            </div>
+
+        </van-popup>
         <div class="title">{{ skuInfoList.title }}</div>
+
+        <div class="select" @click="selectColor = true">
+            <p v-if="skuInfoListColorName == '颜色' && skuInfoListSizeName == '尺码'">选择 <span>颜色 尺码</span></p>
+            <p class="selectStyle" v-else>选择 <span>已选：{{ skuInfoListColorName }} {{ skuInfoListSizeName }}</span></p>
+            <van-icon name="arrow" />
+        </div>
+        <van-popup v-model:show="selectColor" position="bottom" :style="{ height: '62%' }">
+            <div class="selectColor">
+                <div class="select-topList">
+                    <img :src="filterImg">
+                    <div class="select-topList-text">
+                        <h2>{{ price.currency }}{{ price.nowPrice }}</h2>
+                        <p class="inventory">库存：{{ filterInventory }}</p>
+                        <p v-if="skuInfoListColorName == '颜色' && skuInfoListSizeName == '尺码'">请选择：颜色 尺码</p>
+                        <p v-else class="selectStyle">已选：<span>{{ skuInfoListColorName }} {{ skuInfoListSizeName }}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="select-color">
+                    <p class="select-color-title">{{ skuInfoList.props[0].label }}</p>
+                    <div class="select-size-list">
+                        <p @click="changeSelectColor(item.styleId, item.name)"
+                            :class="{ active: skuInfoListColorId == item.styleId }"
+                            v-for="item in skuInfoList.props[0].list">{{
+                                item.name }}</p>
+                    </div>
+                </div>
+                <div class="select-color">
+                    <p class="select-color-title">{{ skuInfoList.props[1].label }}</p>
+                    <div class="select-size-list">
+                        <p :class="{ active: skuInfoListSizeId == item.sizeId }"
+                            @click="changeSelectSize(item.sizeId, item.name)" v-for="item in skuInfoList.props[1].list">{{
+                                item.name }}</p>
+                    </div>
+                </div>
+                <div class="select-color">
+                    <p class="select-color-title">数量</p>
+                    <div class="myStepper">
+                        <div class="stepper-left" @click="clickLeft">
+                            <van-icon name="minus" />
+                        </div>
+                        <div class="mynumber">{{ goodsHowNum }}</div>
+                        <div class="stepper-right" @click="goodsHowNum++">
+                            <van-icon name="plus" />
+                        </div>
+                    </div>
+                </div>
+                <div class="select-bottom">
+                    <button class="cart" @click="addShopingInformation">加入购物车</button>
+                    <button class="now-buy">立即够买</button>
+                </div>
+            </div>
+
+        </van-popup>
         <div class="evaluate">
             <div class="evaluate-title">
                 <span class="evaluate-arctial">评价({{ rateInfoV2List.cRate }})</span>
@@ -71,17 +151,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, reactive } from "vue"
+import { ref, onMounted, nextTick, reactive, computed } from "vue"
 import { useRouter } from "vue-router";
-import { getProdectDetails } from "../apic/search";
+import { getProdectDetails, getPopoversList } from "../apic/search";
 import BScroll from '@better-scroll/core';
-
-// import {type detailList} from "../typings"
-
+import { Toast, showToast } from 'vant';
 
 const router = useRouter();
 const topImagesList = ref<Array<string>>([]);
 const show = ref(false);
+const couponShow = ref(false);
+const selectColor = ref(false);
 let flag = ref(true);
 const onClickIcon = () => {
     flag.value = !flag.value;
@@ -96,6 +176,101 @@ const showList = (index: number) => {
     initScroll1(index);
 }
 
+
+const skuInfoListColorName = ref("颜色");
+const skuInfoListSizeName = ref("尺码");
+const skuInfoListColorId = ref(0);
+const skuInfoListSizeId = ref(0);
+const changeSelectColor = (id: number, name: string) => {
+    if (id != skuInfoListColorId.value) {
+        skuInfoListColorName.value = name;
+        skuInfoListColorId.value = id;
+    } else {
+        skuInfoListColorName.value = "颜色";
+        skuInfoListColorId.value = 0;
+    }
+}
+const changeSelectSize = (id: number, name: string) => {
+    if (id != skuInfoListSizeId.value) {
+        skuInfoListSizeName.value = name;
+        skuInfoListSizeId.value = id;
+    } else {
+        skuInfoListSizeName.value = "尺码";
+        skuInfoListSizeId.value = 0;
+    }
+
+}
+
+// 增加数量
+const goodsHowNum = ref(1);
+const clickLeft = () => {
+    goodsHowNum.value--;
+    if (goodsHowNum.value < 1) {
+        goodsHowNum.value = 1;
+    }
+}
+
+
+let shopCarDataList = reactive({
+    shopId: "",
+    shopName: "",
+    imgSrc: "",
+    goodsName: "",
+    count: 1,
+    size: "",
+    price: "",
+    isFreeMail: true,
+    style: "",
+    id:0,
+})
+// 向购物车中添加商品
+// 确保historyLists是一个字符串数组
+let historyShopCartList = ref([] as Array<string>)
+const addShopingInformation = () => {
+    shopCarDataList.shopId = shopInfoList.shopId;
+    shopCarDataList.shopName = shopInfoList.name;
+    shopCarDataList.imgSrc = filterImgItem.value;
+    shopCarDataList.goodsName = skuInfoList.title;
+    shopCarDataList.count = goodsHowNum.value;
+    shopCarDataList.price = price.nowPrice;
+    shopCarDataList.isFreeMail = true;
+    shopCarDataList.id=Date.parse(new Date());
+    if (skuInfoListColorName.value == "颜色") {
+        showToast('请选择颜色');
+    } else if (skuInfoListSizeName.value == "尺码") {
+        showToast('请选择尺码');
+    } else {
+        // // 先进行去重
+        let historyListshops = localStorage.shopCarData || "[]";
+        historyListshops = JSON.parse(historyListshops);
+        historyShopCartList.value = historyListshops;
+
+        shopCarDataList.size = skuInfoListSizeName.value;
+        shopCarDataList.style = skuInfoListColorName.value;
+
+
+        if (historyShopCartList.value.length > 0) {
+            historyShopCartList.value = historyShopCartList.value.filter(s => {
+                return s.style!=shopCarDataList.style || s.size!=shopCarDataList.size;
+            })
+        }
+
+
+
+        // 将刚才的数据添加到最前面
+        historyShopCartList.value.unshift(shopCarDataList);
+
+        // 将数据同步到localStorage中
+        localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
+        // 退出遮罩层
+        selectColor.value = false;
+
+    }
+
+}
+
+
+
 let price = reactive({
     priceTags: [{
         text: "",
@@ -107,6 +282,25 @@ let price = reactive({
 
 let skuInfoList = reactive({
     title: "",
+    props: [{
+        label: "",
+        list: [{
+            name: "",
+            styleId: 0,
+            sizeId: 0,
+        }]
+    }],
+    skus: [{
+        sizeId: 0,
+        styleId: 0,
+        img: "",
+        stock: 0,
+    }]
+})
+
+let shopInfoList = reactive({
+    name: "",
+    shopId: "",
 })
 
 let detailInfoList = reactive({
@@ -132,6 +326,64 @@ let rateInfoV2List = reactive({
         num: 0,
     }],
     cScore: "",
+});
+
+let popoversList = reactive({
+    popovers: [{
+        data: {
+            effect: "",
+            limit: "",
+            limitDesc: "",
+            validTime: "",
+            highlightCouponDesc: {
+                content: "",
+            }
+        }
+    }],
+    outers: [{
+        text: "",
+    }]
+});
+
+let filterInventory = ref(0);
+let filterImgItem = ref("");
+let filterImg = computed(() => {
+
+    let targetImg = skuInfoList.skus.filter((e) => {
+        return e.styleId == skuInfoListColorId.value;
+    });
+
+    let targetImg1 = skuInfoList.skus.filter((e) => {
+        return e.styleId == skuInfoListColorId.value && e.sizeId == skuInfoListSizeId.value;
+    });
+
+    let targetImg2 = skuInfoList.skus.filter((e) => {
+        return e.sizeId == skuInfoListSizeId.value;
+    });
+
+    if (targetImg2.length && !targetImg.length) {
+        filterInventory.value = 0;
+        for (let i = 0; i < targetImg2.length; i++) {
+            filterInventory.value += targetImg2[i].stock;
+        }
+    }
+
+    if (targetImg1.length) {
+        filterInventory.value = targetImg1[0].stock;
+        filterImgItem.value = targetImg[0].img;
+        return targetImg[0].img;
+    }
+    if (targetImg.length && !targetImg1.length) {
+        filterInventory.value = 0;
+        for (let i = 0; i < targetImg.length; i++) {
+            filterInventory.value += targetImg[i].stock;
+        }
+        filterImgItem.value = targetImg[0].img;
+        return targetImg[0].img;
+    }
+
+    filterImgItem.value = topImagesList.value[0];
+    return topImagesList.value[0];
 })
 
 // 将时间戳转化为日期的格式
@@ -153,11 +405,17 @@ onMounted(async () => {
     id.value = router.currentRoute.value.query.id as string;
 
     let data = await getProdectDetails(id.value);
+    let data1 = await getPopoversList(id.value);
+
     topImagesList.value = data.topImages;
     skuInfoList = data.skuInfo;
     price = data.normalPrice;
     detailInfoList = data.detailInfo;
     rateInfoV2List = data.rateInfoV2;
+    popoversList = data1.data.flushKey.data;
+    shopInfoList = data.shopInfo;
+
+
 
     // 页面更新渲染完毕,实例化BetterScroll
     nextTick(initScroll);
@@ -213,8 +471,217 @@ const initScroll1 = (index: number) => {
 
 <style lang="scss">
 .left-attow {
-    .van-button__text {
+    .van-button__content {
         color: #f46;
+    }
+}
+
+.selectColor {
+    padding-top: 25vw;
+    padding-bottom: 50px;
+
+    .select-topList {
+        padding: 20px;
+        position: fixed;
+        top: 37vh;
+        left: 0;
+        background-color: #fff;
+        width: 100vw;
+        height: 100px;
+
+        img {
+            width: 24vw;
+            height: 32vw;
+            position: absolute;
+            top: -30px;
+        }
+
+        .select-topList-text {
+            margin-left: 27vw;
+            font-size: 12px;
+
+            p {
+                padding: 4px 0;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .selectStyle {
+                span {
+                    color: #f46;
+                }
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+        }
+    }
+
+    .select-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+
+        button {
+            width: 50vw;
+            display: inline-block;
+            border: none;
+            height: 50px;
+            font-size: 14px;
+        }
+
+        .cart {
+            background-color: #FFEEEE;
+            color: #f46;
+        }
+
+        .now-buy {
+            background-color: #FF478E;
+            color: #fff;
+        }
+    }
+}
+
+
+.myStepper {
+    display: flex;
+    align-items: center;
+
+    .stepper-left,
+    .stepper-right,
+    .mynumber {
+        width: 50px;
+        height: 30px;
+        border: 1px solid #ccc;
+        text-align: center;
+        line-height: 30px;
+        margin-bottom: 10px;
+    }
+
+}
+
+.select {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    font-size: 14px;
+
+    p {
+        color: #bbb;
+
+        span {
+            display: inline-block;
+            width: 280px;
+            color: #f46;
+            margin-left: 10px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            vertical-align: -2px;
+        }
+    }
+}
+
+.buoy-item-box {
+    h2 {
+        font-size: 16px;
+        text-align: center;
+        padding-top: 15px;
+        padding-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .remind {
+        margin: 10px;
+        background-color: #F6F6F6;
+        padding: 5px;
+        border-radius: 999px;
+        padding-left: 15px;
+    }
+}
+
+.buoy-box {
+    display: flex;
+    position: relative;
+    padding: 5px 10px;
+
+    &::after {
+        width: 15px;
+        height: 15px;
+        content: "";
+        border-radius: 50px;
+        position: absolute;
+        bottom: -3px;
+        left: 228px;
+        background-color: #fff;
+    }
+
+    &::before {
+        width: 15px;
+        height: 15px;
+        content: "";
+        border-radius: 50px;
+        position: absolute;
+        top: -3px;
+        left: 228px;
+        background-color: #fff;
+    }
+
+    .buoy {
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        background-color: #f46;
+        padding: 4px 12px;
+        font-size: 12px;
+        color: #fff;
+        border-radius: 6px 0 7px;
+    }
+
+    .left-area {
+        background-color: #FFEDEC;
+        width: 60vw;
+        height: 25vw;
+        border-radius: 10px;
+        border-right: 2px dotted #f46;
+        padding: 0 10px;
+
+        .left-area-title {
+            color: #f46;
+            font-size: 26px;
+            margin-top: 30px;
+
+            span {
+                font-size: 12px;
+            }
+        }
+
+        .left-area-data {
+            margin-top: 10px;
+            color: #666;
+        }
+    }
+
+    .right-area {
+        background-color: #FFEDEC;
+        width: 34vw;
+        height: 25vw;
+        border-radius: 13px;
+        text-align: center;
+
+        button {
+            background-color: #FF4469;
+            color: #fff;
+            width: 100px;
+            border: none;
+            height: 40px;
+            border-radius: 999px;
+            margin-top: 7.5vw;
+            font-size: 14px;
+        }
     }
 }
 
@@ -229,7 +696,6 @@ const initScroll1 = (index: number) => {
         display: flex;
         justify-content: space-between;
         padding: 15px 0;
-        border-top: 8px solid #F9F9F9;
 
         .evaluate-arctial {
             font-size: 16px;
@@ -251,6 +717,20 @@ const initScroll1 = (index: number) => {
             border-radius: 5px;
             margin-right: 5px;
             margin-bottom: 10px;
+        }
+    }
+
+    .coupon {
+        padding: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        margin-right: -5px;
+        color: #f46;
+
+        .coupon-title {
+            padding: 3px;
+            background-color: #FFE8EE;
+            border-radius: 3px;
         }
     }
 
@@ -309,7 +789,9 @@ const initScroll1 = (index: number) => {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 8px solid #F9F9F9;
+
     }
 
     .detailImage {
@@ -340,6 +822,33 @@ const initScroll1 = (index: number) => {
                 color: #f25;
                 background-color: #FFE8EE;
                 padding: 2px;
+            }
+        }
+    }
+}
+
+.select-color {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+
+    .select-color-title {
+        color: #666;
+        padding: 0px 0 10px;
+    }
+
+    .select-size-list {
+        display: flex;
+        flex-wrap: wrap;
+
+        p {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            margin: 0 10px 10px 0;
+            border-radius: 5px;
+
+            &.active {
+                color: #f46;
+                border-color: #f46;
             }
         }
     }
@@ -400,4 +909,5 @@ const initScroll1 = (index: number) => {
             }
         }
     }
-}</style>
+}
+</style>

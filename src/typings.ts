@@ -31,8 +31,8 @@ export interface List {
 }
 
 // 首页二级导航条下标
-export interface item{
-    [proName:string]:any
+export interface item {
+    [proName: string]: any
 }
 // 首页热门模块
 // 首页小导航 （数组（字符串））
@@ -94,38 +94,38 @@ export interface getHomeC {
 
 // 首页除热门模块的其他页面
 //首页推荐模块
-export interface recommend{
-    data:{
-        list:Array<recommendList>
+export interface recommend {
+    data: {
+        list: Array<recommendList>
     }
 }
-export interface recommendList{
-    _material_end_time:string
-    title:string
-    startTime?:number
-    image:string
-    _material_start_time:string
-    sort?:string
-    endTime?:string
-    _system_record_entry_id:string
+export interface recommendList {
+    _material_end_time: string
+    title: string
+    startTime?: number
+    image: string
+    _material_start_time: string
+    sort?: string
+    endTime?: string
+    _system_record_entry_id: string
 }
 // 首页内容模块
-export interface ContentTwo{
-    result:{
-        wall:{
-            docs:Array<ContentTwoList>
+export interface ContentTwo {
+    result: {
+        wall: {
+            docs: Array<ContentTwoList>
         }
     }
 }
-export interface ContentTwoList{
-    img:string
-    iid:string
-    title:string
-    price:number
-    sale:number
-    cafv:string
+export interface ContentTwoList {
+    img: string
+    iid: string
+    title: string
+    price: number
+    sale: number
+    cafv: string
     //查找类似商品（网页）
-    similarityUrl:string
+    similarityUrl: string
 }
 
 
@@ -203,45 +203,45 @@ export interface livePlayBackListLefttop_taglistItem {
 }
 
 //直播间信息(直播流,码率,主播等信息)
-export interface liveRoom{
-    "data":{
-        "roomId":number,
-        "liveUrl":string,
-        "actorInfo":{
-            "avatar":string,
-            "uid":string,
-            "uname":string
+export interface liveRoom {
+    "data": {
+        "roomId": number,
+        "liveUrl": string,
+        "actorInfo": {
+            "avatar": string,
+            "uid": string,
+            "uname": string
         },
-        "actorTag":{
-            "icon":string,
-            "listIcon":string,
+        "actorTag": {
+            "icon": string,
+            "listIcon": string,
         }
-        "noticeContent":string,
-        "actUserId":string,
-        "onlineUserCount":number,
-        "definitions":Array<liveRoomDefinitions>
+        "noticeContent": string,
+        "actUserId": string,
+        "onlineUserCount": number,
+        "definitions": Array<liveRoomDefinitions>
     }
 }
 //直播间画质
-export interface liveRoomDefinitions{
-    "auto":boolean,
-    "selected":false,
-    "height":number,
-    "width":number,
-    "label":string,
-    "template":string,
-    "liveUrl":string
+export interface liveRoomDefinitions {
+    "auto": boolean,
+    "selected": false,
+    "height": number,
+    "width": number,
+    "label": string,
+    "template": string,
+    "liveUrl": string
 }
 //直播间促销商品
-export interface liveRoomGood{
-    "itemList":Array<liveRoomGoods>
+export interface liveRoomGood {
+    "itemList": Array<liveRoomGoods>
 }
 
-export interface liveRoomGoods{
-    "shopId":number,
-    "image":string,
-    "title":string,
-    "itemId":string,
+export interface liveRoomGoods {
+    "shopId": number,
+    "image": string,
+    "title": string,
+    "itemId": string,
 }
 // 直播回放相关
 export interface getPlaybackData {
@@ -394,43 +394,98 @@ export interface leftbottomTagList {
 }
 
 export interface detailList {
-    data:{
-        result:{
-            topImages:Array<string>
-            normalPrice:{
-                priceTags:[{
-                    text:string,
+    data: {
+        result: {
+            topImages: Array<string>
+            normalPrice: {
+                priceTags: [{
+                    text: string,
                 }],
-                nowPrice:string,
-                currency:string,
-                sales:string,
+                nowPrice: string,
+                currency: string,
+                sales: string,
             },
-            skuInfo:{
-                title:string,
+            skuInfo: {
+                title: string,
+                props:Array<{
+                    label:string,
+                    list:Array<{
+                        name:string,
+                        sizeId:number,
+                        styleId:number,
+                    }>
+                }>,
+                skus:Array<{
+                    sizeId:number,
+                    styleId:number,
+                    img:string,
+                    stock:number,
+                }>
             },
-            detailInfo:{
-                desc:string,
-                detailImage:Array<{
-                    key:string,
-                    list:Array<string>,
-                }>, 
+            detailInfo: {
+                desc: string,
+                detailImage: Array<{
+                    key: string,
+                    list: Array<string>,
+                }>,
             },
-            rateInfoV2:{
-                list:Array<{
-                    user:{
-                        uname:string,
-                        avatar:string,
+            rateInfoV2: {
+                list: Array<{
+                    user: {
+                        uname: string,
+                        avatar: string,
                     },
-                    created:number,
-                    content:string,
+                    created: number,
+                    content: string,
                 }>,
-                cRate:number,
-                rateTags:Array<{
-                    value:string,
-                    num:number,
+                cRate: number,
+                rateTags: Array<{
+                    value: string,
+                    num: number,
                 }>,
-                cScore:string,
+                cScore: string,
+            },
+            shopInfo:{
+                name:string,
+                shopId:string,
             }
         }
     }
 }
+
+
+export interface popovers {
+    data: {
+        flushKey: {
+            data: {
+                popovers: Array<{
+                    data: {
+                        effect: string,
+                        limit: string
+                        limitDesc: string,
+                        validTime: string,
+                        highlightCouponDesc: {
+                            content: string,
+                        }
+                    },
+
+                }>,
+                outers: Array<{
+                    text: string,
+                }>
+            }
+        }
+    }
+}
+export interface shopCarData {
+      shopId: string,
+      shopName: string,
+      imgSrc: string,
+      goodsName: string,
+      count: number,
+      size: string,
+      price: string,
+      isFreeMail: boolean,
+      style:string,
+      id:number,
+    }
