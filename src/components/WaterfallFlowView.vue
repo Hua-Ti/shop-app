@@ -2,13 +2,13 @@
 <template>
     <div class="waterfallFlow">
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item" >
+            <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
-                    @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
+                    @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId, item)">
                     <div class="picture">
                         <!-- 幕布 -->
                         <div class="curtain"></div>
-                        <img class="bigPic" :src="item.itemImage" alt="">
+                        <img class="bigPic" :src="item.itemImage" v-lazy="item.itemImage" alt="">
                         <div class="liveBroadcastAtTheSamePrice">
                             <img :src="item.lefttop_taglist[0]?.img" alt="">
                         </div>
@@ -63,14 +63,15 @@ const finished = ref(false);
 const count = ref(Math.random() * 2000)
 
 const props = defineProps(['getHomeC'])
-function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
+function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string, item: any) {
     console.log(actorUrlId)
     router.push({
         name: 'livePlayback',
         params: {
             itemUrlId: itemUrlId,
             actorUrlId: actorUrlId,
-            explainId: explainId
+            explainId: explainId,
+            itemData: item
         }
     })
 }
@@ -107,11 +108,12 @@ const onLoad = async () => {
         margin-bottom: 10px;
         width: 49%;
     }
-    .item:nth-child(n+1){
-        padding:0 6px;
+
+    .item:nth-child(n+1) {
+        padding: 0 6px;
     }
-    
-   
+
+
 
     .picture {
         position: relative;
@@ -119,14 +121,16 @@ const onLoad = async () => {
         // background-color: #ff4668;
     }
 
-    .bigPic,.curtain {
+    .bigPic,
+    .curtain {
         width: 100%;
         height: 100%;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
     }
-    .curtain{
-        z-index:99999!important;
+
+    .curtain {
+        z-index: 99999 !important;
         height: 100%;
         background-color: #ff4668;
     }

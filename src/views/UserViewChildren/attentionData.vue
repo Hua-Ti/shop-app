@@ -32,11 +32,12 @@
 import { onMounted, ref } from "vue";
 import { useAttention } from '../../stores/bgChange';
 import { showConfirmDialog } from 'vant';
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 
 const attentionlist = useAttention()
 let active = ref(0);
 const route=useRoute()
+const router=useRouter()
 
 
 const onClickLeft = () => history.back();
@@ -56,9 +57,9 @@ function cancelTheAttention(contentId: string) {
 };
 function onClickRight(){
     console.log(1111)
-    // router.push({
-    //     name:
-    // })
+    router.push({
+        name:'live'
+    })
 }
 onMounted(()=>{
     if(route.query.id!=undefined){

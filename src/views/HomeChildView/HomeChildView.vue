@@ -32,16 +32,21 @@
     <!-- 除了热门之外的 -->
     <div class="homeChild" v-if="route.query.pid !== '666' && route.query.pid != undefined">
         <!-- 首页二级模块 -->
-        <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav"/>
+        <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav" />
         <!-- 正在流行独有 -->
         <div v-if="route.query.pid === '3627'">
             <!-- 轮播图 -->
             <div class="broadcastMap">
-                <van-swipe :autoplay="3000" lazy-render @change="onChange" >
-                    <van-swipe-item v-for="(image,a) in images" :key="image" >
-                        <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }"/>
-                    </van-swipe-item>
-                </van-swipe>
+                <!-- <lazy-component> -->
+                    <van-swipe :autoplay="3000" lazy-render @change="onChange">
+                        <van-swipe-item v-for="(image, a) in images" :key="image">
+                            <lazy-component>
+                                <img :src="image" 
+                                    :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }"  />
+                            </lazy-component>
+                        </van-swipe-item>
+                    </van-swipe>
+                <!-- </lazy-component> -->
             </div>
             <!-- 秋冬必备模块 -->
             <div class="autumnAndWinter">

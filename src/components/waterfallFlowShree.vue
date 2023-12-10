@@ -8,7 +8,9 @@
                     <div class="picture">
                         <!-- 幕布 -->
                         <div class="curtain"></div>
-                        <img class="bigPic" :src="item.itemImage" alt="">
+                        <lazy-component loading="../assets/images/dianpu.jpg">
+                            <img class="bigPic"  v-lazy="item.itemImage"  :src="item.itemImage" alt="" >
+                        </lazy-component>
                         <div class="liveBroadcastAtTheSamePrice">
                             <img :src="item.lefttop_taglist[0]?.img" alt="">
                         </div>
@@ -130,6 +132,8 @@ const onLoad = async () => {
         height: 100%;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
+        background-color: #ddd;
+        z-index:99;
     }
 
     .curtain {

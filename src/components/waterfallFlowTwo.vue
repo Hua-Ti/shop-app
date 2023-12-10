@@ -5,31 +5,31 @@
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in ContTwoList" :key="index">
                     <!-- <router-link :to="{name:}"> -->
-                        <div class="picture">
-                            <img class="bigPic" :src="item.img" alt="">
-                            <div class="sale">已售{{ item.sale }}件</div>
-                        </div>
-                        <p class="title">{{ item.title }}</p>
-                        <!-- 价格 -->
-                        <div class="price">
-                            <div class="livePrice">
-                                <div>
-                                    ￥<span>{{ Math.floor(item.price) }}</span>
-                                    <span v-if="Math.floor(
-                                        (item.price - Math.floor(item.price)) * 10
-                                    )">.{{ Math.floor(
+                    <div class="picture">
+                        <img class="bigPic" :src="item.img" alt="" v-lazy="item.img">
+                        <div class="sale">已售{{ item.sale }}件</div>
+                    </div>
+                    <p class="title">{{ item.title }}</p>
+                    <!-- 价格 -->
+                    <div class="price">
+                        <div class="livePrice">
+                            <div>
+                                ￥<span>{{ Math.floor(item.price) }}</span>
+                                <span v-if="Math.floor(
+                                    (item.price - Math.floor(item.price)) * 10
+                                )">.{{ Math.floor(
     (item.price - Math.floor(item.price)) * 10
 ) }}
-                                        <span class="decimalTwo"
-                                            v-if="Math.floor((item.price - Math.floor(item.price * 10) / 10) * 100)">
-                                            {{ Math.floor((item.price - Math.floor(item.price * 10) /
-                                                10) * 100) }}
-                                        </span>
+                                    <span class="decimalTwo"
+                                        v-if="Math.floor((item.price - Math.floor(item.price * 10) / 10) * 100)">
+                                        {{ Math.floor((item.price - Math.floor(item.price * 10) /
+                                            10) * 100) }}
                                     </span>
-                                </div>
+                                </span>
                             </div>
-                            <div class="cafv">立即购买</div>
                         </div>
+                        <div class="cafv">立即购买</div>
+                    </div>
                     <!-- </router-link> -->
                 </div>
             </div>
