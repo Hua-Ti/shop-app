@@ -267,7 +267,7 @@ export interface LiveDetailList {
                         index: number,
                         name: string,
                         isDefault: boolean,
-                        type:string
+                        type: string
                     }>
                 }>
             },
@@ -422,7 +422,10 @@ export interface getPlaybackBuyData {
     "priceBannerOnly": getPlaybackPriceBannerOnly,
     "skuInfo": getPlaybackSkuInfo,
     "skuBarInfo": getPlaybackSkuBarInfoImg,
-    "webImOptionInfo": getPlaybackwebImOptionInfo
+    "webImOptionInfo": getPlaybackwebImOptionInfo,
+    "shopInfo": {
+        "shopId": string
+    }
 }
 
 // 直播回放-购买广告图片-priceBannerOnly
@@ -562,4 +565,19 @@ export interface detailList {
             }
         }
     }
+}
+
+
+// 购物车数据
+export interface shopCarData {
+    id: number,
+    shopId: string,
+    shopName: string,
+    imgSrc: string,
+    goodsName: string,
+    count: number,
+    style: string,
+    size: string,
+    price: string,
+    isFreeMail: boolean,
 }

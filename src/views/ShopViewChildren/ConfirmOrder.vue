@@ -32,34 +32,33 @@
 
         <!-- 确认提交的内容 -->
         <div class="confirm-center">
-            <div>
-
+            <div class="mainBox" v-for="e in data" :key="e.id">
                 <div class="dianming-box">
                     <div>
                         <van-icon name="shop-collect-o" color="gray" size="22" />&nbsp;
-                        <p>商店的名字</p>
+                        <p>{{ e.shopName }}</p>
                     </div>
                     <div>
-                        <van-icon name="chat-o" color="#ff5375" size="21" />
-                        <p>联系商家</p>
+                        <van-icon name="chat-o" color="#ff5375" size="18" />
+                        <p style="font-size: 12px;">联系商家</p>
                     </div>
                 </div>
 
                 <!-- 订单详情 -->
                 <div class="order-box">
                     <div class="order-picture">
-                        <van-image width="80" height="105" src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg" />
+                        <van-image width="80" height="105" :src="e.imgSrc" />
                     </div>
                     <div class="order-text">
                         <div class="order-texts">
                             <div class="order-texts-one">
-                                <p class="one-one">法式复古连衣裙绑带收腰中长裙2020秋季新款喇叭袖梦幻粉裙子</p>
-                                <p class="one-two">颜色: 图片色;尺码: L;</p>
+                                <p class="one-one">{{ e.goodsName }}</p>
+                                <p class="one-two">颜色: {{ e.style }};尺码: {{ e.size }};</p>
                             </div>
                             <div class="order-texts-two">
-                                <p class="two-one">￥16228.00
+                                <p class="two-one">¥{{ Number(e.price) * e.count }}
                                 </p>
-                                <p class="two-two">x1<van-icon name="records-o" size="20" /></p>
+                                <p class="two-two">x{{ e.count }}</p>
                             </div>
                         </div>
                         <p class="ppp">付款后最晚于3日内发货</p>
@@ -67,34 +66,26 @@
                 </div>
 
                 <div class="other-box">
-
                     <div class="kuaidi">
                         <p>快递运费<span>全国包邮</span></p>
-                        <p>￥0.00</p>
+                        <p style="color: var(--subject-color);">¥0.00</p>
                     </div>
 
                     <div class="remark">
                         <p>订单备注</p>
                         <div><input type="text" v-model="value" placeholder="有什么想对商家说的可以写在这里哦~"></div>
                     </div>
-                    <div class="total">
-                        <p class="total-prices">￥176.40</p>&nbsp;
+                    <!-- <div class="total">
+                        <p class="total-prices">¥176.40</p>&nbsp;
                         <p class="total-dian">店铺合计:</p>&nbsp;
                         <p class="total-shu">共1件</p>
-                    </div>
+                    </div> -->
 
 
                 </div>
             </div>
-
-
-
-
-
-
-
             <div class="confirm-bottom">
-                <van-submit-bar :price="3050" text-align="left" button-text="提交订单" button-color="#ff468a"
+                <van-submit-bar :price="totalPrices" text-align="left" button-text="提交订单" button-color="#ff468a"
                     @submit="onSubmit" />
             </div>
         </div>
@@ -102,7 +93,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import type { shopCarData } from '../../typings'
 import { useRouter, RouterView } from 'vue-router';
 import line from '../../assets/images/shop_line.png'
 import { showToast } from 'vant';
@@ -110,18 +102,42 @@ import { getAddress } from '../../stores/address'
 const addressNeirong = getAddress()
 const router = useRouter();
 
+const data = ref<Array<shopCarData>>([]);
+
+const totalPrices = computed(() => {
+    let all = 0;
+    for (let i = 0; i < data.value.length; i++) {
+        const e = data.value[i];
+        all += e.count * Number(e.price) * 100;
+    }
+    return all;
+})
+
+// 获取数据
+function getData() {
+    data.value = JSON.parse(localStorage.buyData || `[]`)
+    console.log(data.value);
+}
+
+onMounted(() => {
+    getData();
+})
+
 const value = ref('');
 const onSubmit = () => {
     if (!addressNeirong.address) {
         showToast('请选择地址');
-    } else { showToast('跳到支付'); }
+    } else {
+        localStorage.buyData = '[]';
+        router.replace({ name: 'pay' })
+    }
 }
 
 </script>
 
 <style lang="scss" scoped>
 .confirm-order {
-    font-size: 14px;
+    font-size: 13px;
     background-color: #f6f6f6;
     position: fixed;
     top: 0px;
@@ -229,12 +245,11 @@ const onSubmit = () => {
     }
 
     .ppp {
+        display: inline-block;
         background-color: #fff0f3;
         color: #ff5375;
         margin-top: 3%;
-        padding-top: 2%;
-        padding-bottom: 2%;
-        padding-left: 2%;
+        padding: 2%;
         border-radius: 8px;
     }
 }
@@ -259,6 +274,11 @@ const onSubmit = () => {
 
 .order-texts-two {
     text-align: right;
+
+    .two-one {
+        color: var(--subject-color);
+        margin-top: 2px;
+    }
 
     .two-two {
         margin-top: 15%;
