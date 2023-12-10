@@ -11,6 +11,9 @@
             <!-- nav标签页 -->
             <van-tabs v-model:active="active" :animated="true" title-active-color="#ff5777" line-width="80"
                 @click-tab="onNavHadle(liveList[active].id)" sticky>
+                <!-- <van-tab title="关注" v-show="attentionlist.attention">
+                    <LiveComponent :liveData="attentionlist.attention" />
+                </van-tab> -->
                 <van-tab v-for="(item, index) in liveList" :key="index" :title="item.name">
                     <!-- 下拉刷新,上拉加载 -->
                     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -33,10 +36,11 @@ import { useRouter } from "vue-router";
 import LiveComponent from "@/components/LiveComponent.vue";
 import { getLiveBroadcastSort, getLiveList } from '../apic/live-data';
 import type { LiveSortTabs, LiveList } from '../typings';
+import { useAttention } from '../stores/bgChange';
 const router = useRouter();
 let keyWord = ref('');
 
-
+const attentionlist = useAttention()
 const active = ref(0);
 const liveList = ref<Array<LiveSortTabs>>([])
 const page = ref(1)
@@ -46,7 +50,8 @@ let loading = ref(true);
 let finished = ref(false);
 let refreshing = ref(false);
 let filterShow = ref(false);
-//获取数据
+//获取关注主播数据
+
 
 onMounted(async () => {
     //首页导航
@@ -55,6 +60,10 @@ onMounted(async () => {
     liveList.value = data.tabs.items;
     page.value = 1;
     getLivesList();
+    console.log(liveList.value);
+    // console.log("assasas",attentionlist.attention);
+
+
 
 });
 
@@ -67,46 +76,52 @@ function gotoShop() {
 const getLivesList = (async () => {
     let { data } = await getLiveList(liveId.value, page.value);
     // console.log(data);
-
-    liveData.value = [...data?.lives, ...liveData.value];
-    loading.value = false
-    filterShow.value = false
-    refreshing.value = false
-    finished.value = true
-
     if (page.value > 1) {
         liveData.value = [...liveData.value, ...data?.lives];
     }
     if (data.lives.length == 0) {
         loading.value = false
-        finished.value = false
+        finished.value = true
         filterShow.value = true
     }
     if (liveData.value.length == 0) {
+        liveData.value = [...data?.lives, ...liveData.value];
         loading.value = false
         finished.value = false
         filterShow.value = true
     }
+    // liveData.value = [...data?.lives, ...liveData.value];
+    loading.value = false
+    filterShow.value = false
+    refreshing.value = false
+    finished.value = false
+    // console.log("a",liveData.value);
+    // console.log("b",attentionlist.attention);
+
 })
 
 
 const onNavHadle = function (i: number) {
     //点击事件切换nav改变直播类型ID并传值
+    // if (liveId.value) {
+    //     page.value = 1;
+    //     liveId.value = i;
+    //     liveData.value = [];
+    //     getLivesList();
+    // }
     page.value = 1;
     liveId.value = i;
     liveData.value = [];
     getLivesList();
-
-    // if (liveId.value != 60) {
-    //     getLivesList();
-    // }
+    // finished.value = true
 }
 
 //上拉加载
 
 const onLoad = async () => {
     page.value++
-    await getLivesList()
+    await getLivesList();
+    finished.value = true;
 }
 // 下拉刷新
 const onRefresh = () => {

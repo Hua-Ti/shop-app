@@ -2,7 +2,7 @@
     <div class="live-box">
         <!-- 返回 -->
         <van-floating-bubble axis="xy" icon="revoke" magnetic="x" :gap="5" v-model:offset="offset" @click="goBack"
-            v-if="definitions.length >= 1"/>
+            v-if="definitions.length >= 1" />
 
         <div class="handle" v-if="roomData">
             <header class="head-section">
@@ -15,8 +15,9 @@
                         <div class="online-num">热度 {{ roomData.onlineUserCount }}</div>
                     </div>
 
-                    <div class="actor-fans">
-                        <div class="focus-btn f-center">关注</div>
+                    <div class="actor-fans" @click="attentionData(roomData)">
+                        <div v-show="flag" class="focus-btn f-center">关注</div>
+                        <div v-show="!flag" class="focus-btn f-center">已关注</div>
                     </div>
                 </div>
                 <div class="live-tag" v-if="roomData.actorTag.length >= 1">
@@ -51,7 +52,8 @@
                     <!-- 右侧点赞转发 -->
                     <div class="flex fans-click">
                         <!-- 清晰度 -->
-                        <div class="clarity" @click="showDefin = true" v-if="definitions.length > 0">{{ definitions[definitionsIndex].label }}
+                        <div class="clarity" @click="showDefin = true" v-if="definitions.length > 0">{{
+                            definitions[definitionsIndex].label }}
                             <div class="ropover" v-show="showDefin">
                                 <div class="clarityItem" v-for="(d, index) in definitions" :key="index"
                                     :class="{ active: index == definitionsIndex }" @click.stop="handover(index)">{{ d.label
@@ -110,10 +112,13 @@ import type { liveRoomDefinitions, liveRoomGoods } from "../../typings"
 import ThumbsUpAni from './canvas.js'
 import LiveGoods from '../../components/LiveGoods.vue'
 import { showLoadingToast } from 'vant';
-// import { reactive } from "vue";
+import { useAttention } from '../../stores/bgChange';
+
+const flag = ref(true);
+// 关注数据
+const attentionlist = useAttention()
 
 const width = ref(window.innerWidth);
-
 const offset = ref({ x: width.value - 55, y: 5 })
 const route = useRoute();
 const router = useRouter();
@@ -149,6 +154,16 @@ const options = [
     { name: '二维码', icon: 'qrcode' },
 ];
 
+const attentionData = (data: any) => {
+    if (flag.value) {
+        attentionlist.addAttention(data)
+        flag.value = false;
+    } else if (!flag.value) {
+        flag.value = true;
+        attentionlist.removeAttention(roomData.value.actUserId)
+    }
+    console.log('关注列表', attentionlist.attention)
+}
 
 onMounted(async () => {
     roomId.value = route.query.roomId;
@@ -177,6 +192,13 @@ onMounted(async () => {
     });
     getGoods()
 
+    // 显示是否关注
+    attentionlist.attention.map((item: any) => {
+        console.log('列表', item.actUserId)
+        if (roomData.value.actUserId == item.actUserId) {
+            flag.value = false;
+        }
+    })
 })
 const createVideo = () => {
 
@@ -226,7 +248,7 @@ const muted = setTimeout(() => {
 const getGoods = async () => {
     let { data } = await getLiveGoods(roomId.value, actUserId.value);
     goods.value = data.itemList.reverse();
-    console.log(goods.value);
+    // console.log(goods.value);
 
 }
 
@@ -281,9 +303,10 @@ onUnmounted(() => {
 </script>
 
 <style>
- .van-floating-bubble {
-        background-color: rgba(0, 0, 0, .1) !important;
-    }
+.van-floating-bubble {
+    background-color: rgba(0, 0, 0, .1) !important;
+}
+
 .live-box {
     .var-input__input {
         color: #fff;

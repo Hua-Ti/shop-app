@@ -17,6 +17,8 @@ declare module 'vue' {
     Shopping: typeof import('./src/components/Shopping.vue')['default']
     VanActionBar: typeof import('vant/es')['ActionBar']
     VanActionBarButton: typeof import('vant/es')['ActionBarButton']
+    VanActionBar: typeof import('vant/es')['ActionBar']
+    VanActionBarButton: typeof import('vant/es')['ActionBarButton']
     VanActionBarIcon: typeof import('vant/es')['ActionBarIcon']
     VanAddressList: typeof import('vant/es')['AddressList']
     VanBackTop: typeof import('vant/es')['BackTop']
