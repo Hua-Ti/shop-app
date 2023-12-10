@@ -1,7 +1,9 @@
 <!-- 瀑布流（热门模块） -->
 <template>
     <div class="waterfallFlow">
-        <!-- <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
+
+        <div class="mubu" v-show="flags"></div>
+        <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId, item)">
@@ -35,7 +37,8 @@
 ) }}
                                     <span class="decimalTwo"
                                         v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
+                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10)
+                                            /
                                             10) * 100) }}
                                     </span>
                                 </span>
@@ -46,7 +49,8 @@
                     </div>
                 </div>
             </div>
-        <!-- </van-list> -->
+        </van-list>
+
     </div>
 </template>
 <script setup lang="ts">
@@ -58,6 +62,7 @@ import { collection } from '../stores/bgChange'
 const router = useRouter();
 
 const collectDataList = collection();
+const flags = ref(true)
 
 
 // const list = ref([]);
@@ -81,6 +86,7 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
         }
     })
 }
+
 const onLoad = async () => {
 
     // 异步更新数据
@@ -89,8 +95,7 @@ const onLoad = async () => {
     for (let i = 0; i < HomeContentData.data.list.length; i++) {
         getHomeC.value.push(HomeContentData.data.list[i]);
     }
-    // getHomeC.value=HomeContentData.data.list
-    // console.log('首页内容', getHomeC.value);
+
     // 加载状态结束
     loading.value = false;
 
@@ -100,6 +105,9 @@ const onLoad = async () => {
         count.value++;
         console.log('sdadasd')
     })
+    setTimeout(() => {
+        flags.value = false
+    }, 3000)
 
 };
 
@@ -112,7 +120,14 @@ const onLoad = async () => {
     padding: 10px 0px 10px 6px;
     box-sizing: border-box;
     width: 100vw;
-
+    .mubu{
+        position: fixed;
+        width: 100vw;
+        height:41vh;
+        background-color: #fff;
+        bottom:50px;
+        z-index:1;
+    }
     .item {
         margin-bottom: 10px;
         width: 49%;
@@ -136,6 +151,7 @@ const onLoad = async () => {
         border-top-left-radius: 5px;
         background-color: hsl(0, 0%, 87%);
     }
+
 
     // 播放
     .Play {

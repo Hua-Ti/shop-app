@@ -38,14 +38,13 @@
             <!-- 轮播图 -->
             <div class="broadcastMap">
                 <!-- <lazy-component> -->
-                    <van-swipe :autoplay="3000" lazy-render @change="onChange">
-                        <van-swipe-item v-for="(image, a) in images" :key="image">
-                            <lazy-component>
-                                <img :src="image" 
-                                    :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }"  />
-                            </lazy-component>
-                        </van-swipe-item>
-                    </van-swipe>
+                <van-swipe :autoplay="3000" lazy-render @change="onChange">
+                    <van-swipe-item v-for="(image, a) in images" :key="image">
+                        <lazy-component>
+                            <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
+                        </lazy-component>
+                    </van-swipe-item>
+                </van-swipe>
                 <!-- </lazy-component> -->
             </div>
             <!-- 秋冬必备模块 -->

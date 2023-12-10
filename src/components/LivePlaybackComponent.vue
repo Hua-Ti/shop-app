@@ -327,6 +327,7 @@ onMounted(() => {
     getShopGoodsData();
     // console.log(props.itemUrlId, props.actorUrlId);
     collec();
+    console.log('uid', collectDataList.collectionData.videoId, collectDataList.collectionData.itemId)
 })
 
 // 评论区弹出框
@@ -350,14 +351,13 @@ function collectionList() {
         // }
     } else {
         flag.value = true;
-        collectDataList.remove(collectDataList.collectionData.id);
+        collectDataList.remove(collectDataList.collectionData);
     }
 }
 // 判断是否收藏
 function collec() {
     collectDataList.collectionDataList.map((item: any, index: number) => {
-        console.log('hsd')
-        if (collectDataList.collectionData.id == item.id) {
+        if (collectDataList.collectionData == item) {
             flag.value = false;
         }
     })
@@ -907,13 +907,15 @@ function collec() {
 
 .collection {
     text-align: center;
-    p{
-        margin-top:6px;
+
+    p {
+        margin-top: 6px;
     }
 }
-.comment{
-    p{
-        margin-top:6px;
+
+.comment {
+    p {
+        margin-top: 6px;
     }
 }
 </style>

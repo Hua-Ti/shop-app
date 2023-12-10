@@ -4,7 +4,7 @@
         <div class="head-nav">
             <van-tabs v-model:active="active" >
                 <van-tab title="用户" replace :to="{name:'attention',query:{id:0}}">
-                    <div class="atten-item">
+                    <div class="atten-item" v-show="attentionlist.attention.length>0">
                         <div class="att-item-list" v-for="(i, index) in attentionlist.attention" :key="index">
                             <div>
                                 <div class="image" :style="{ backgroundImage: `url(${i.coverImageData.imgUrl})` }"></div>
@@ -16,6 +16,10 @@
                             <div class="attentionIsArray" @click="cancelTheAttention(i)">已关注</div>
                         </div>
                     </div>
+                    <div class="aShop" v-show="attentionlist.attention.length<1">
+                        <img src="../../assets/images/dianpu.jpg" alt="">
+                        <div>你还没有关注任何店铺哦~~</div>
+                     </div>
                     <div class="more">没有更多了~~</div>
                 </van-tab>
                 <van-tab title="店铺" replace :to="{name:'attention',query:{id:1}}">

@@ -64,6 +64,7 @@ const bg = index[title];
         border: none;
     }
 
+
     .bqf {
         background-color: #6888a4;
     }

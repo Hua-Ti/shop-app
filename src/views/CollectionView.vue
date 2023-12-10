@@ -4,11 +4,11 @@
         <div class="head-nav">
             <van-tabs v-model:active="active">
                 <van-tab title="收藏视频" replace :to="{ name: 'collection', query: { id: 0 } }">
-                    <div v-show="collectDataList.collectionDataList">
+                    <div v-show="collectDataList.collectionDataList.length>0">
                         <waterfallFlowFour :getCollList="collectDataList.collectionDataList" />
                         <!-- <div class="more">没有更多了~~</div> -->
                     </div>
-                    <div>
+                    <div v-show="collectDataList.collectionDataList.length<1">
                         <div class="aShop" v-show='!collectDataList.collectionDataList'>
                         <img src="../assets/images/dianpu.jpg" alt="">
                         <div>你还没有收藏任何视频哦~~</div>
@@ -16,7 +16,7 @@
                     </div>
                 </van-tab>
                 <van-tab title="收藏商品" replace :to="{ name: 'collection', query: { id: 1 } }">
-                    <div v-show="newData.length>1">
+                    <div v-show="newData.length>0">
                         <div class="atten-item">
                             <div class="att-item-list" v-for="(i, index) in newData" :key="index">
                                 <div>
