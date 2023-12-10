@@ -5,7 +5,9 @@
             <span @click="$router.go(-1)">
                 <van-icon name="arrow-left" />
             </span>
-            <input type="text" :placeholder="keyWord" class="input">
+            <input type="text" :placeholder="keyWord" class="input" @click="router.push({
+                name:'search'
+            })">
         </div>
 
         <div class="tabble-nav">
@@ -39,7 +41,7 @@
                         @click="projectDetailPage(item.tradeItemId)" />
                 </div>
             </van-list>
-            <van-back-top right="13vw" bottom="10vh" />
+            <van-back-top  class="buttonTop" right="13vw" bottom="10vh" />
         </div>
         <div v-else>
             <div class="noshopping">
@@ -134,7 +136,11 @@ const changeCondition = async (name: string) => {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.buttonTop{
+    background-color: #ff4466;
+    opacity: .8;
+}
 .shopping-List {
     width: 100vw;
     position: relative;
@@ -158,7 +164,7 @@ const changeCondition = async (name: string) => {
         top: 0;
         height: 50px;
         font-size: 13px;
-        background: linear-gradient(0deg, rgba(255, 69, 105, 1) 35%, rgba(255, 0, 0, 1) 88%);
+        background: linear-gradient(0deg, rgb(232, 188, 195) 0%, rgba(225, 148, 160, 0.978) 100%);
         z-index: 10;
 
         input {

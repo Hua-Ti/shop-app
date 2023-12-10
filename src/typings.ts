@@ -31,8 +31,8 @@ export interface List {
 }
 
 // 首页二级导航条下标
-export interface item {
-    [proName: string]: any
+export interface item  {
+    [proName:  string]:  any
 }
 // 首页热门模块
 // 首页小导航 （数组（字符串））
@@ -555,6 +555,20 @@ export interface detailList {
             },
             skuInfo: {
                 title: string,
+                props:Array<{
+                    label:string,
+                    list:Array<{
+                        name:string,
+                        sizeId:number,
+                        styleId:number,
+                    }>
+                }>,
+                skus:Array<{
+                    sizeId:number,
+                    styleId:number,
+                    img:string,
+                    stock:number,
+                }>
             },
             detailInfo: {
                 desc: string,
@@ -562,11 +576,55 @@ export interface detailList {
                     key: string,
                     list: Array<string>,
                 }>,
+            },
+            rateInfoV2: {
+                list: Array<{
+                    user: {
+                        uname: string,
+                        avatar: string,
+                    },
+                    created: number,
+                    content: string,
+                }>,
+                cRate: number,
+                rateTags: Array<{
+                    value: string,
+                    num: number,
+                }>,
+                cScore: string,
+            },
+            shopInfo:{
+                name:string,
+                shopId:string,
             }
         }
     }
 }
 
+
+export interface popovers {
+    data: {
+        flushKey: {
+            data: {
+                popovers: Array<{
+                    data: {
+                        effect: string,
+                        limit: string
+                        limitDesc: string,
+                        validTime: string,
+                        highlightCouponDesc: {
+                            content: string,
+                        }
+                    },
+
+                }>,
+                outers: Array<{
+                    text: string,
+                }>
+            }
+        }
+    }
+}
 
 // 购物车数据
 export interface shopCarData {
