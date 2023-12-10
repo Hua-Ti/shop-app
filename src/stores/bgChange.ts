@@ -35,7 +35,7 @@ export const useAttention = defineStore('gz', () => {
     return { attention, addAttention, removeAttention }
 })
 
-// 收藏
+// 收藏视频
 export const collection = defineStore('sc', () => {
     // 点击的收藏？数据
     let collectionData = ref();
@@ -72,39 +72,27 @@ export const collection = defineStore('sc', () => {
 
     return { collectionData,collectionDataList, repalceData, addList, remove }
 })
-// 收藏
-export const collectionProduct = defineStore('sc', () => {
-    // 点击的收藏？数据
-    const collItem = localStorage.collectionData
-    if (collItem != undefined && collItem !=null) {
-        collectionData=JSON.parse(collItem)
-    }
+// 收藏商品
+export const collectionProduct = defineStore('pj', () => {
     // 收藏的数据
-    let collectionDataList = ref([])
-    const collItemList = localStorage.collectionDataList
-    if (collItemList != undefined && collItemList !=null) {
-        collectionDataList.value=JSON.parse(collItemList)
-    }
-
-    // 点击数据的替换
-    const repalceData = (item: object) => {
-        console.log('数据', item)
-        collectionData.value = item;
-        localStorage.collectionData = JSON.stringify(collectionData.value);
+    const collectionDataProduct = ref([])
+    const collItemListProduc = localStorage.collectionDataProduct
+    if (collItemListProduc != undefined && collItemListProduc !=null) {
+        collectionDataProduct.value=JSON.parse(collItemListProduc)
     }
     
-    const addList = (item: object) => {
-        collectionDataList.value.push(item)
-        localStorage.collectionDataList = JSON.stringify(collectionDataList.value)
+    const addListProduct = (item: object) => {
+        collectionDataProduct.value.push(item)
+        localStorage.collectionDataProduct = JSON.stringify(collectionDataProduct.value)
     }
-    const remove = (itemId: object) => {
-        collectionDataList.value.map((dataList: any, index: number) => {
-            if (itemId == dataList.id) {
-                collectionDataList.value.splice(index, 1)
+    const removeProduct = (itemId: object) => {
+        collectionDataProduct.value.map((dataList: any, index: number) => {
+            if (itemId == dataList) {
+                collectionDataProduct.value.splice(index, 1)
             }
         });
-        localStorage.collectionDataList = JSON.stringify(collectionDataList.value)
+        localStorage.collectionDataProduct = JSON.stringify(collectionDataProduct.value)
     }
 
-    return { collectionData,collectionDataList, repalceData, addList, remove }
+    return { collectionDataProduct, addListProduct, removeProduct }
 })

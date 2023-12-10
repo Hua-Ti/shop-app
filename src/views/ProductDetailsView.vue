@@ -29,14 +29,15 @@
         <div class="detailTitle">
             <div class="price-num">
                 <span class="price">{{ price.currency }} {{ price.nowPrice }}</span>
-                <span class="active" v-if="price.priceTags">{{ price.priceTags[0].text }}</span>
+                <span class="active" v-if="price.priceTags">{{ price.priceTags[0]?.text }}</span>
             </div>
             <span>已售{{ price.sales }}</span>
         </div>
         <div class="title">{{ skuInfoList.title }}</div>
         <div class="detailInfo">
             <p class="article-title">{{ detailInfoList.detailImage[0].key }}</p>
-            <van-text-ellipsis class="article-text" rows="3" :content="detailInfoList.desc" expand-text="展开" collapse-text="收起" />
+            <van-text-ellipsis class="article-text" rows="3" :content="detailInfoList.desc" expand-text="展开"
+                collapse-text="收起" />
             <div class="detailImage">
                 <img v-for="item in detailInfoList.detailImage[0].list" :src="item">
             </div>
@@ -50,19 +51,41 @@ import { useRouter } from "vue-router";
 import { getProdectDetails } from "../apic/search";
 import BScroll from '@better-scroll/core';
 // import {type detailList} from "../typings"
+import { collectionProduct } from '../stores/bgChange'
 
+//收藏操作
+const collectDataListProduct = collectionProduct();
 
+let id = ref("");
 const router = useRouter();
 const topImagesList = ref<Array<string>>([]);
+console.log(router)
+
+
 const show = ref(false);
 let flag = ref(true);
 const onClickIcon = () => {
-    flag.value = !flag.value;
+    if (flag.value) {
+        flag.value = false;
+        collectDataListProduct.addListProduct(id.value);
+    } else if (!flag.value) {
+        flag.value = true;
+        collectDataListProduct.removeProduct(id.value)
+    }
 };
+// 判断是否收藏
+function collec() {
+    collectDataListProduct.collectionDataProduct.map((item: any, index: number) => {
+        console.log(item)
+        if (id.value == item) {
+            console.log('相同')
+            collectDataListProduct.removeProduct(id)
+            flag.value = false;
+        }
+    })
+}
 
 let screenWidth = ref(0);
-
-let id = ref("");
 
 const showList = (index: number) => {
     show.value = true;
@@ -83,24 +106,30 @@ let skuInfoList = reactive({
 })
 
 let detailInfoList = reactive({
-    desc:"",
-    detailImage:[{
-        key:"",
-        list:[""],
+    desc: "",
+    detailImage: [{
+        key: "",
+        list: [""],
     }],
 })
 onMounted(async () => {
+    console.log('hhh',id)
+    console.log('收藏数据',collectDataListProduct.collectionDataProduct);
+
+    
     id.value = router.currentRoute.value.query.id as string;
 
     let data = await getProdectDetails(id.value);
     topImagesList.value = data.topImages;
     skuInfoList = data.skuInfo;
     price = data.normalPrice;
-    detailInfoList=data.detailInfo;
+    detailInfoList = data.detailInfo;
 
     // 页面更新渲染完毕,实例化BetterScroll
     nextTick(initScroll);
     screenWidth.value = window.innerWidth;
+    // 收藏显示
+    collec()
 })
 
 
@@ -146,7 +175,6 @@ const initScroll1 = (index: number) => {
                 direction = 0;
             })
         })
-
     })
 }
 </script>
@@ -157,14 +185,16 @@ const initScroll1 = (index: number) => {
     padding: 10px 10px 50px;
     box-sizing: border-box;
 
-    .article-title{
+    .article-title {
         font-size: 20px;
         font-weight: bold;
         padding: 10px 0;
     }
-    .article-text{
+
+    .article-text {
         padding-bottom: 10px;
     }
+
     .title {
         margin-top: 10px;
         font-size: 16px;
@@ -172,13 +202,16 @@ const initScroll1 = (index: number) => {
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-    .detailImage{
+
+    .detailImage {
         width: 100%;
-        img{
+
+        img {
             width: 100%;
             vertical-align: middle;
         }
     }
+
     .detailTitle {
         display: flex;
         justify-content: space-between;

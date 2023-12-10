@@ -7,10 +7,8 @@
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
                     <!-- <lazy-component loading="../assets/images/dianpu.jpg"> -->
                     <div class="picture">
-                        <!-- 幕布 -->
-                        <div class="curtain"></div>
-
-                        <img class="bigPic" v-lazy="item.itemImage" :src="item.itemImage" alt="">
+                    
+                        <img class="bigPic" :src="item.itemImage" alt="">
 
                         <div class="liveBroadcastAtTheSamePrice">
                             <img :src="item.lefttop_taglist[0]?.img" alt="">
@@ -39,7 +37,9 @@
 ) }}
                                         <span class="decimalTwo"
                                             v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                            {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10)
+                                            {{ Math.floor((item.showDiscountPrice -
+                                                Math.floor(item.showDiscountPrice *
+                                                    10)
                                                 /
                                                 10) * 100) }}
                                         </span>
@@ -133,19 +133,12 @@ const onLoad = async () => {
     .bigPic {
         width: 100%;
         height: 100%;
-        // height: auto;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
         background-color: hsl(0, 0%, 87%);
         z-index: 99;
-        // min-height: 253px;
     }
 
-    // .curtain {
-    //     z-index: 99999 !important;
-    //     height: 100%;
-    //     // background-color: #ff4668;
-    // }
 
     // 播放
     .Play {

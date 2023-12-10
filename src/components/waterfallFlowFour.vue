@@ -1,27 +1,29 @@
 <!-- 瀑布流（热门模块） -->
 <template>
     <div class="waterfallFlow">
-        <!-- <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
+        <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
-                <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
+                <div v-masonry-tile class="item" v-for="(item, index) in getCollList" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId, item)">
-                    <div class="picture">
+                    <lazy-component lazyComponent=true loading="../assets/images/dianpu.jpg">
+                        <div class="picture">
 
-                        <img class="bigPic" :src="item.itemImage" alt="">
+                            <img class="bigPic" :src="item.itemImage" alt="">
 
-                        <div class="liveBroadcastAtTheSamePrice">
-                            <img :src="item.lefttop_taglist[0]?.img" alt="">
+                            <div class="liveBroadcastAtTheSamePrice">
+                                <img :src="item.lefttop_taglist[0]?.img" alt="">
+                            </div>
+                            <!-- 头像 -->
+                            <div class="headImage">
+                                <img :src="item.actorAvatar" alt="">
+                                <span>{{ item.actorName }}</span>
+                            </div>
+                            <!-- 播放 -->
+                            <div class="Play">
+                                <img src="../assets/images/Play.png" alt="">
+                            </div>
                         </div>
-                        <!-- 头像 -->
-                        <div class="headImage">
-                            <img :src="item.actorAvatar" alt="">
-                            <span>{{ item.actorName }}</span>
-                        </div>
-                        <!-- 播放 -->
-                        <div class="Play">
-                            <img src="../assets/images/Play.png" alt="">
-                        </div>
-                    </div>
+                    </lazy-component>
                     <p class="title">{{ item.title }}</p>
                     <!-- 价格 -->
                     <div class="price">
@@ -46,7 +48,7 @@
                     </div>
                 </div>
             </div>
-        <!-- </van-list> -->
+        </van-list>
     </div>
 </template>
 <script setup lang="ts">
@@ -82,25 +84,27 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
     })
 }
 const onLoad = async () => {
+    if (props.getHomeC) {
+        // 异步更新数据
+        let HomeContentData: any = await getHomeContent(count.value);//第二页数据
+        // console.log(1111)
+        for (let i = 0; i < HomeContentData.data.list.length; i++) {
+            getHomeC.value.push(HomeContentData.data.list[i]);
+        }
+        // getHomeC.value=HomeContentData.data.list
+        // console.log('首页内容', getHomeC.value);
+        // 加载状态结束
+        loading.value = false;
 
-    // 异步更新数据
-    let HomeContentData: any = await getHomeContent(count.value);//第二页数据
-    // console.log(1111)
-    for (let i = 0; i < HomeContentData.data.list.length; i++) {
-        getHomeC.value.push(HomeContentData.data.list[i]);
-    }
-    // getHomeC.value=HomeContentData.data.list
-    // console.log('首页内容', getHomeC.value);
-    // 加载状态结束
-    loading.value = false;
-
-    // 数据全部加载完成
-    nextTick(() => {
+        // 数据全部加载完成
+        nextTick(() => {
+            loading.value = false
+            count.value++;
+            console.log('sdadasd')
+        })
+    } else if (props.getCollList) {
         loading.value = false
-        count.value++;
-        console.log('sdadasd')
-    })
-
+    }
 };
 
 
@@ -126,7 +130,8 @@ const onLoad = async () => {
 
     .picture {
         position: relative;
-
+        // min-height: 157.76px;
+        // background-color: #ff4668;
     }
 
     .bigPic {
@@ -136,6 +141,8 @@ const onLoad = async () => {
         border-top-left-radius: 5px;
         background-color: hsl(0, 0%, 87%);
     }
+
+ 
 
     // 播放
     .Play {

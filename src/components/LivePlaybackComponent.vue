@@ -358,8 +358,6 @@ function collec() {
     collectDataList.collectionDataList.map((item: any, index: number) => {
         console.log('hsd')
         if (collectDataList.collectionData.id == item.id) {
-            console.log('collectDataList.collectionData.id', collectDataList.collectionData.id)
-            console.log('item.id', item.id)
             flag.value = false;
         }
     })

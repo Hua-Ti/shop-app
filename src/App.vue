@@ -26,7 +26,7 @@ import mySrc from './assets/icons/my.svg';
 
           <van-image width="22" height="22" :src="attentionSrc" />
 
-          <span class="nav-title">关注</span>
+          <span class="nav-title">收藏</span>
         </div>
       </RouterLink>
       <RouterLink :to="{ name: 'live' }" v-slot="{ navigate, isActive, isExactActive }" custom>
