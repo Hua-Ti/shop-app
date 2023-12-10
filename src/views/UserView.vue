@@ -7,8 +7,9 @@
                     <div>
                         <!-- <van-image v-if="pictureSrc.picture" class="img-bg" @click.stop="gotoHomepage" round width="2.3rem"
                             height="2.3rem" :src="src" /> -->
-                        <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem"
-                            :src="src || pictureSrc.picture || picSrc" />
+                        <!-- <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem"
+                            :src="src || pictureSrc.picture || picSrc" /> -->
+                        <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem" :src="src" />
                     </div>
                 </div>
                 <div class="user_white">
@@ -131,7 +132,7 @@ import userMessage from '../assets/icons/user_message.png'
 import userShoucang from '../assets/icons/user_shoucang.png'
 import userAttention from '../assets/icons/user_attention.png'
 import address from '../assets/icons/user_address2.png'
-import src from "../assets/images/user_touxiang.png"
+// import src from "../assets/images/user_touxiang.png"
 
 import { accountNumber } from "../stores/counter"
 import { getPicture } from '../stores/picture'
@@ -142,7 +143,7 @@ const userid = accountNumber()
 const nameid = ref('')
 const pictureSrc = getPicture()
 const picSrc = ref('')
-
+const src = ref(new URL('../assets/images/user_touxiang.png', import.meta.url).href)
 
 //获取登录的账号id
 onMounted(() => {
@@ -161,19 +162,9 @@ onMounted(() => {
 // pictureSrc.picture
 //头像url
 onMounted(() => {
-    let pictureList = localStorage.pictureList || `[]`;
-    // pictureList = JSON.parse(pictureList);
-    // console.log(Array.isArray(pictureList))
-    if (pictureList == '[]') {
-        // console.log(11)
-        return
-    } else {
-        let pictureList = localStorage.pictureList
-        pictureList = JSON.parse(pictureList);
-        // pictureSrc.picture = pictureList.slice(-1)[0].pictureid
-        // console.log(pictureList.slice(-1)[0])
-        picSrc.value = pictureList.slice(-1)[0].pictureid
-    }
+    console.log('我的onMounted');
+    src.value = pictureSrc.pictureurl
+    console.log(picSrc.value);
 })
 
 //退出登录

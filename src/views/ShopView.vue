@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts" name="shop">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { showToast } from 'vant';
 import { useRouter, RouterView } from 'vue-router';
 const router = useRouter();
@@ -51,9 +51,11 @@ function theSubmit() {
 
     }
 
+
 }
-
-
+onMounted(() => {
+    console.log('我是购物车的Mounted')
+})
 </script>
 
 <style lang="scss" scoped>
