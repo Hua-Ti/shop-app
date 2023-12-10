@@ -27,7 +27,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="live">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import LiveComponent from "@/components/LiveComponent.vue";

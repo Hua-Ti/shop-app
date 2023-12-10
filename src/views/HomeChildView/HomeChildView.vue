@@ -75,7 +75,7 @@
     <!-- <router-view /> -->
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="homechild">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import homeTwoModule from '@/components/homeTwoModule.vue';

@@ -7,8 +7,8 @@
                     <div>
                         <!-- <van-image v-if="pictureSrc.picture" class="img-bg" @click.stop="gotoHomepage" round width="2.3rem"
                             height="2.3rem" :src="src" /> -->
-                        <van-image v-if="pictureSrc.picture" class="img-bg" @click="gotoHomepage" round width="2.3rem"
-                            height="2.3rem" :src="pictureSrc.picture || picSrc || src" />
+                        <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem"
+                            :src="src || pictureSrc.picture || picSrc" />
                     </div>
                 </div>
                 <div class="user_white">
@@ -120,7 +120,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="user">
 import { ref, onMounted, } from 'vue'
 import { useRouter, RouterView } from 'vue-router';
 
@@ -491,7 +491,7 @@ function attention(){
 }
 
 .user-button {
-    height: 115px;
+    height: 76px;
     width: 91vw;
     margin: 0px auto;
 

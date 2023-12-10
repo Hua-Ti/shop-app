@@ -1,5 +1,5 @@
 import axios from '../untils/axios'
-import { type HomeNavigation,type HomeTopNav,type gettimeRob,type gettimeRobItem,type getHomeC ,type recommend,type ContentTwo} from '../typings'
+import { type HomeNavigation, type HomeTopNav, type gettimeRob, type gettimeRobItem, type getHomeC, type recommend, type ContentTwo } from '../typings'
 
 //热门模块
 // 首页二级导航
@@ -23,7 +23,7 @@ export async function getTimeProg() {
     return data
 }
 //首页内容数据
-export async function getHomeContent(count:string | number) {
+export async function getHomeContent(count: string | number) {
     let { data } = await axios.get<Array<getHomeC>>(`https://apis.netstart.cn/mogujie/video/item?page=${count}`)
     return data
 }
@@ -32,18 +32,18 @@ export async function getHomeContent(count:string | number) {
 
 // 非热门模块
 //首页小导航
-export async function getHomeModuleRowTwo(pids:string) {
-    let { data } = await axios.get<Array<recommend>>(`https://apis.netstart.cn/mogujie/category/getSub?pid=${pids}`)
+export async function getHomeModuleRowTwo(pids: string) {
+    let { data } = await axios.get<recommend>(`https://apis.netstart.cn/mogujie/category/getSub?pid=${pids}`)
     return data
 }
 //首页内容数据2
-export async function getHomeContentTwo(pids:string,count:number) {
+export async function getHomeContentTwo(pids: string, count: number) {
     let { data } = await axios.get<Array<ContentTwo>>(`https://apis.netstart.cn/mogujie/category/miniWall?fcid=${pids}&page=${count}&sort=new`)
     return data
 }
 
 //首页内容数据3
-export async function getModuleHome(keyword:string) {
+export async function getModuleHome(keyword: string) {
     let { data } = await axios.get<Array<getHomeC>>(`https://apis.netstart.cn/mogujie/video/item?q=${keyword}`)
     return data
 }

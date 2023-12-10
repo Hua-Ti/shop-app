@@ -37,10 +37,12 @@ export const accountNumber = defineStore('counter', () => {
 export const useUserGeolocationStore = defineStore('userGeolocation', () => {
 
   const userLocation = ref<userLocationItem>();
-
+  const locationShow = ref(false)
   function getUserGeolocation(curLocation: userLocationItem) {
     userLocation.value = curLocation;
   }
-
-  return { userLocation, getUserGeolocation }
+  function changeLocationShow(show: boolean) {
+    locationShow.value = show
+  }
+  return { userLocation, locationShow, getUserGeolocation, changeLocationShow }
 }, { persist: true })

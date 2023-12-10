@@ -34,11 +34,17 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      children:  [
+      meta: {
+        keepAlive: true //设置页面是否需要使用缓存
+      },
+      children: [
         {
-          path:  '/',
-          name:  'homechild',
-          component:  HomeChildView
+          path: '/',
+          name: 'homechild',
+          component: HomeChildView,
+          meta: {
+            keepAlive: true //设置页面是否需要使用缓存
+          },
         }
       ]
     },
@@ -51,6 +57,9 @@ const router = createRouter({
       path: '/shop',
       name: 'shop',
       component: ShopView,
+      meta: {
+        keepAlive: true //设置页面是否需要使用缓存
+      },
       children: [
         {
           path: 'confirmorder',
@@ -63,6 +72,9 @@ const router = createRouter({
       path: '/user',
       name: 'user',
       component: UserView,
+      meta: {
+        keepAlive: true //设置页面是否需要使用缓存
+      },
       children: [
         {
           path: 'homepage',
@@ -80,6 +92,9 @@ const router = createRouter({
       path: '/live',
       name: 'live',
       component: LiveView,
+      meta: {
+        keepAlive: true //设置页面是否需要使用缓存
+      },
     },
     {
       path: '/liveroom',

@@ -5,10 +5,13 @@
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in ContTwoList" :key="index">
                     <!-- <router-link :to="{name:}"> -->
-                    <div class="picture">
-                        <img class="bigPic" :src="item.img" alt="" v-lazy="item.img">
-                        <div class="sale">已售{{ item.sale }}件</div>
-                    </div>
+                    <lazy-component loading="../assets/images/dianpu.jpg">
+                        <div class="picture">
+                            <img class="bigPic" :src="item.img" alt="" v-lazy="item.img">
+                            <div class="sale">已售{{ item.sale }}件</div>
+                        </div>
+                    </lazy-component>
+
                     <p class="title">{{ item.title }}</p>
                     <!-- 价格 -->
                     <div class="price">
@@ -30,6 +33,7 @@
                         </div>
                         <div class="cafv">立即购买</div>
                     </div>
+
                     <!-- </router-link> -->
                 </div>
             </div>
@@ -59,7 +63,7 @@ async function fuc(pid: string) {
     for (let i = 0; i < HomeContentData.result.wall.docs.length; i++) {
         ContTwoList.value.push(HomeContentData.result.wall.docs[i]);
     }
-    console.log(ContTwoList)
+    // console.log(ContTwoList)
     // 加载状态结束
     loading.value = false;
 
@@ -77,7 +81,7 @@ const onLoad = async () => {
 // 监听路由变化，来跳转页面
 watch(() => route.query.pid,
     (newVa, oldVal) => {
-        console.log(newVa, oldVal)
+        // console.log(newVa, oldVal)
         if (newVa !== '666') {
             console.log(3333, props.pid)
             ContTwoList.value.length = 0
@@ -113,7 +117,7 @@ watch(() => route.query.pid,
 
     .bigPic {
         width: 100%;
-        height: 100%;
+        // height: 100%;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
     }

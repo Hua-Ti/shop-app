@@ -7,93 +7,79 @@
                 </template>
             </van-nav-bar>
         </div>
-
-        <van-button type="primary" @click="router.push({ name: 'location' })">跳转按钮</van-button>
-
         <!-- 地址列表 -->
 
-
-        <van-address-list v-model="chosenAddressId" :list="list" default-tag-text="默认" @edit="compile($event)"
-            @select="daGou($event)" :show-add-button="false">
-        </van-address-list>
+        <van-config-provider :theme-vars="themeVars">
+            <van-address-list v-model="chosenAddressId" :list="list" default-tag-text="默认" @edit="compile($event)"
+                @select="daGou($event)" :show-add-button="false">
+            </van-address-list>
+        </van-config-provider>
 
         <!-- 增加地址 -->
         <div class="bottom">
             <div class="button-box">
                 <van-cell @click="showPopup">
-                    <van-button color="linear-gradient(to right, #d3ce62, #ff4689)" block>新增地址</van-button>
+                    <van-button
+                        color="linear-gradient(90deg, rgba(255,69,105,0.7344071417629552) 0%, rgba(255,69,105,0.8240429961046919) 100%)"
+                        block>新增地址</van-button>
                 </van-cell>
 
                 <van-popup class="popup-box" v-model:show="show" closeable close-icon-position="top-left" position="bottom"
-                    :style="{ height: '70%' }">
+                    :style="{ height: '65%' }">
                     <div class="address-location" @click="goLocation">
                         <van-icon name="location-o" size="28" />
                     </div>
 
                     <div class="address-bianji2">
-                        <van-cell-group inset class="goLocation-fu">
-                            <van-field class="inputclass" v-model="name" placeholder="张三" label="姓名" label-width="4em" />
-                        </van-cell-group>
+                        <div>
 
-                        <van-cell-group inset class="goLocation-fu">
-                            <van-field class="inputclass" placeholder="180xxxxyyyy" v-model="tel" type="tel" label="电话"
-                                label-width="4em" />
-                        </van-cell-group>
+                            <van-form>
+                                <van-cell-group inset class="form-from">
+                                    <van-field v-model="name" name="用户名" label="用户名" placeholder="用户名" label-width="4.5em"
+                                        :rules="[{ required: true, message: '请填写用户名' }]" />
+                                    <van-field v-model="tel" type="tel" name="电话" label="电话" placeholder="手机号"
+                                        label-width="4.5em" :rules="[{ pattern, message: '请输入正确手机号' }]" />
+                                    <van-field v-model="diqu" name="地区" label="地区" placeholder="地区" label-width="4.5em"
+                                        :rules="[{ required: true, message: '请填写地区' }]" />
+                                    <van-field v-model="address" name="详细地址" label="详细地址" placeholder="详细地址"
+                                        label-width="4.5em" :rules="[{ required: true, message: '请填写详细地址' }]" />
+                                    <div class="moren">
+                                        <p>设为默认地址</p>
+                                        <van-switch class="kaiguan" v-model="checked" active-color="#ff4569"
+                                            inactive-color="#dcdee0" />
+                                    </div>
+                                </van-cell-group>
+                            </van-form>
+                        </div>
 
-                        <van-cell-group inset class="goLocation-fu">
-                            <van-field class="inputclass" v-model="diqu" label="地区" label-width="4em"
-                                placeholder="浙江省杭州市西湖区" />
-                            <div class="goLocation" @click="goLocation">
-                                <van-icon name="location-o" size="30" />
-                            </div>
-                        </van-cell-group>
+                        <div class="moresmores">
+                            <van-button class="mores" type="primary" @click="addSave" block
+                                color="linear-gradient(to right, #f4becf, #ff4569)">保存</van-button>
+                            <van-button class="mores" type="primary" @click="getdelete" block
+                                color="linear-gradient(to right, #ff4569, #f4becf)">删除</van-button>
+                        </div>
 
-                        <van-cell-group inset class="goLocation-fu">
-                            <van-field class="inputclass" placeholder="景湖街道新华路xxx号" v-model="address" type="text"
-                                label="详细地址" label-width="4em" />
-                        </van-cell-group>
 
-                        <van-cell class="moren" center title="设为默认收获地址">
-                            <template #right-icon>
-                                <van-switch v-model="checked" active-color="#ee0a24" inactive-color="#dcdee0"
-                                    @change="Changeadd" />
-                            </template>
-                        </van-cell>
-                        <van-button class="moren" type="primary" @click="addSave" block
-                            color="linear-gradient(to right, #ff6034, #ee0a24)">保存</van-button>
                     </div>
-
-                    <!-- 方法一 -->
-                    <!-- <div class="address-bianji">
-                        <van-address-edit :area-list="areaList" v-model:show="show" show-set-default
-                            :search-result="searchResult" class="van-cell--clickable"
-                            :area-columns-placeholder="['请选择', '请选择', '请选择']" @save="onSave" @delete="onDelete"
-                            :address-info="{
-                                name: info!.name,
-                                tel: info!.tel,
-                                addressDetail: info!.addressDetail,
-                                isDefault: info!.isDefault,
-                            }">
-                        </van-address-edit>
-                    </div> -->
-
                 </van-popup>
             </div>
-
         </div>
     </div>
     <router-view />
 </template>
 
 <script setup lang="ts">
-import { useRouter, RouterView } from 'vue-router';
+import { useRouter, RouterView, onBeforeRouteUpdate } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
-import { listProps, showToast } from 'vant';
+import { listProps, showToast, showDialog } from 'vant';
 import { areaList } from '@vant/area-data';
 import type { AddressEditInstance } from 'vant';
-import { getAddress } from '../stores/address'
-const addressNeirong = getAddress()
+import { getAddress } from '../stores/address';
+import { useUserGeolocationStore } from "../stores/counter"
+
 const router = useRouter();
+const addressNeirong = getAddress()
+const getLocation = useUserGeolocationStore()
 const chosenAddressId = ref('');
 const show = ref(false);
 
@@ -102,7 +88,16 @@ const list = ref([])
 const searchResult = ref([]);
 const addressEditRef = ref<AddressEditInstance>();
 addressEditRef.value?.setAddressDetail('');
-const info = ref<Shuju>()
+
+
+const themeVars = {
+    tagPrimaryColor: '#ff4569',
+    addressListRadioColor: '#ff4569',
+    radioLabelColor: '#000',
+    addressListItemTextColor: '#727272',
+    cellGroupBackground: '#727272'
+    // --van-cell-group-background
+};
 
 //方法二的数据
 const tel = ref('');
@@ -110,77 +105,81 @@ const name = ref('');
 const diqu = ref('');
 const address = ref('');
 const checked = ref(false);
-const bianjiId = ref('')
+
 const pattern = /^(?:(?:\+|00)86)?1[3-9]\d{9}$/;
 
-
+//点击的地址id
+const bianjiId = ref('')
+const dianjiid = ref('')
 
 const showPopup = () => {
-    info.value = [] as any;
     show.value = true;
     tel.value = ''
     name.value = ''
     diqu.value = ''
     address.value = ''
     checked.value = false
+    // console.log('我是更改前', checked.value)
 }
-interface Shuju {
-    name: string
-    tel: string
-    addressDetail: string
-    isDefault: boolean
-}
+
 onMounted(() => {
+
+    let size = 0;
+    let storage = window.localStorage;
+    for (let props in storage) {
+        if (props === "length") continue;
+        size += storage[props].length;
+    }
+    // console.log('使用了localStorage的大小,单位kb', (size / 1024).toFixed(2))
+
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
     list.value = addressList
 })
+
 //编辑地址
 const compile = (list: any) => {
     if (list != '[]') {
         show.value = true;
-        console.log(list)
+        // console.log(list)
         tel.value = list.tel
         name.value = list.name
         diqu.value = list.diqu;
-        address.value = list.address;
+        address.value = list.smalladdress;
         checked.value = list.isDefault
         bianjiId.value = list.id
-
-        let addressList = localStorage.addressList || `[]`;
-        addressList = JSON.parse(addressList);
-        console.log(addressList)
-        let record = addressList.findIndex(
-            (item: any) => item.id == list.id
-        );
-        addressList = addressList.filter((item: any) => item.id != list.id)
-        list.value = addressList
-        localStorage.addressList = JSON.stringify(addressList);
-
-        console.log(addressList)
-        // console.log(record)
-        // for (let i = 0; i <= addressList.length; i++) {
-        //     const dianjide = addressList[i].id;
-        //     if (list.id == dianjide) {
-        //         console.log(i)
-        //     }
-        // }
-
-
     }
 }
+
+//删除地址
+const getdelete = (() => {
+    // console.log(bianjiId.value)
+    let addressList = localStorage.addressList || `[]`;
+    addressList = JSON.parse(addressList);
+    addressList = addressList.filter((item: any) => item.id != bianjiId.value)
+    list.value = addressList
+    localStorage.addressList = JSON.stringify(addressList);
+    show.value = false;
+    // console.log('我是删除还剩', addressList)
+    if (addressList.length == 0) {
+        addressNeirong.name = ''
+        addressNeirong.tel = ''
+        addressNeirong.address = ''
+        addressNeirong.id = ''
+    }
+})
 
 //打勾的地址
 onMounted(() => {
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
     if (addressList.length != 0) {
-        console.log('我是第二个onMounted', addressList)
+        // console.log('我是第二个onMounted', addressList)
         let piniaAddress = localStorage.address || `[]`;
         piniaAddress = JSON.parse(piniaAddress);
-        console.log('pinia存贮的地址', piniaAddress)
+        // console.log('pinia存贮的地址', piniaAddress)
         if (piniaAddress) {
-            console.log(111)
+            // console.log(111)
             chosenAddressId.value = piniaAddress.id
         } else {
             for (let i = 0; i <= addressList.length; i++) {
@@ -196,7 +195,7 @@ onMounted(() => {
 
 //切换打勾
 const daGou = (item: any) => {
-    console.log(item)
+    // console.log(item)
     chosenAddressId.value = item.id
     addressNeirong.name = item.name
     addressNeirong.tel = item.tel
@@ -204,47 +203,52 @@ const daGou = (item: any) => {
     addressNeirong.id = item.id
 }
 
-
-const onDelete = (val: any) => {
-    console.log(val)
-    showToast('delete')
-};
-
-const onEdit = (item: any, index: any) => showToast('编辑地址:' + index);
+//跳转定位页面
 const goLocation = () => {
-    showToast('跳到定位')
-
+    router.push({ name: 'location' })
+    getLocation.changeLocationShow(false);
+    // console.log(getLocation.locationShow)
 }
 
-//方法二的方法
-const Changeadd = (value: any) => {
-    console.log(value)
-    changevalue.value = value
-}
+
+//点击保存
 const addSave = () => {
+    // console.log(bianjiId.value)
+    if (bianjiId.value) {
+        let addressList = localStorage.addressList || `[]`;
+        addressList = JSON.parse(addressList);
+        addressList = addressList.filter((item: any) => item.id != bianjiId.value)
+        list.value = addressList
+        localStorage.addressList = JSON.stringify(addressList);
+        show.value = false;
+
+    }
     if (name.value && tel.value && address.value && diqu.value != '') {
         let addressList = localStorage.addressList || `[]`;
         addressList = JSON.parse(addressList);
 
-        addressList.push({
+        addressList.unshift({
             id: new Date().getTime(),
             name: name.value,
             tel: tel.value,
             address: diqu.value + address.value,
             diqu: diqu.value,
-            isDefault: changevalue.value,
+            isDefault: checked.value,
+            smalladdress: address.value,
         });
-        console.log(addressList[addressList.length - 1].isDefault)
+
+
         for (let i = 0; i < addressList.length; i++) {
-            const last = addressList[addressList.length - 1].isDefault;
+            const last = addressList[0].isDefault;
+            // console.log(addressList[0])
 
             if (last) {
-                chosenAddressId.value = addressList[addressList.length - 1].id
-                addressNeirong.name = addressList[addressList.length - 1].name
-                addressNeirong.tel = addressList[addressList.length - 1].tel
-                addressNeirong.address = addressList[addressList.length - 1].address
-                addressNeirong.id = addressList[addressList.length - 1].id
-                for (let j = 0; j < addressList.length - 1; j++) {
+                chosenAddressId.value = addressList[0].id
+                addressNeirong.name = addressList[0].name
+                addressNeirong.tel = addressList[0].tel
+                addressNeirong.address = addressList[0].address
+                addressNeirong.id = addressList[0].id
+                for (let j = 1; j < addressList.length; j++) {
                     addressList[j].isDefault = false;
                 }
             }
@@ -252,10 +256,9 @@ const addSave = () => {
 
         list.value = addressList
         localStorage.addressList = JSON.stringify(addressList);
-        // console.log(val)
-        console.log(addressList)
+        // console.log(addressList)
         showToast({
-            message: '添加成功',
+            message: '保存成功',
             icon: 'success',
         });
         name.value = ''
@@ -263,39 +266,20 @@ const addSave = () => {
         address.value = ''
         diqu.value = ''
         checked.value = false
+        show.value = false;
     } else {
         showToast('信息没有填完整')
     }
 
 }
 
-//获取输入的数据,没有用
-const onSave = (val: any) => {
-    let addressList = localStorage.addressList || `[]`;
-    addressList = JSON.parse(addressList);
-    console.log(val)
-    addressList.push({
-        id: new Date().getTime(),
-        name: val.name,
-        tel: val.tel,
-        address: val.province
-            + val.city + val.county + val.addressDetail,
-        isDefault: val.isDefault,
-        addressDetail: val.addressDetail,
-        province: val.province,
-        city: val.city,
-        county: val.county
-    });
-    list.value = addressList
-    localStorage.addressList = JSON.stringify(addressList);
-    val = ''
-
-    console.log(addressList)
-    showToast({
-        message: '添加成功',
-        icon: 'success',
-    });
-}
+//路由更新
+onBeforeRouteUpdate(() => {
+    if (getLocation.locationShow == true) {
+        diqu.value = getLocation.userLocation!.address
+        address.value = getLocation.userLocation!.title
+    }
+})
 
 </script>
 <style lang="scss" scoped>
@@ -310,7 +294,7 @@ const onSave = (val: any) => {
 }
 
 .bottom {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -318,6 +302,7 @@ const onSave = (val: any) => {
 
     .button-box {
         width: 94vw;
+        // height: 100vh;
         margin: 10px auto;
         position: relative;
 
@@ -352,65 +337,60 @@ const onSave = (val: any) => {
 }
 
 .address-bianji2 {
+    padding-top: 5%;
     margin-top: 15%;
-    height: 100vh;
+    // height: 100vh;
+    height: 89%;
     width: 100vw;
-    background-color: aquamarine;
+    background-color: rgb(255, 255, 255);
+    border-top: 1px solid #e3e1e1;
+}
+
+.form-from {
+    // border: 1px solid #ff4569;
+    box-shadow: 0px 2px 5px #cac9c9;
+}
+
+.three-bottom {
+    // background-color: #a59a9a;
 }
 
 .moren {
-    width: 91vw;
-    border-radius: 2%;
+    width: 91.5vw;
+    border-radius: 6px;
+    font-size: 14.5px;
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(255, 255, 255);
     margin: 0 auto;
     margin-top: 2%;
+    margin-bottom: 2%;
 
-}
-
-.inputclass {
-    padding-top: 4%;
-    // padding-bottom: 2%;
-    height: 6vh;
-
-    background-color: rgb(255, 255, 255);
-}
-
-.goLocation-fu {
-    position: relative;
-    margin-top: 2%;
-
-    // height: 20%;
-    // padding-top: 10%;
-
-
-    .goLocation {
-        background-color: rgb(226, 226, 226);
-        position: absolute;
-        top: 10%;
-        right: 10%;
+    p {
+        padding-left: 4.5%;
+        padding-top: 2%;
+        color: #ff4569;
     }
+}
+
+.kaiguan {
+    margin-right: 2%;
+}
+
+.moresmores {
+    margin-top: 5%;
+}
+
+.mores {
+    margin: 0 auto;
+    margin-top: 5%;
+    width: 75vw;
+    border-radius: 999px;
 }
 
 
 .address-bianji {
     margin-top: 15%;
-
-}
-
-//定位
-
-.popup-box {
-    // position: relative;
-
-
-}
-
-
-.van-cell--clickable {
-    background-color: rgb(255, 253, 127);
-    position: relative;
-
-
-
 
 }
 </style>

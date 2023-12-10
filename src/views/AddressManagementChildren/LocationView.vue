@@ -147,7 +147,7 @@ const initMap = () => {
 
 onMounted(() => {
     nextTick(() => {
-        // initMap();
+        initMap();
         // console.log(locationArr.value)
     })
 })
@@ -183,6 +183,7 @@ function sumbit() {
     if (chooseLocation.value) {
         // 将地理位置存到pinia中
         store.getUserGeolocation(chooseLocation.value!);
+        store.changeLocationShow(true)
     } else {
         store.getUserGeolocation(curAddress);
     }

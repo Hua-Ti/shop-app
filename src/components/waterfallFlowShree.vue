@@ -5,12 +5,13 @@
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
+                    <!-- <lazy-component loading="../assets/images/dianpu.jpg"> -->
                     <div class="picture">
                         <!-- 幕布 -->
                         <div class="curtain"></div>
-                        <lazy-component loading="../assets/images/dianpu.jpg">
-                            <img class="bigPic"  v-lazy="item.itemImage"  :src="item.itemImage" alt="" >
-                        </lazy-component>
+
+                        <img class="bigPic" v-lazy="item.itemImage" :src="item.itemImage" alt="">
+
                         <div class="liveBroadcastAtTheSamePrice">
                             <img :src="item.lefttop_taglist[0]?.img" alt="">
                         </div>
@@ -49,6 +50,7 @@
                             <div class="sale">{{ item.sale }}</div>
                         </div>
                     </div>
+                    <!-- </lazy-component> -->
                 </div>
             </div>
         </van-list>
@@ -68,11 +70,11 @@ const loading = ref(false);
 const finished = ref(false);
 const count = ref(1)
 let keyword: string = route.query.keyword;
-console.log('keyword', keyword)
+// console.log('keyword', keyword)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
-    console.log(actorUrlId)
+    // console.log(actorUrlId)
     router.push({
         name: 'livePlayback',
         params: {
@@ -114,6 +116,7 @@ const onLoad = async () => {
     .item {
         margin-bottom: 10px;
         width: 49%;
+        // min-height: 250px;
     }
 
     .item:nth-child(n+1) {
@@ -124,23 +127,25 @@ const onLoad = async () => {
 
     .picture {
         position: relative;
+        width: 100%;
     }
 
-    .bigPic,
-    .curtain {
+    .bigPic {
         width: 100%;
         height: 100%;
+        // height: auto;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
-        background-color: #ddd;
-        z-index:99;
+        background-color: hsl(0, 0%, 87%);
+        z-index: 99;
+        // min-height: 253px;
     }
 
-    .curtain {
-        z-index: 99999 !important;
-        height: 100%;
-        background-color: #ff4668;
-    }
+    // .curtain {
+    //     z-index: 99999 !important;
+    //     height: 100%;
+    //     // background-color: #ff4668;
+    // }
 
     // 播放
     .Play {
