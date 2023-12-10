@@ -71,6 +71,8 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
             itemUrlId: itemUrlId,
             actorUrlId: actorUrlId,
             explainId: explainId,
+        },
+        query:{
             itemData: item
         }
     })
