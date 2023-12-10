@@ -1,7 +1,7 @@
 <template>
     <!-- 首页二级页面（热门模块） -->
     <!-- 热门 -->
-    <div class="homeChild" v-if="route.query.pid === '666' || route.query.pid==undefined">
+    <div class="homeChild" v-if="route.query.pid === '666' || route.query.pid == undefined">
         <!-- 首页二级模块 -->
         <homeTwoModule :homeNav="homeNav" />
 
@@ -28,26 +28,53 @@
         <WaterfallFlow />
         <!-- </keep-alive> -->
     </div>
+
     <!-- 除了热门之外的 -->
-    <div class="homeChild" v-if="route.query.pid !== '666'">
+    <div class="homeChild" v-if="route.query.pid !== '666' && route.query.pid != undefined">
         <!-- 首页二级模块 -->
-        <homeRecommend :homeNav="RecommendNav" />
+        <homeRecommend v-if="route.query.pid !== '3627'" :homeNav="RecommendNav" />
+        <!-- 轮播图 -->
+        <div class="broadcastMap">
+            <van-swipe :autoplay="3000" lazy-render>
+                <van-swipe-item v-for="image in images" :key="image">
+                    <img :src="image" />
+                </van-swipe-item>
+            </van-swipe>
+        </div>
+        <!-- 秋冬必备模块 -->
+        <div v-if="route.query.pid === '3627'" class="autumnAndWinter">
+            <div class="autu-menu">
+                <div class="autu">
+                    <div class="item" v-for="(item, index) in TypeData" :key="index">
+                        <router-link :to="{ name: 'moduleHome', query: { keyword: item } }">
+                            <img class="pic" :src="`pic/p${index + 1}.png`">
+                            <p class="content">{{ item }}</p>
+                        </router-link>
+                    </div>
+                    <!-- 潮流，休闲区， -->
+                </div>
+            </div>
+        </div>
+        <!-- 分割图 -->
+        <div class="hp1" v-if="route.query.pid === '3627'">
+            <img src="/hp1.webp" alt="">
+        </div>
         <!-- 瀑布流内容 -->
         <keep-alive>
-            <waterfallFlowTwo :pid="pid"/>
+            <waterfallFlowTwo :pid="pid" />
         </keep-alive>
     </div>
     <!-- <router-view /> -->
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="homechild">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import WaterfallFlow from '@/components/WaterfallFlowView.vue';
+import { Swipe, SwipeItem } from 'vant';
 import homeTwoModule from '@/components/homeTwoModule.vue';
 import homeRecommend from '@/components/homeRecommend.vue';
+import WaterfallFlow from '@/components/WaterfallFlowView.vue';
 import waterfallFlowTwo from '@/components/waterfallFlowTwo.vue';
-
 
 import { getHomeModuleRow, gettimeLimitedQuickGrab, getTimeProg, getHomeNavigation, getHomeModuleRowTwo } from '../../apic/homes'
 import { type List, type HomeTopNav, type gettimeRob, type gettimeRobItem, type recommendList } from '../../typings'
@@ -61,27 +88,38 @@ const timeRobItem = ref<Array<gettimeRobItem>>([])
 
 // 非热门页面
 const RecommendNav = ref<Array<recommendList>>([])
+const TypeData = ['百变潮流裤', '棒球服', '宽松卫衣', '毛呢大衣', '毛衣', '棉服', '皮草', '气质风衣', '少女感马甲', '小个子精选', '羽绒服', '针织衫'];
+const images = [
+    'projectTitle/百变潮流裤bg.png',
+    'projectTitle/棒球服bg.png',
+    'projectTitle/宽松卫衣bg.png',
+];
 
 // 点击跳转相关
 //跳购买页面
 function shoping() {
     router.push({ name: 'shop' })
 }
-const pid = route.query.pid?route.query.pid:'666';
+const pid = route.query.pid ? route.query.pid : '666';
 
 // 获取非热门页面数据
 async function fn(pid: string) {
     let RecommendData = await getHomeModuleRowTwo(pid);
-    RecommendNav.value = RecommendData.data?.list;
+    if (RecommendData.data?.list) {
+        RecommendNav.value = RecommendData.data?.list;
+    }
+    if (RecommendNav.value.length < 12) {
+        RecommendNav.value = RecommendNav.value.splice(0, 7)
+    }
     // console.log(RecommendNav)
 }
 
 onMounted(async () => {
     // console.log('pid', pid)
     //首页数据(热门)
-    console.log("pid76",pid);
-    
-    if (pid === '666') {
+    // console.log("pid76", pid);
+
+    if (pid === '666' || pid == undefined) {
         let homeTwoNavMenu: any = await getHomeNavigation();
         let dataArr = await getHomeModuleRow();
         let dataTime = await gettimeLimitedQuickGrab();
@@ -93,15 +131,17 @@ onMounted(async () => {
         timeRobItem.value = dataProg.data?.itemList.splice(0, 3)
     } else {
         //首页数据(非热门)
-        fn(pid);
+        fn(pid as string);
     }
 })
 // 监听路由变化，来跳转页面
 watch(() => route.query,
     (newVa, oldVal) => {
-        console.log(newVa, oldVal)
-        if (newVa.pid !== '666') {
-            fn(newVa.pid);
+        // console.log(66666);
+
+        // console.log(newVa, oldVal)
+        if (newVa.pid !== '666' && pid !== undefined) {
+            fn(newVa.pid as string);
         }
     },
     { immediate: true }
@@ -121,6 +161,7 @@ watch(() => route.query,
     background-color: white;
     position: relative;
     top: -12px;
+
 
     // 限时快抢模块
     .goodList {
@@ -208,6 +249,70 @@ watch(() => route.query,
             height: 66%;
             // background-color: rgb(250, 152, 230);
             margin: 0 6px 2px 6px;
+        }
+    }
+
+    // 秋冬必备
+    .autumnAndWinter {
+        // margin-bottom: 10px;
+        width: 100vw;
+        padding: 10px 15px;
+        box-sizing: border-box;
+
+        // background-color: #e9a5aa;
+        // border:1px solid #e0abae;
+        .autu-menu {
+            border-radius: 10px;
+            border: 10px 0;
+        }
+
+        .autu {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .autuTitle {
+            font-size: 18px;
+            font-weight: 500;
+            padding: 10px;
+            color: #111;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+        }
+
+        .content {
+            font-size: 14px;
+            padding: 10px 0;
+            box-sizing: border-box;
+            text-align: center;
+            color: #333;
+        }
+    }
+
+    .hp1 img {
+        width: 100vw;
+        padding: 0 12px;
+    }
+
+    .broadcastMap {
+        width: 100vw;
+        // padding: 0 10px;
+        padding: 0 2px;
+        box-sizing: border-box;
+        border-radius: 12px;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
         }
     }
 }

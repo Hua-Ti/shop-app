@@ -28,7 +28,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="cafv">{{ item.sale }}</div>
+                        <div class="cafv">立即购买</div>
                     </div>
                 </div>
             </div>
@@ -36,28 +36,29 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import { getHomeContentTwo } from '../apic/homes'
 import { type ContentTwoList } from '../typings'
 import { ref, nextTick,watch } from 'vue';
 const router = useRouter();
+const route = useRoute();
 
 // const list = ref([]);
-const ContTwoList = ref<Array<ContentTwoList>>([])
+let ContTwoList = ref<Array<ContentTwoList>>([])
 const loading = ref(false);
 const finished = ref(false);
-const count = ref(3)
+const count = ref(1)
 
 const props = defineProps(['pid'])
 
 // 获取数据
 async function fuc(pid:string){
     // 异步更新数据
-    let HomeContentData: any = await getHomeContentTwo(pid,count.value);//第二页数据
+    let HomeContentData: any = await getHomeContentTwo(pid,count.value);
     for (let i = 0; i < HomeContentData.result.wall.docs.length; i++) {
         ContTwoList.value.push(HomeContentData.result.wall.docs[i]);
     }
-    console.log(ContTwoList)
+    // console.log(ContTwoList)
     // 加载状态结束
     loading.value = false;
 
@@ -69,16 +70,17 @@ async function fuc(pid:string){
 }
 
 const onLoad = async () => {
-    console.log(22,props.pid)
+    // console.log(22,props.pid)
     fuc(props.pid)
 };
 // 监听路由变化，来跳转页面
-watch(() => props.pid,
+watch(() => route.query.pid,
     (newVa, oldVal) => {
-        console.log(newVa, oldVal)
-        if (newVa.pid !== '666') {
-            console.log(3333,props.pid)
-            fuc(newVa.pid);
+        // console.log(newVa, oldVal)
+        if (newVa !== '666') {
+            // console.log(3333,props.pid)
+            ContTwoList.value.length=0
+            fuc(newVa);
         }
     },
     { immediate: true }
@@ -151,6 +153,7 @@ watch(() => props.pid,
     .price {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 3px 5px 5px;
         color: #ff4668;
         font-size: 12px;
@@ -175,11 +178,12 @@ watch(() => props.pid,
 
         .cafv {
             font-size: 10px;
-            padding: 3px 6px;
+            padding: 4px 8px;
             background-color: #ffecef;
             border-radius: 10px;
             text-align: center;
             color:black;
+            margin-top:-2px;
         }
 
         .decimalTwo {

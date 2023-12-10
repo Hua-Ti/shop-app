@@ -12,7 +12,24 @@
             :author-weight="actorInfoList?.weight" :comment-number="itemExplainList?.commentCount"
             :goods-id="itemInfoList?.itemId" :goods-img="itemInfoList?.cover" :goods-name="itemInfoList?.title"
             :goods-price="itemInfoList?.discountPrice" :is-benefit-point-list="isBenefitPoint"
-            :sold-count="itemInfoList?.soldCount" :comment-list="comments">
+            :sold-count="itemInfoList?.soldCount" :actor-url-id="actorUrlId" :item-url-id="itemUrlId"
+            :goods-live-img-arr="goodsLiveImgArr" :dsr-bg-img="dsrInfoData?.dsrBgImg" :dsr-score="dsrInfoData?.dsrScore">
+            <!-- 弹幕评论 -->
+            <template v-slot:barrage>
+                <div class="comments">
+                    <div class="comments-list">
+                        <div class="comments-item" v-for="e in comments" :key="e.commentId" ref="list">
+                            <div>
+                                <van-image width="22" height="22" round :src="e.avatar" />
+                            </div>
+                            <div class="notice">
+                                <div class="intro">{{ e.content }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
             <!-- 跳转关键video -->
             <template v-slot:slotVideoKey>
                 <div class="videoKey">
@@ -54,10 +71,10 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, nextTick } from 'vue';
 import LivePlaybackOrPlayComponent from '../../components/LivePlaybackComponent.vue';
 import { getPlaybackData } from '../../apic/live-data';
-import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem, getPlaybackCommentsItem } from '../../typings';
+import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem, getPlaybackCommentsItem, getPlaybackDsrInfo } from '../../typings';
 import { useRoute, useRouter } from 'vue-router';
 import loadingSrc from '../../assets/images/shopingGirl.png'
 const router = useRouter();
@@ -70,7 +87,7 @@ let draging = ref(false);
 const isPlay = ref(false);
 const video = ref();
 let totalTime = ref(0);
-const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物']
+const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物', '正在加载中,请稍候~']
 
 // 解决mounted无法解析ref中dom元素的bug
 let isReady = ref(false);
@@ -85,11 +102,13 @@ const actorInfoList = ref<getPlaybackActorInfo>();
 const itemInfoList = ref<getPlaybackItemInfo>();
 const benefitPointList = ref<Array<getPlaybackBenefitPointListItem>>();
 const comments = ref<Array<getPlaybackCommentsItem>>();
+const dsrInfoData = ref<getPlaybackDsrInfo>();
+const goodsLiveImgArr = ref();
 const videoUrl = ref('');
 const coverImg = ref('');
 
 const getData = async () => {
-    console.log('发起请求')
+    // console.log('发起请求')
     let { data } = await getPlaybackData(itemUrlId, actorUrlId);
     // console.log(data);
     itemExplainList.value = data.itemExplainList.find(e => e.explainId == Number(curExplainId));
@@ -100,6 +119,10 @@ const getData = async () => {
     benefitPointList.value = itemExplainList.value?.videoInfo.benefitPointList;
     comments.value = itemExplainList.value?.comments;
     isReady.value = true;
+    dsrInfoData.value = itemExplainList.value?.dsrInfo;
+    let arr = itemExplainList.value?.itemExplainSkuTopTitle_taglist;
+    goodsLiveImgArr.value = arr?.filter((e) => e.styleType == 1);
+    // console.log(comments.value)
 }
 
 const isBenefitPoint = computed(() => {
@@ -190,6 +213,36 @@ function clickToTime(startTime: number) {
     isPlay.value = true;
 }
 
+onMounted(() => {
+    nextTick(() => {
+        console.log(list.value)
+    })
+})
+
+let count = ref(0)
+let list = ref();
+// 评论轮播
+// const setComment = setInterval(() => {
+//     count.value++;
+//     const random = Math.floor(Math.random() * 20);
+//     comments.value.push(commentArr.value[random]);
+//     nextTick(() => {
+//         list.value.style = `transform:translateY(${-(count.value * 28)}px)`;
+//     })
+//     // list.value.scrollTop = 100;
+//     // list.value.scrollTop = -(count.value * 28)
+// }, 2000)
+
+// const muted = setTimeout(() => {
+//     if (videoElement.value.muted) {
+
+//         videoElement.value.muted = false;
+
+//         videoElement.value.volume = 0.5;
+
+//     }
+// }, 2000)
+
 </script>
 
 <style lang="scss" scoped>
@@ -198,11 +251,15 @@ function clickToTime(startTime: number) {
     height: 100vh;
     background-color: white;
     background-repeat: no-repeat;
-    background-position: 30% 30%;
+    background-position: 90% 90%;
     background-size: 100% 55%;
+    // margin-top: 30vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .myLoading {
-        margin-top: 25vh;
+        margin-top: -27vh;
     }
 }
 
@@ -298,6 +355,39 @@ video {
 
     .timeKey:last-child {
         margin-right: 0;
+    }
+}
+
+// 评论区弹幕
+.comments {
+    margin-left: 10px;
+    width: 228px;
+    height: 105px;
+    overflow: hidden;
+    line-height: 1.5;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.comments-item {
+    display: flex;
+}
+
+.notice {
+    padding: 5px 8px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    max-width: 228px;
+
+    .intro {
+        color: #fff;
     }
 }
 </style>

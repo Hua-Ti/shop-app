@@ -1,11 +1,5 @@
 <template>
-    <div @click="router.push({
-        name: 'livePlayback', params: {
-            itemUrlId: '1n2dne6',
-            actorUrlId: '19pb9ua',
-            explainId: 3110825,
-        }
-    })">我是关注页面</div>
+    <div>我是关注页面</div>
 </template>
 
 <script setup lang="ts">
@@ -14,4 +8,4 @@ const router = useRouter();
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped name="attention"></style>

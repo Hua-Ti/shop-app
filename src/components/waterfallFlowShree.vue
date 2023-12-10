@@ -1,8 +1,8 @@
 <!-- 瀑布流（热门模块） -->
 <template>
-    <div class="waterfallFlow">
+    <div class="waterfallFlowShree">
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item" >
+            <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
                     <div class="picture">
@@ -22,27 +22,30 @@
                             <img src="../assets/images/Play.png" alt="">
                         </div>
                     </div>
-                    <p class="title">{{ item.title }}</p>
                     <!-- 价格 -->
-                    <div class="price">
-                        <div class="livePrice">
-                            <div>
-                                ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
-                                <span v-if="Math.floor(
-                                    (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
-                                )">.{{ Math.floor(
+                    <div class="information">
+                        <p class="title">{{ item.title }}</p>
+                        <div class="price">
+                            <div class="livePrice">
+                                <div>
+                                    ￥<span>{{ Math.floor(item.showDiscountPrice) }}</span>
+                                    <span v-if="Math.floor(
+                                        (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
+                                    )">.{{ Math.floor(
     (item.showDiscountPrice - Math.floor(item.showDiscountPrice)) * 10
 ) }}
-                                    <span class="decimalTwo"
-                                        v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
-                                            10) * 100) }}
+                                        <span class="decimalTwo"
+                                            v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
+                                            {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10)
+                                                /
+                                                10) * 100) }}
+                                        </span>
                                     </span>
-                                </span>
+                                </div>
+                                <img :src="item.bottomIcon" alt="">
                             </div>
-                            <img :src="item.bottomIcon" alt="">
+                            <div class="sale">{{ item.sale }}</div>
                         </div>
-                        <div class="sale">{{ item.sale }}</div>
                     </div>
                 </div>
             </div>
@@ -50,17 +53,20 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import { getHomeContent } from '../apic/homes'
+import { useRouter, useRoute } from "vue-router";
+import { getModuleHome } from '../apic/homes'
 import { type getHomeC } from '../typings'
 import { ref, nextTick } from 'vue';
 const router = useRouter();
+const route = useRoute();
 
 // const list = ref([]);
 const getHomeC = ref<Array<getHomeC>>([])
 const loading = ref(false);
 const finished = ref(false);
-const count = ref(Math.random() * 2000)
+const count = ref(1)
+let keyword: string = route.query.keyword;
+// console.log('keyword', keyword)
 
 const props = defineProps(['getHomeC'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
@@ -76,7 +82,7 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
 }
 const onLoad = async () => {
     // 异步更新数据
-    let HomeContentData: any = await getHomeContent(count.value);//第二页数据
+    let HomeContentData: any = await getModuleHome(keyword);//第二页数据
     // console.log(1111)
     for (let i = 0; i < HomeContentData.data.list.length; i++) {
         getHomeC.value.push(HomeContentData.data.list[i]);
@@ -98,7 +104,7 @@ const onLoad = async () => {
 
 <style lang="scss">
 // 瀑布流内容
-.waterfallFlow {
+.waterfallFlowShree {
     padding: 10px 0px 10px 6px;
     box-sizing: border-box;
     width: 100vw;
@@ -107,24 +113,27 @@ const onLoad = async () => {
         margin-bottom: 10px;
         width: 49%;
     }
-    .item:nth-child(n+1){
-        padding:0 6px;
+
+    .item:nth-child(n+1) {
+        padding: 0 6px;
     }
-    
-   
+
+
 
     .picture {
         position: relative;
     }
 
-    .bigPic,.curtain {
+    .bigPic,
+    .curtain {
         width: 100%;
         height: 100%;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
     }
-    .curtain{
-        z-index:99999!important;
+
+    .curtain {
+        z-index: 99999 !important;
         height: 100%;
         background-color: #ff4668;
     }
@@ -178,8 +187,15 @@ const onLoad = async () => {
         display: -webkit-box;
         overflow: hidden;
         font-size: 12px;
-        margin: 5px;
+        padding: 5px;
         line-height: 1.2;
+    }
+
+    .information {
+        background-color: #fff;
+        margin-top: -5px;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
     }
 
     //价格
