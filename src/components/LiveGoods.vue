@@ -32,7 +32,7 @@
     </div>
 
     <div class="buy-bag" v-else>
-        <div class="close" @click="goodsList = true">
+        <div class="close" @click="onClose">
             <van-icon name="cross" color="#989898" size="22" />
         </div>
         <!-- 商品信息 -->
@@ -73,21 +73,25 @@
                         <div class="number">
                             <div class="number-title">数量</div>
                             <div class="number-calculator">
-                                <van-stepper v-model="value" theme="round" button-size="30"
-                                input-width="50" integer />
+                                <van-stepper v-model.number="value" theme="round" button-size="30" input-width="50"
+                                    integer />
                             </div>
-
                         </div>
                     </div>
                 </div>
 
             </div>
+                <van-action-bar @click="BuyHandle">
+                    <van-action-bar-button color="#be99ff" type="warning" text="加入购物车" />
+                    <van-action-bar-button color="#7232dd" type="danger" text="立即购买" />
+                </van-action-bar>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { showToast } from 'vant';
+import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { getGood } from '../apic/live-data'
 const props = defineProps(["goods"]);
@@ -95,7 +99,8 @@ const shopData = ref();
 const goodsList = ref(true);
 const count = ref();
 const goodDeta = ref();
-const value  = ref(1);
+const router = useRouter();
+const value = ref(1);
 // 颜色尺码信息
 const goodDetails = ref([] as any);
 //颜色对应的图片
@@ -104,15 +109,21 @@ const skuBarInfo = ref([] as any);
 const colorIndex = ref(0);
 // 尺码高亮
 const sizeIndex = ref(0);
+const token = ref('');
+
 
 // const activeIndex = ref(1);
 // 高亮数组
 const arr = ref([0, 0]);
 onMounted(() => {
-
+    token.value = localStorage.token;
     // console.log(props.goods);
 })
 
+const onClose = () =>{
+    arr.value = [0,0];
+    goodsList.value = true
+}
 
 const getShopDetail = async (id: string) => {
     let { data } = await getGood(id);
@@ -148,11 +159,32 @@ const Handover = (type: string, index: number, dataIndex: number) => {
         arr.value[1] = dataIndex;
     }
 }
+
+const BuyHandle = () =>{
+    console.log(token.value);
+    
+    if(!token.value){
+        console.log("asassas");
+        
+        router.push({
+            name:"authorization",
+        })
+    }
+    
+}
+
 </script>
 <style>
-.buy-bag{
-    .van-stepper__input{
+.buy-bag {
+    .van-stepper__input {
         background-color: snow;
+    }
+    .van-action-bar{
+        background: none;
+        margin-bottom: 20px;
+    }
+    .van-action-bar-button{
+        height: 50px;
     }
 }
 </style>
@@ -491,9 +523,7 @@ const Handover = (type: string, index: number, dataIndex: number) => {
             color: #fff;
         }
 
-        .number-calculator {
-           
-        }
+        .number-calculator {}
     }
 }
 </style>
