@@ -109,7 +109,7 @@
                 </div>
                 <div class="select-bottom">
                     <button class="cart" @click="addShopingInformation">加入购物车</button>
-                    <button class="now-buy">立即够买</button>
+                    <button class="now-buy">立即购买</button>
                 </div>
             </div>
 
@@ -469,7 +469,7 @@ const initScroll1 = (index: number) => {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .left-attow {
     .van-button__content {
         color: #f46;
