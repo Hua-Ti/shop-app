@@ -172,8 +172,9 @@ function theSubmit() {
     router.push({ name: 'confirmorder' })
     // console.log(buyData.value)
 }
-
-
+onMounted(() => {
+    console.log('我是购物车的Mounted')
+})
 </script>
 
 <style lang="scss" scoped>

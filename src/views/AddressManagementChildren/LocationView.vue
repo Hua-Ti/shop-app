@@ -146,8 +146,10 @@ const initMap = () => {
 }
 
 onMounted(() => {
+    console.log('我是定位的Mounted')
     nextTick(() => {
         initMap();
+        console.log('我是定位下一帧的Mounted')
         // console.log(locationArr.value)
     })
 })
@@ -188,7 +190,7 @@ function sumbit() {
         store.getUserGeolocation(curAddress);
     }
     // console.log(store.userLocation)
-    router.replace({ name: 'addressmanagement' });
+    router.go(-1)
 }
 
 </script>

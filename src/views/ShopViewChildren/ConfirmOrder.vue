@@ -124,6 +124,12 @@ onMounted(() => {
 })
 
 const value = ref('');
+
+onMounted(() => {
+    console.log('我是确认的Mounted')
+})
+
+
 const onSubmit = () => {
     if (!addressNeirong.address) {
         showToast('请选择地址');

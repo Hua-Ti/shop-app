@@ -120,7 +120,6 @@ const attentionlist = useAttention()
 
 const width = ref(window.innerWidth);
 const offset = ref({ x: width.value - 55, y: 5 })
-import { useAttention } from '../../stores/bgChange';
 const route = useRoute();
 const router = useRouter();
 const videoElement = ref();
