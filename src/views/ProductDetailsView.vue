@@ -115,7 +115,7 @@
                 </div>
                 <div class="select-bottom">
                     <button class="cart" @click="addShopingInformation">加入购物车</button>
-                    <button class="now-buy">立即够买</button>
+                    <button class="now-buy">立即购买</button>
                 </div>
             </div>
 
@@ -161,21 +161,43 @@ import { ref, onMounted, nextTick, reactive, computed } from "vue"
 import { useRouter } from "vue-router";
 import { getProdectDetails, getPopoversList } from "../apic/search";
 import BScroll from '@better-scroll/core';
-import { Toast, showToast } from 'vant';
+import { Toast, showToast } from 'vant';import { collectionProduct } from '../stores/bgChange'
 
+//收藏操作
+const collectDataListProduct = collectionProduct();
+
+let id = ref("");
 const router = useRouter();
 const topImagesList = ref<Array<string>>([]);
+console.log(router)
+
+
 const show = ref(false);
 const couponShow = ref(false);
 const selectColor = ref(false);
 let flag = ref(true);
 const onClickIcon = () => {
-    flag.value = !flag.value;
+    if (flag.value) {
+        flag.value = false;
+        collectDataListProduct.addListProduct(id.value);
+    } else if (!flag.value) {
+        flag.value = true;
+        collectDataListProduct.removeProduct(id.value)
+    }
 };
+// 判断是否收藏
+function collec() {
+    collectDataListProduct.collectionDataProduct.map((item: any, index: number) => {
+        console.log(item)
+        if (id.value == item) {
+            console.log('相同')
+            collectDataListProduct.removeProduct(id)
+            flag.value = false;
+        }
+    })
+}
 
 let screenWidth = ref(0);
-
-let id = ref("");
 
 const showList = (index: number) => {
     show.value = true;
@@ -424,6 +446,10 @@ const addZero = (num: number) => {
     return num < 10 ? "0" + num : num;
 }
 onMounted(async () => {
+    console.log('hhh',id)
+    console.log('收藏数据',collectDataListProduct.collectionDataProduct);
+
+    
     id.value = router.currentRoute.value.query.id as string;
 
     let data = await getProdectDetails(id.value);
@@ -442,6 +468,8 @@ onMounted(async () => {
     // 页面更新渲染完毕,实例化BetterScroll
     nextTick(initScroll);
     screenWidth.value = window.innerWidth;
+    // 收藏显示
+    collec()
 })
 
 
@@ -486,12 +514,11 @@ const initScroll1 = (index: number) => {
                 direction = 0;
             })
         })
-
     })
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .left-attow {
     .van-button__content {
         color: #f46;

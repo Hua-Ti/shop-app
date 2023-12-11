@@ -1,5 +1,5 @@
 <template>
-    <div class="address-management">
+    <div class="address-management" @click="changrfalse">
         <div class="page-top">
             <van-nav-bar :title="`地址管理`">
                 <template #left>
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter, RouterView, onBeforeRouteUpdate } from 'vue-router';
+import { useRouter, RouterView, onBeforeRouteUpdate, } from 'vue-router';
 import { ref, computed, onMounted } from 'vue';
 import { listProps, showToast, showDialog } from 'vant';
 import { areaList } from '@vant/area-data';
@@ -88,6 +88,8 @@ const list = ref([])
 const searchResult = ref([]);
 const addressEditRef = ref<AddressEditInstance>();
 addressEditRef.value?.setAddressDetail('');
+
+
 
 
 const themeVars = {
@@ -119,22 +121,12 @@ const showPopup = () => {
     diqu.value = ''
     address.value = ''
     checked.value = false
-    // console.log('我是更改前', checked.value)
+    console.log('我是更改前', checked.value)
 }
 
-onMounted(() => {
-
-    let size = 0;
-    let storage = window.localStorage;
-    for (let props in storage) {
-        if (props === "length") continue;
-        size += storage[props].length;
-    }
-    // console.log('使用了localStorage的大小,单位kb', (size / 1024).toFixed(2))
-
-    let addressList = localStorage.addressList || `[]`;
-    addressList = JSON.parse(addressList);
-    list.value = addressList
+const changrfalse = (() => {
+    getLocation.getShowPopUps(false);
+    console.log('改为falsel了')
 })
 
 //编辑地址
@@ -171,15 +163,36 @@ const getdelete = (() => {
 
 //打勾的地址
 onMounted(() => {
+
+    console.log('我是地址的Mounted')
+    console.log('我是地址的Mounted', getLocation.ShowPopUps)
+
+    if (getLocation.ShowPopUps == true) {
+        console.log('111')
+        show.value = true;
+        if (getLocation.userLocation) {
+
+            name.value = getLocation.getname
+            tel.value = getLocation.gettel
+            diqu.value = getLocation.userLocation!.address
+            address.value = getLocation.userLocation!.title
+            checked.value = getLocation.getmoren
+        }
+
+
+    }
     let addressList = localStorage.addressList || `[]`;
     addressList = JSON.parse(addressList);
+    list.value = addressList
+
+
     if (addressList.length != 0) {
         // console.log('我是第二个onMounted', addressList)
         let piniaAddress = localStorage.address || `[]`;
         piniaAddress = JSON.parse(piniaAddress);
         // console.log('pinia存贮的地址', piniaAddress)
         if (piniaAddress) {
-            // console.log(111)
+
             chosenAddressId.value = piniaAddress.id
         } else {
             for (let i = 0; i <= addressList.length; i++) {
@@ -191,6 +204,7 @@ onMounted(() => {
         }
 
     }
+    console.log('我是地址的Mounted结束')
 })
 
 //切换打勾
@@ -203,11 +217,23 @@ const daGou = (item: any) => {
     addressNeirong.id = item.id
 }
 
+
 //跳转定位页面
 const goLocation = () => {
+
+    getLocation.getnames(name.value)
+    getLocation.gettels(tel.value)
+    getLocation.getmorens(checked.value)
+
+
     router.push({ name: 'location' })
-    getLocation.changeLocationShow(false);
-    // console.log(getLocation.locationShow)
+    // getLocation.changeLocationShow(false);
+    // getLocation.getShowPopUps(false);
+    getLocation.getShowPopUps(false);
+
+    console.log('跳转定位页面')
+
+
 }
 
 
@@ -275,11 +301,20 @@ const addSave = () => {
 
 //路由更新
 onBeforeRouteUpdate(() => {
+
+    console.log("路由更新1")
+    show.value = true;
+    getLocation.getShowPopUps(true);
+    console.log("路由更新1,", getLocation.ShowPopUps)
     if (getLocation.locationShow == true) {
         diqu.value = getLocation.userLocation!.address
         address.value = getLocation.userLocation!.title
     }
+    console.log("路由更新2")
 })
+
+
+
 
 </script>
 <style lang="scss" scoped>

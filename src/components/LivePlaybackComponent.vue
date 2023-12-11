@@ -40,9 +40,15 @@
                         <p>买家评论</p>
                         <span class="num">{{ totalNum }}</span>
                     </div>
-                    <div class="collection">
-                        <van-icon class="myIcon" color="white" size="16" name="star" />
-                        <p>收藏</p>
+                    <div class="collection" @click="collectionList">
+                        <div v-show="flag">
+                            <van-icon class="myIcon" color="white" size="16" name="star" />
+                            <p>收藏</p>
+                        </div>
+                        <div v-show="!flag">
+                            <van-icon class="myIcon" color="yellow" size="16" name="star" />
+                            <p>已收藏</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -137,7 +143,7 @@
             :overlay-style="{ backgroundColor: 'rgba(0, 0, 0, 0.55)' }">
             <div class="goods-top">
                 <div class="goods-top-head">
-                    <van-image width="80" height="80" radius="10" :src="shopGoodsData?.webImOptionInfo.option.img" />
+                    <van-image width="80" height="80" radius="10" :src="allImgSrc" />
                     <div class="goods-top-right">
                         <div class="top-imgBox">
                             <div class="reputation" :style="{ backgroundImage: `url(${dsrBgImg})` }">
@@ -154,7 +160,7 @@
                             <div class="icon-box">
                                 <div class="thecomment">
                                     <van-icon name="comment-o" size="14" />
-                                    <p>评论<span>{{}}</span></p>
+                                    <p>评论<span>{{ totalNum }}</span></p>
                                 </div>
                                 <div class="help">
                                     <van-icon name="service-o" size="14" />
@@ -171,12 +177,15 @@
                     <p class="goods-middle-title">颜色</p>
                     <div class="goods-content">
                         <!-- 如果颜色为空的占位↓ -->
-                        <div class="goods-item" v-if="!shopGoodsData?.skuBarInfo.list">
+                        <div :class="[{ active: colorActive == 0 }, 'goods-item']" v-if="!shopGoodsData?.skuBarInfo.list"
+                            @click="addColorActiveClass(0, shopGoodsData?.webImOptionInfo.option.img!, '主播同款')">
                             <van-image width="28" height="28" radius="4" :src="shopGoodsData?.webImOptionInfo.option.img" />
                             <span>主播同款</span>
                         </div>
                         <!-- 有数据的情况↓ -->
-                        <div class="goods-item" v-for="e in shopGoodsData?.skuBarInfo.list">
+                        <div :class="[{ active: colorActive == i }, 'goods-item']"
+                            v-for="(e, i) in shopGoodsData?.skuBarInfo.list"
+                            @click="addColorActiveClass(i, e.image, e.label)">
                             <van-image width="28" height="28" radius="4" :src="e.image" />
                             <span>{{ e.label }}</span>
                         </div>
@@ -185,7 +194,16 @@
                 <div class="size">
                     <p class="goods-middle-title">尺码</p>
                     <div class="goods-content">
-                        <div class="goods-item" v-for="e in shopGoodsData?.skuInfo.props[1].list">
+                        <!-- 如果尺码为空的占位 -->
+                        <div :class="[{ active: sizeActive == 0 }, 'goods-item']" @click="addSizeActiveClass(0, '均码')"
+                            v-if="shopGoodsData?.skuInfo.props.length == 1">
+                            <span>均码</span>
+                        </div>
+
+                        <!-- 有尺码数据↓ -->
+                        <div :class="[{ active: sizeActive == i }, 'goods-item']"
+                            v-if="shopGoodsData?.skuInfo.props.length! > 1"
+                            v-for="(e, i) in shopGoodsData?.skuInfo.props[1].list" @click="addSizeActiveClass(i, e.name)">
                             <p>{{ e.name }}</p>
                         </div>
                     </div>
@@ -205,8 +223,11 @@
                 </div>
             </div>
             <div class="goods-bottom">
-                <button class="addShop">加入购物车</button>
+                <button class="addShop" @click="storeDataToShop">加入购物车</button>
                 <button class="gotoShop">立即购买</button>
+            </div>
+            <div class="shopCar" v-show="shopShowBottom" @click="gotoShop">
+                <van-icon name="shopping-cart-o" size="16" />
             </div>
         </van-popup>
     </div>
@@ -214,10 +235,16 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { showConfirmDialog } from 'vant';
 import { getPlaybackComment, getPlaybackGoodsShop } from '../apic/live-data'
-import type { getPlaybackCommentItem, getPlaybackBuyData, getPlaybackItemExplainSkuTopTitle_taglist } from '../typings';
+import type { getPlaybackCommentItem, getPlaybackBuyData, getPlaybackItemExplainSkuTopTitle_taglist, shopCarData } from '../typings';
 import { useRouter } from 'vue-router';
+import { collection } from '../stores/bgChange';
+
 const router = useRouter();
+//收藏操作
+const collectDataList = collection();
+let flag = ref(true);
 
 // 传参内容
 const props = defineProps({
@@ -286,6 +313,24 @@ const props = defineProps({
 const commentList = ref<Array<getPlaybackCommentItem>>([]);
 const totalNum = ref(0);
 const goodsHowNum = ref(1);
+let colorName = ref('主播同款');
+let sizeName = ref('均码');
+
+// 展示图片src
+let allImgSrc = ref('');
+// 存储的购物车数据
+const curShopCarData = {
+    id: 0,
+    shopId: '',
+    shopName: '',
+    imgSrc: '',
+    goodsName: '',
+    count: 0,
+    size: '',
+    style: '',
+    price: '',
+    isFreeMail: true,
+};
 
 // 限制数量
 function clickLeft() {
@@ -308,13 +353,28 @@ const shopGoodsData = ref<getPlaybackBuyData>();
 async function getShopGoodsData() {
     let { data } = await getPlaybackGoodsShop(props.itemUrlId!);
     shopGoodsData.value = data.result;
-    // console.log(data.result);
+    // 默认的展示图片
+    if (shopGoodsData.value.skuBarInfo.list) {
+        allImgSrc.value = shopGoodsData.value.skuBarInfo.list[0].image
+    } else {
+        allImgSrc.value = props.goodsImg!;
+    }
+
+    if (shopGoodsData.value.skuBarInfo.list) {
+        colorName.value = shopGoodsData.value.skuBarInfo.list[0].label;
+    }
+    if (shopGoodsData?.value.skuInfo.props.length! > 1) {
+        sizeName.value = shopGoodsData.value.skuInfo.props[1].list[0].name
+    }
+    console.log()
 }
 
 onMounted(() => {
     getCommentsData();
     getShopGoodsData();
     // console.log(props.itemUrlId, props.actorUrlId);
+    collec();
+    console.log('uid', collectDataList.collectionData.videoId, collectDataList.collectionData.itemId)
 })
 
 // 评论区弹出框
@@ -328,6 +388,116 @@ function changeShowBtn() {
 
 function changeShopShowBottom() {
     shopShowBottom.value = true;
+}
+// 点击切换收藏
+function collectionList() {
+    if (flag.value == true) {
+        // if(collectDataList.collectionData!=''){
+        collectDataList.addList(collectDataList.collectionData);
+        flag.value = false;
+        // }
+    } else {
+        flag.value = true;
+        collectDataList.remove(collectDataList.collectionData);
+    }
+}
+// 判断是否收藏
+function collec() {
+    collectDataList.collectionDataList.map((item: any, index: number) => {
+        if (collectDataList.collectionData == item) {
+            flag.value = false;
+        }
+    })
+}
+
+
+
+// 选择购物车的内容以及高亮
+let colorActive = ref(0);
+let sizeActive = ref(0);
+
+
+function addColorActiveClass(curId: number, imgSrc: string, goodsName: string) {
+    colorActive.value = curId;
+    allImgSrc.value = imgSrc;
+    colorName.value = goodsName;
+}
+
+function addSizeActiveClass(curId: number, curSize: string) {
+    sizeActive.value = curId;
+    sizeName.value = curSize;
+}
+
+// 点击提交到购物车
+function storeDataToShop() {
+    let token = localStorage.token;
+    if (!token) {
+        showConfirmDialog({
+            title: '还没登录噢(๑˙ー˙๑)',
+            message: '现在是否去登录?',
+            confirmButtonColor: "#ff4569",
+        })
+            .then(() => {
+                router.replace({ name: 'login' })
+            })
+            .catch(() => {
+            });
+    } else {
+        curShopCarData.id = new Date().getTime();
+        curShopCarData.imgSrc = allImgSrc.value;
+        curShopCarData.size = sizeName.value;
+        curShopCarData.shopId = shopGoodsData.value?.shopInfo.shopId!;
+        curShopCarData.goodsName = shopGoodsData.value!.skuInfo.title;
+        curShopCarData.count = goodsHowNum.value;
+        curShopCarData.shopName = props.authorName!;
+        curShopCarData.price = props.goodsPrice!;
+        curShopCarData.style = colorName.value!;
+        // console.log(curShopCarData)
+
+        // 存入localStorage里
+        let localShopCarData = JSON.parse(localStorage.shopCarData || '[]')
+        // console.log(localShopCarData);
+        let length = localShopCarData.length;
+        if (localShopCarData.length > 0) {
+
+            // 循环遍历是否已经存在同款商品
+            for (let i = 0; i < length; i++) {
+                const e = localShopCarData[i];
+                if (e.shopId == curShopCarData.shopId && e.goodsName == curShopCarData.goodsName && e.style == curShopCarData.style && e.size == curShopCarData.size) {
+                    e.count++;
+                } else {
+                    localShopCarData.push(curShopCarData)
+                }
+            }
+        } else {
+            localShopCarData.push(curShopCarData);
+        }
+
+        // console.log(localShopCarData);
+        localStorage.shopCarData = JSON.stringify(localShopCarData)
+
+        shopShowBottom.value = false;
+    }
+}
+
+// 跳转到购物车
+function gotoShop() {
+    let token = localStorage.token;
+    if (!token) {
+        showConfirmDialog({
+            title: '还没登录噢(๑˙ー˙๑)',
+            message: '现在是否去登录?',
+            confirmButtonColor: "#ff4569",
+        })
+            .then(() => {
+                router.replace({ name: 'login' })
+            })
+            .catch(() => {
+                console.log(111)
+            });
+    } else {
+        router.replace({ name: 'shop' })
+    }
 }
 </script>
 
@@ -777,6 +947,8 @@ function changeShopShowBottom() {
 }
 
 .goods-middle {
+    max-height: 340px;
+
     .goods-middle-title {
         font-size: 11px;
         padding-top: 10px;
@@ -807,6 +979,11 @@ function changeShopShowBottom() {
     span {
         padding: 8px;
         margin: 0 5px;
+    }
+
+    &.active {
+        outline: 1px solid var(--subject-color);
+        color: var(--subject-color);
     }
 }
 
@@ -841,17 +1018,24 @@ function changeShopShowBottom() {
 }
 
 .goods-bottom {
-    transform: translateY(180px);
     display: flex;
     justify-content: space-between;
 
+    position: absolute;
+    bottom: 15px;
+    left: 0px;
+
     button {
         font-size: 11px;
-        width: 49%;
+        width: 45vw;
         height: 25px;
         border-radius: 999px;
         border: none;
         outline: none;
+
+        &:last-child {
+            margin-left: 10px;
+        }
     }
 
     .addShop {
@@ -868,5 +1052,34 @@ function changeShopShowBottom() {
     padding: 15px 0;
     font-size: 12px;
     color: rgb(165, 165, 165);
+}
+
+.collection {
+    text-align: center;
+
+    p {
+        margin-top: 6px;
+    }
+}
+
+.comment {
+    p {
+        margin-top: 6px;
+    }
+}
+
+.shopCar {
+    background-color: rgba(0, 0, 0, 0.7);
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 999px;
+
+    position: fixed;
+    right: 15px;
+    top: 210px;
+
+    z-index: 20;
 }
 </style>

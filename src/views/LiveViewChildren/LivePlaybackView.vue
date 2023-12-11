@@ -17,8 +17,8 @@
             <!-- 弹幕评论 -->
             <template v-slot:barrage>
                 <div class="comments">
-                    <div class="comments-list">
-                        <div class="comments-item" v-for="e in comments" :key="e.commentId" ref="list">
+                    <div class="comments-list" ref="curCommentList">
+                        <div class="comments-item" v-for="e in commentsArr" :key="e.commentId">
                             <div>
                                 <van-image width="22" height="22" round :src="e.avatar" />
                             </div>
@@ -71,7 +71,7 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, computed, nextTick } from 'vue';
+import { ref, onMounted, computed, nextTick, onUnmounted, watch } from 'vue';
 import LivePlaybackOrPlayComponent from '../../components/LivePlaybackComponent.vue';
 import { getPlaybackData } from '../../apic/live-data';
 import type { getPlaybackItemExplainListItem, getPlaybackActorInfo, getPlaybackItemInfo, getPlaybackBenefitPointListItem, getPlaybackCommentsItem, getPlaybackDsrInfo } from '../../typings';
@@ -89,6 +89,7 @@ const video = ref();
 let totalTime = ref(0);
 const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物', '正在加载中,请稍候~']
 
+
 // 解决mounted无法解析ref中dom元素的bug
 let isReady = ref(false);
 
@@ -101,7 +102,7 @@ const itemExplainList = ref<getPlaybackItemExplainListItem>();
 const actorInfoList = ref<getPlaybackActorInfo>();
 const itemInfoList = ref<getPlaybackItemInfo>();
 const benefitPointList = ref<Array<getPlaybackBenefitPointListItem>>();
-const comments = ref<Array<getPlaybackCommentsItem>>();
+const commentsArr = ref<Array<getPlaybackCommentsItem>>();
 const dsrInfoData = ref<getPlaybackDsrInfo>();
 const goodsLiveImgArr = ref();
 const videoUrl = ref('');
@@ -117,13 +118,16 @@ const getData = async () => {
     actorInfoList.value = itemExplainList.value?.actorInfo;
     itemInfoList.value = itemExplainList.value?.itemInfo;
     benefitPointList.value = itemExplainList.value?.videoInfo.benefitPointList;
-    comments.value = itemExplainList.value?.comments;
-    isReady.value = true;
+    commentsArr.value = itemExplainList.value?.comments;
     dsrInfoData.value = itemExplainList.value?.dsrInfo;
     let arr = itemExplainList.value?.itemExplainSkuTopTitle_taglist;
     goodsLiveImgArr.value = arr?.filter((e) => e.styleType == 1);
-    // console.log(comments.value)
+    // console.log(goodsLiveImgArr.value)
+
+    // 修改页面展示
+    isReady.value = true;
 }
+
 
 const isBenefitPoint = computed(() => {
     if (benefitPointList.value) {
@@ -141,6 +145,7 @@ const randomText = computed(() => {
 
 onMounted(() => {
     getData();
+    
 })
 
 // 点击播放暂停
@@ -213,35 +218,58 @@ function clickToTime(startTime: number) {
     isPlay.value = true;
 }
 
+let curCommentList = ref();
+let count = ref(0)
+let setComment: any = null
+let height = ref(0);
+let curtranslateY = ref(0);
+
 onMounted(() => {
     nextTick(() => {
-        console.log(list.value)
+        playComments();
     })
 })
 
-let count = ref(0)
-let list = ref();
 // 评论轮播
-// const setComment = setInterval(() => {
-//     count.value++;
-//     const random = Math.floor(Math.random() * 20);
-//     comments.value.push(commentArr.value[random]);
-//     nextTick(() => {
-//         list.value.style = `transform:translateY(${-(count.value * 28)}px)`;
-//     })
-//     // list.value.scrollTop = 100;
-//     // list.value.scrollTop = -(count.value * 28)
-// }, 2000)
+function playComments() {
+    if (!isReady.value) {
+        // console.log('开始滚动')
+        setComment = setInterval(() => {
+            height.value = curCommentList.value.clientHeight;
 
-// const muted = setTimeout(() => {
-//     if (videoElement.value.muted) {
+            // 获取translate高度
+            curtranslateY.value = Number(curCommentList.value.style.transform.substring(11, (curCommentList.value.style.transform.length - 3)))
 
-//         videoElement.value.muted = false;
+            // console.log(height.value, curtranslateY.value)
 
-//         videoElement.value.volume = 0.5;
+            count.value++;
+            curCommentList.value.style = `transform:translateY(${-(count.value * 30)}px)`;
+        }, 2000)
+    }
+}
 
-//     }
-// }, 2000)
+// 关掉评论
+function clearComment() {
+    if (height.value * 1.5 < -curtranslateY.value) {
+        // console.log('评论区滚动完成')
+        clearInterval(setComment);
+    }
+}
+
+watch(curtranslateY, () => {
+    clearComment();
+})
+
+// 暴露性解决过程null
+defineExpose({
+    playComments,
+})
+
+onUnmounted(() => {
+    setComment && clearInterval(setComment);
+})
+
+
 
 </script>
 
@@ -365,10 +393,17 @@ video {
     height: 105px;
     overflow: hidden;
     line-height: 1.5;
+    padding-top: 109px;
+    // background-color: pink;
 
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+.comments-list {
+    // transform: translateY(109px);
+    transition: all 2s linear;
 }
 
 .comments-item {
@@ -376,6 +411,7 @@ video {
 }
 
 .notice {
+    font-size: 12px;
     padding: 5px 8px;
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.2);

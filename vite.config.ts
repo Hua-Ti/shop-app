@@ -4,6 +4,8 @@ import { VantResolver } from '@vant/auto-import-resolver';
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import postCssPxToRem from 'postcss-pxtorem'
+import autoImport from 'unplugin-auto-import/vite'
+import { VarletUIResolver } from 'unplugin-vue-components/resolvers'
 import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus'
 
 export default defineConfig({
@@ -11,8 +13,11 @@ export default defineConfig({
     vue(),
     vueSetupExtend(),
     Components({
-      resolvers: [VantResolver()],
+      resolvers: [VantResolver(),VarletUIResolver()],
     }),
+    autoImport({
+      resolvers: [VarletUIResolver({ autoImport: true })],
+    })
   ],
   resolve: {
     alias: {

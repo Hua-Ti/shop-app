@@ -234,7 +234,9 @@ export interface liveRoomDefinitions {
 }
 //直播间促销商品
 export interface liveRoomGood {
-    "itemList": Array<liveRoomGoods>
+    "data": {
+        "itemList": Array<liveRoomGoods>
+    }
 }
 
 export interface liveRoomGoods {
@@ -242,7 +244,44 @@ export interface liveRoomGoods {
     "image": string,
     "title": string,
     "itemId": string,
+    "defaultPrice": number,
+    "historySale": number,
+    "stock": number,
+    "seckill": boolean,//是否秒杀中
 }
+
+//直播间评论
+export interface liveComment {
+    "username": string
+    "action": string
+}
+
+//直播间商品详情
+export interface LiveDetailList {
+    data: {
+        result: {
+            skuInfo: {
+                props: Array<{
+                    label: string,
+                    list: Array<{
+                        index: number,
+                        name: string,
+                        isDefault: boolean,
+                        type: string
+                    }>
+                }>
+            },
+            skuBarInfo: {
+                list: Array<{
+                    color: string,
+                    label: string,
+                    image: string
+                }>
+            }
+        }
+    }
+}
+
 // 直播回放相关
 export interface getPlaybackData {
     data: {
@@ -383,7 +422,10 @@ export interface getPlaybackBuyData {
     "priceBannerOnly": getPlaybackPriceBannerOnly,
     "skuInfo": getPlaybackSkuInfo,
     "skuBarInfo": getPlaybackSkuBarInfoImg,
-    "webImOptionInfo": getPlaybackwebImOptionInfo
+    "webImOptionInfo": getPlaybackwebImOptionInfo,
+    "shopInfo": {
+        "shopId": string
+    }
 }
 
 // 直播回放-购买广告图片-priceBannerOnly
@@ -583,15 +625,17 @@ export interface popovers {
         }
     }
 }
+
+// 购物车数据
 export interface shopCarData {
-      shopId: string,
-      shopName: string,
-      imgSrc: string,
-      goodsName: string,
-      count: number,
-      size: string,
-      price: string,
-      isFreeMail: boolean,
-      style:string,
-      id:number,
-    }
+    id: number,
+    shopId: string,
+    shopName: string,
+    imgSrc: string,
+    goodsName: string,
+    count: number,
+    style: string,
+    size: string,
+    price: string,
+    isFreeMail: boolean,
+}

@@ -15,22 +15,36 @@
                     <p class="item_l">头像</p>
                     <div class="item_r">
                         <van-uploader v-model="fileList" reupload max-count="1" :deletable="false"
-                            :after-read="afterRead" />
+                            accept="image/png, image/jpeg,data:image/jpeg;base64" :after-read="afterRead" />
                     </div>
                 </div>
                 <div class="group_item">
                     <p class="item_l">用户id</p>
                     <div class="item_r">{{ userid.accountName }}</div>
                 </div>
+                <!-- <div class="group_item">
+                    <div class="item_l">昵称</div>
+                    <div class="item_r" @touchmove="niChen" v-show="nichengshow == false">{{ nicheng ||
+                        userid.accountName
+                    }}
+                    </div>
+                    <div><input type="text" v-show="nichengshow == true" autofocus v-model="nicheng" @focus="niChens" />
+                    </div>
+                </div> -->
                 <div class="group_item">
                     <div class="item_l">昵称</div>
-                    <div class="item_r">{{ userid.accountName }}</div>
+                    <div class="item_r" @touchmove="niChen">{{ nicheng ||
+                        userid.accountName
+                    }}
+                    </div>
+                    <input type="text" v-show="nichengshow == true" v-model="nicheng" @blur="niChens" />
+
                 </div>
+
                 <div class="group_item">
                     <p class="item_l">简介</p>
                     <div class="item_r">这家伙很懒，什么都没留下!</div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -43,37 +57,37 @@ import { accountNumber } from '../../stores/counter'
 import { getPicture } from '../../stores/picture'
 const router = useRouter();
 const pictureSrc = getPicture()
-const src = ref('')
+const nicheng = ref('')
+const nichengshow = ref(false)
+// const src = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
+const src = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
 const fileList = ref([
-    { url: '../../../public/user_touxiang.png' || src },
+    { url: src },
 ]);
 const userid = accountNumber()
 
+onMounted(() => {
+    console.log('主页的onMounted');
+    // src.value = pictureSrc.pictureurl
 
+})
+const niChen = (() => {
+    nichengshow.value = true
+
+})
+const niChens = (() => {
+    nichengshow.value = false
+})
 
 const afterRead = (file: any) => {
     // 此时可以自行将文件上传至服务器
-    console.log(file.objectUrl);
-    let pictureList = localStorage.pictureList || `[]`;
-    pictureList = JSON.parse(pictureList);
-    pictureList.push({
-        pictureid: file.objectUrl
-    });
-    localStorage.pictureList = JSON.stringify(pictureList);
-    pictureSrc.picture = pictureList.slice(-1)[0].pictureid
-    src.value = pictureSrc.picture
-    console.log(src.value)
-    // let picture = localStorage.picture || `[]`;
-    // // pictureList = JSON.parse(picture);
-    // console.log(picture.substring(12, 75))
-    // src.value = picture.substring(12, 75)
+    console.log(file);
+    pictureSrc.changePicture(file.content)
+    console.log(pictureSrc.pictureurl);
+
+
 };
-// onMounted(() => {
-//     let picture = localStorage.picture || `[]`;
-//     // pictureList = JSON.parse(picture);
-//     console.log(picture.substring(12, 75))
-//     src.value = picture.substring(12, 75)
-// })
+
 //返回上一级
 
 </script>
@@ -87,6 +101,12 @@ const afterRead = (file: any) => {
     left: 0px;
     right: 0px;
 }
+
+// input {
+//     background-color: #d1d1d1;
+//     border: none;
+//     height: 12px;
+// }
 
 .page-top {
     // padding: 0px 15px;

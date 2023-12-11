@@ -38,11 +38,41 @@ export const useUserGeolocationStore = defineStore('userGeolocation', () => {
 
   const userLocation = ref<userLocationItem>();
   const locationShow = ref(false)
+  const ShowPopUps = ref(false)
+  const getname = ref('')
+  const gettel = ref('')
+  const getmoren = ref(false)
   function getUserGeolocation(curLocation: userLocationItem) {
     userLocation.value = curLocation;
   }
   function changeLocationShow(show: boolean) {
     locationShow.value = show
   }
-  return { userLocation, locationShow, getUserGeolocation, changeLocationShow }
+  function getShowPopUps(pop: boolean) {
+    ShowPopUps.value = pop
+  }
+  function getnames(name: string) {
+    getname.value = name
+  }
+  function gettels(tel: string) {
+    gettel.value = tel
+  }
+  function getmorens(moren: boolean) {
+    getmoren.value = moren
+  }
+
+
+  return { userLocation, locationShow, ShowPopUps, getname, gettel, getmoren, getUserGeolocation, changeLocationShow, getShowPopUps, getnames, gettels, getmorens }
 }, { persist: true })
+
+
+// export const useUserGeolocationStore = defineStore('userGeolocation', () => {
+
+//   const userLocation = ref<userLocationItem>();
+
+//   function getUserGeolocation(curLocation: userLocationItem) {
+//     userLocation.value = curLocation;
+//   }
+
+//   return { userLocation, getUserGeolocation, }
+// }, { persist: true })

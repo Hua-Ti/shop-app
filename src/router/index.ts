@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AttentionView from '../views/AttentionView.vue'
+import CollectionView from '../views/CollectionView.vue'
 import LoginVire from '../views/AuthorizationViewChildren/LoginVire.vue'
 import RegisterView from '../views/AuthorizationViewChildren/RegisterView.vue'
 import ShopView from '../views/ShopView.vue'
@@ -10,14 +10,16 @@ import SearchView from '../views/SearchView.vue'
 import HomePage from '../views/UserViewChildren/HomePage.vue'
 import LivePlaybackView from '../views/LiveViewChildren/LivePlaybackView.vue'
 import LivingView from '../views/LiveViewChildren/LivingView.vue'
-import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
-import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
 import PayView from '../views/PayView.vue'
 import PaySuccess from '../views/PaySuccess.vue'
+import LiveRoomView from '../views/LiveViewChildren/LiveRoomView.vue'
+import LiveTest from '../views/LiveViewChildren/LiveTest.vue'
+import HomeChildView from '../views/HomeChildView/HomeChildView.vue'
 import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
 import AddressManagement from '../views/AddressManagement.vue'
 import LocationView from '../views/AddressManagementChildren/LocationView.vue'
 import ModuleHome from '../views/HomeChildView/ModuleHome.vue'
+import attentionData from '../views/UserViewChildren/attentionData.vue'
 
 
 // 在路由中引入pinia
@@ -48,12 +50,9 @@ const router = createRouter({
       ]
     },
     {
-      path: '/attention',
-      name: 'attention',
-      component: AttentionView,
-      meta: {
-        keepAlive: true //设置页面是否需要使用缓存
-      },
+      path: '/collection',
+      name: 'collection',
+      component: CollectionView
     },
     {
       path: '/shop',
@@ -82,7 +81,7 @@ const router = createRouter({
           path: 'homepage',
           name: 'homepage',
           component: HomePage,
-        },
+        }
       ]
     },
     {
@@ -148,6 +147,11 @@ const router = createRouter({
       component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
     },
     {
+      path:'/livetest',
+      name:'livetest',
+      component:LiveTest,
+    },
+    {
       path: '/address-anagement',
       name: "addressmanagement",
       component: AddressManagement,
@@ -163,10 +167,15 @@ const router = createRouter({
       path: '/moduleHome',
       name: "moduleHome",
       component: ModuleHome
-    }, {
-      path: '/project-detail',
-      name: "project-detail",
-      component: () => import("../views/ProductDetailsView.vue")
+    },{
+      path:'/project-detail',
+      name:"project-detail",
+      component:()=>import("../views/ProductDetailsView.vue")
+    },
+    {
+      path: '/attention',
+      name: 'attention',
+      component: attentionData,
     }
 
   ]
