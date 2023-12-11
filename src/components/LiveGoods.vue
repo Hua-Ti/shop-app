@@ -83,7 +83,7 @@
             </div>
             <van-action-bar @click="BuyHandle">
                 <van-action-bar-button color="#be99ff" type="warning" text="加入购物车" @click.stop="addShopingInformation" />
-                <van-action-bar-button color="#7232dd" type="danger" text="立即购买" />
+                <van-action-bar-button color="#7232dd" type="danger" text="立即购买" @click="buyImmediately" />
             </van-action-bar>
         </div>
     </div>
@@ -139,6 +139,7 @@ const getShopDetail = async (id: string) => {
     goodDeta.value = data.result;
     goodDetails.value = data.result.skuInfo.props;
     skuBarInfo.value = data.result.skuBarInfo.list
+
 }
 
 const goShopping = (index: number) => {
@@ -200,8 +201,6 @@ let historyShopCartList = ref([] as Array<string>)
 const addShopingInformation = () => {
 
     console.log(goodDetails.value);
-
-
     shopCarDataList.shopId = shopData.value.shopId;
     shopCarDataList.shopName = props.userName;
     shopCarDataList.imgSrc = shopData.value.image;
@@ -210,14 +209,31 @@ const addShopingInformation = () => {
     shopCarDataList.price = (shopData.value.defaultPrice / 100).toFixed(2);
     shopCarDataList.isFreeMail = true;
     shopCarDataList.id = +new Date();
-    console.log(goodDetails.value[0]?.label);
+    console.log(goodDetails.value);
 
-    if (ChoiceColor.value == "颜色" || goodDetails.value[0].label == "规格") {
-        showToast(`请选择${goodDetails.value[0].label}`);
-    } else if (ChoiceSize.value == "尺码" && goodDetails.value.length > 1) {
-        console.log(ChoiceSize.value);
+    if (goodDetails.value) {
+        if (ChoiceColor.value == "颜色" || goodDetails.value[0].label == "规格") {
+            // if(goodDetails.value[0]?.label != undefined){
+            showToast(`请选择${goodDetails.value[0].label}`);
+            // }
+        } else if (ChoiceSize.value == "尺码" && goodDetails.value.length > 1) {
+            // console.log(ChoiceSize.value);
 
-        showToast(`请选择${goodDetails.value[1].label}`)
+            showToast(`请选择${goodDetails.value[1].label}`)
+        } else {
+            let historyListshops = localStorage.shopCarData || "[]";
+            historyListshops = JSON.parse(historyListshops);
+            historyShopCartList.value = historyListshops;
+            shopCarDataList.size = '';
+            shopCarDataList.style = '';
+            historyShopCartList.value.push(shopCarDataList);
+
+            // 将数据同步到localStorage中
+            localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
+            showToast("添加成功!")
+            goodsList.value = true;
+            value.value = 1;
+        }
     } else {
         let historyListshops = localStorage.shopCarData || "[]";
         historyListshops = JSON.parse(historyListshops);
@@ -227,10 +243,49 @@ const addShopingInformation = () => {
 
         historyShopCartList.value.push(shopCarDataList);
 
-          // 将数据同步到localStorage中
-          localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
-          showToast("添加成功!")
-          goodsList.value = true;
+        // 将数据同步到localStorage中
+        localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
+        showToast("添加成功!")
+        goodsList.value = true;
+        value.value = 1;
+    }
+
+
+
+
+}
+
+const buyImmediately = () => {
+    shopCarDataList.shopId = shopData.value.shopId;
+    shopCarDataList.shopName = props.userName;
+    shopCarDataList.imgSrc = shopData.value.image;
+    shopCarDataList.goodsName = shopData.value.title;
+    shopCarDataList.count = value.value;
+    shopCarDataList.price = (shopData.value.defaultPrice / 100).toFixed(2);
+    shopCarDataList.isFreeMail = true;
+    shopCarDataList.id = +new Date();
+    if (goodDetails.value) {
+        if (ChoiceColor.value == "颜色" || goodDetails.value[0].label == "规格") {
+            showToast('请选择颜色');
+        } else if (ChoiceSize.value == "尺码" && goodDetails.value.length > 1) {
+            showToast('请选择尺码');
+        } else {
+            shopCarDataList.size = ChoiceSize.value;
+            shopCarDataList.style = ChoiceColor.value;
+            // console.log(shopCarDataList);
+            let test = [shopCarDataList];
+            localStorage.buyData = JSON.stringify(test);
+            // console.log(shopCarDataList);
+            router.push({ name: 'confirmorder' })
+        }
+    } else {
+        shopCarDataList.size = ChoiceSize.value;
+        shopCarDataList.style = ChoiceColor.value;
+        // console.log(shopCarDataList);
+        let test = [shopCarDataList];
+        localStorage.buyData = JSON.stringify(test);
+        // console.log(shopCarDataList);
+        router.push({ name: 'confirmorder' })
     }
 }
 

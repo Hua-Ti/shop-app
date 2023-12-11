@@ -28,7 +28,7 @@
 
             <div class="footer-mask">
                 <!-- 评论区 -->
-                <div class="comments" v-if="comment.length >= 1" ref="wrapper">
+                <div class="comments" v-if="comment?.length >= 1" ref="wrapper">
                     <div class="comments-list" ref="list">
                         <div class="official-tip">{{ roomData.noticeContent }}</div>
                         <div class="notice" v-for="(c, index) in comment" :key="index" v-if="comment.length > 1">
@@ -177,7 +177,7 @@ onMounted(async () => {
     comment.value = comment.value.slice(0, 5)
     commentArr.value = await getComment();
     definitions.value = data.definitions;
-    console.log(definitions.value);
+    console.log(comment.value);
 
     createVideo();
     //创建BS对象
