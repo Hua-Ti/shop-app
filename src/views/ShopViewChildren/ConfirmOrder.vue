@@ -80,8 +80,6 @@
                         <p class="total-dian">店铺合计:</p>&nbsp;
                         <p class="total-shu">共1件</p>
                     </div> -->
-
-
                 </div>
             </div>
             <div class="confirm-bottom">

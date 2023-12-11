@@ -18,7 +18,7 @@
         </van-popup>
         <van-action-bar class="bottom-bar">
             <van-action-bar-icon icon="shop-o" text="店铺" />
-            <van-action-bar-icon icon="cart-o" text="购物车" />
+            <van-action-bar-icon icon="cart-o" @click="$router.push({name:'shop'})" text="购物车" />
             <van-action-bar-icon icon="star-o" @click="onClickIcon" v-show="flag" text="未收藏" />
             <van-action-bar-icon icon="star" @click="onClickIcon" v-show="!flag" text="已收藏" color="#f46" />
             <van-action-bar-button color="#FFE6E8" @click="selectColor = true" class="left-attow" type="warning"
@@ -115,7 +115,7 @@
                 </div>
                 <div class="select-bottom">
                     <button class="cart" @click="addShopingInformation">加入购物车</button>
-                    <button class="now-buy">立即购买</button>
+                    <button class="now-buy" @click="buyImmediately">立即购买</button>
                 </div>
             </div>
 
@@ -230,6 +230,29 @@ const changeSelectSize = (id: number, name: string) => {
 
 }
 
+const buyImmediately = ()=>{
+    shopCarDataList.shopId = shopInfoList.shopId;
+    shopCarDataList.shopName = shopInfoList.name;
+    shopCarDataList.imgSrc = filterImgItem.value;
+    shopCarDataList.goodsName = skuInfoList.title;
+    shopCarDataList.count = goodsHowNum.value;
+    shopCarDataList.price = price.nowPrice;
+    shopCarDataList.isFreeMail = true;
+    shopCarDataList.id = Date.now();
+    if (skuInfoListColorName.value == "颜色") {
+        showToast('请选择颜色');
+    } else if (skuInfoListSizeName.value == "尺码") {
+        showToast('请选择尺码');
+    } else {
+        shopCarDataList.size = skuInfoListSizeName.value;
+        shopCarDataList.style = skuInfoListColorName.value;
+        console.log(shopCarDataList);
+        let test = [shopCarDataList];
+        localStorage.buyData = JSON.stringify(test) ;
+        console.log(shopCarDataList);
+        router.push({name:'confirmorder'})
+    }
+}
 // 增加数量
 const goodsHowNum = ref(1);
 const clickLeft = () => {
@@ -304,6 +327,8 @@ const addShopingInformation = () => {
         localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
         // 退出遮罩层
         selectColor.value = false;
+
+        showToast('添加成功');
 
     }
 
@@ -519,7 +544,7 @@ const initScroll1 = (index: number) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .left-attow {
     .van-button__content {
         color: #f46;
