@@ -27,13 +27,13 @@
                 text="立即购买" />
         </van-action-bar>
     </div>
-    <div class="price-box" v-if="price.nowPrice">
+    <div class="price-box1" v-if="price.nowPrice">
         <div class="detailTitle">
             <div class="price-num">
-                <span class="price">{{ price.currency }} {{ price.nowPrice }}</span>
+                <span class="price1">{{ price.currency }} {{ price.nowPrice }}</span>
                 <span class="active" v-if="price.priceTags.length">{{ price.priceTags[0].text }}</span>
             </div>
-            <span>已售{{ price.sales }}</span>
+            <span class="share">已售{{ price.sales }}</span>
         </div>
 
         <div v-if="popoversList.popovers.length" class="coupon" @click="couponShow = true">
@@ -87,12 +87,18 @@
                                 item.name }}</p>
                     </div>
                 </div>
-                <div class="select-color">
+                <div class="select-color" v-if="skuInfoList.props[1]">
                     <p class="select-color-title">{{ skuInfoList.props[1].label }}</p>
                     <div class="select-size-list">
                         <p :class="{ active: skuInfoListSizeId == item.sizeId }"
                             @click="changeSelectSize(item.sizeId, item.name)" v-for="item in skuInfoList.props[1].list">{{
                                 item.name }}</p>
+                    </div>
+                </div>
+                <div v-else class="select-color">
+                    <p class="select-color-title">尺码</p>
+                    <div class="select-size-list">
+                        <p :class="{ active: skuInfoListSizeName=='均码' }">{{freeSize}}</p>
                     </div>
                 </div>
                 <div class="select-color">
@@ -221,11 +227,22 @@ let shopCarDataList = reactive({
     price: "",
     isFreeMail: true,
     style: "",
-    id:0,
+    id: 0,
 })
 // 向购物车中添加商品
 // 确保historyLists是一个字符串数组
-let historyShopCartList = ref([] as Array<string>)
+let historyShopCartList = ref([{
+    shopId: "",
+    shopName: "",
+    imgSrc: "",
+    goodsName: "",
+    count: 1,
+    size: "",
+    price: "",
+    isFreeMail: true,
+    style: "",
+    id: 0,
+}]);
 const addShopingInformation = () => {
     shopCarDataList.shopId = shopInfoList.shopId;
     shopCarDataList.shopName = shopInfoList.name;
@@ -234,7 +251,7 @@ const addShopingInformation = () => {
     shopCarDataList.count = goodsHowNum.value;
     shopCarDataList.price = price.nowPrice;
     shopCarDataList.isFreeMail = true;
-    shopCarDataList.id=Date.parse(new Date());
+    shopCarDataList.id = Date.now();
     if (skuInfoListColorName.value == "颜色") {
         showToast('请选择颜色');
     } else if (skuInfoListSizeName.value == "尺码") {
@@ -251,7 +268,7 @@ const addShopingInformation = () => {
 
         if (historyShopCartList.value.length > 0) {
             historyShopCartList.value = historyShopCartList.value.filter(s => {
-                return s.style!=shopCarDataList.style || s.size!=shopCarDataList.size;
+                return s.style != shopCarDataList.style || s.size != shopCarDataList.size;
             })
         }
 
@@ -347,6 +364,11 @@ let popoversList = reactive({
 
 let filterInventory = ref(0);
 let filterImgItem = ref("");
+
+let freeSize = computed(()=>{
+ return skuInfoListSizeName.value = "均码";
+
+})
 let filterImg = computed(() => {
 
     let targetImg = skuInfoList.skus.filter((e) => {
@@ -685,7 +707,7 @@ const initScroll1 = (index: number) => {
     }
 }
 
-.price-box {
+.price-box1 {
     font-size: 12px;
     padding: 10px 10px 50px;
     box-sizing: border-box;
@@ -810,7 +832,9 @@ const initScroll1 = (index: number) => {
         color: #666;
 
         .price-num {
-            .price {
+            display: flex;
+
+            .price1 {
                 font-size: 20px;
                 font-weight: bold;
                 color: #000;
