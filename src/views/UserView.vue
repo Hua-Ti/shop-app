@@ -277,6 +277,7 @@ function attention() {
             width: 20vw;
             height: 9vh;
             border-radius: 50%;
+            z-index: 15;
         }
     }
 }

@@ -103,12 +103,12 @@
                 </div>
                 <div class="select-color">
                     <p class="select-color-title">数量</p>
-                    <div class="myStepper">
-                        <div class="stepper-left" @click="clickLeft">
+                    <div class="production-myStepper">
+                        <div class="production-stepper-left" @click="clickLeft">
                             <van-icon name="minus" />
                         </div>
-                        <div class="mynumber">{{ goodsHowNum }}</div>
-                        <div class="stepper-right" @click="goodsHowNum++">
+                        <div class="production-mynumber">{{ goodsHowNum }}</div>
+                        <div class="production-stepper-right" @click="goodsHowNum++">
                             <van-icon name="plus" />
                         </div>
                     </div>
@@ -621,13 +621,13 @@ const initScroll1 = (index: number) => {
 }
 
 
-.myStepper {
+.production-myStepper {
     display: flex;
     align-items: center;
 
-    .stepper-left,
-    .stepper-right,
-    .mynumber {
+    .production-stepper-left,
+    .production-stepper-right,
+    .production-mynumber {
         width: 50px;
         height: 30px;
         border: 1px solid #ccc;

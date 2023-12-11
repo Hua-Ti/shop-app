@@ -256,6 +256,7 @@ const addShopingInformation = () => {
 }
 
 const buyImmediately = () => {
+    // let buyData = JSON.parse(localStorage.buyData || "[]");
     shopCarDataList.shopId = shopData.value.shopId;
     shopCarDataList.shopName = props.userName;
     shopCarDataList.imgSrc = shopData.value.image;
@@ -279,8 +280,9 @@ const buyImmediately = () => {
             router.push({ name: 'confirmorder' })
         }
     } else {
-        shopCarDataList.size = ChoiceSize.value;
-        shopCarDataList.style = ChoiceColor.value;
+
+        shopCarDataList.size = '';
+        shopCarDataList.style ='';
         // console.log(shopCarDataList);
         let test = [shopCarDataList];
         localStorage.buyData = JSON.stringify(test);

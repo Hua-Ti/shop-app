@@ -117,11 +117,9 @@ const totalPrices = computed(() => {
 // 获取数据
 function getData() {
     data.value = JSON.parse(localStorage.buyData || `[]`)
-    let aaa = JSON.parse(localStorage.buyData || `[]`)
-    console.log('我是aaa', aaa)
     console.log('我是data.value', data.value)
     // 获取旧shopCar
-    newShopCarData = JSON.parse(localStorage.shopCarData)
+    newShopCarData = JSON.parse(localStorage.shopCarData || `[]`)
     // console.log(data.value);
 }
 
