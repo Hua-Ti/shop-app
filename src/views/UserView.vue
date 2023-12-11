@@ -5,15 +5,12 @@
             <div class="top-box">
                 <div class="user-message">
                     <div>
-                        <!-- <van-image v-if="pictureSrc.picture" class="img-bg" @click.stop="gotoHomepage" round width="2.3rem"
-                            height="2.3rem" :src="src" /> -->
-                        <!-- <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem"
-                            :src="src || pictureSrc.picture || picSrc" /> -->
+
                         <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem" :src="src" />
                     </div>
                 </div>
                 <div class="user_white">
-                    <p>{{ userid.accountName || nameid }}</p>
+                    <p>{{ store.userPatname || userid.accountName || nameid }}</p>
                 </div>
                 <div class="top-vip">
                     <img src="../assets/images/user_vip.png" alt="">
@@ -70,7 +67,7 @@
             <div class="order-box">
                 <p>我的订单</p><span>全部 &gt;</span>
             </div>
-            <div class="user-five">
+            <div class="user-five" @click="router.push({ name: 'myorder' })">
                 <div>
                     <i class="iconfont">&#xe69a;<span class="nav-title">待付款</span></i>
                 </div>
@@ -136,7 +133,8 @@ import address from '../assets/icons/user_address2.png'
 
 import { accountNumber } from "../stores/counter"
 import { getPicture } from '../stores/picture'
-
+import { usePetNameStore } from "../stores/counter"
+const store = usePetNameStore()
 const router = useRouter();
 const userid = accountNumber()
 
@@ -147,6 +145,7 @@ const src = ref(new URL('../assets/images/user_touxiang.png', import.meta.url).h
 
 //获取登录的账号id
 onMounted(() => {
+    console.log('我的的onMounted');
     let userIDList = localStorage.userIDList || `[]`;
     userIDList = JSON.parse(userIDList);
     if (userid.accountName) {
@@ -162,9 +161,9 @@ onMounted(() => {
 // pictureSrc.picture
 //头像url
 onMounted(() => {
-    console.log('我的onMounted');
+    // console.log('我的onMounted');
     src.value = pictureSrc.pictureurl
-    console.log(picSrc.value);
+    // console.log(picSrc.value);
 })
 
 //退出登录
@@ -185,8 +184,8 @@ function gotoHomepage() {
 }
 
 //跳关注页面
-function attention(){
-    console.log(2222)
+function attention() {
+    // console.log(2222)
     router.push({ name: 'attention' })
 }
 
@@ -216,8 +215,8 @@ function attention(){
     // background-position: center center;
     background-position: 0px 0px;
     background-repeat: no-repeat;
-    background-size: 100%;
-    background-color: #f1f1f1;
+    background-size: 120%;
+    background-color: #f5f2f2;
     z-index: 13;
     position: fixed;
     top: 0px;
