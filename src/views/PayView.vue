@@ -8,11 +8,12 @@
 import axios from "axios";
 import qs from 'qs'
 // import { ref, onMounted } from "vue";
+const orderId = +new Date()
 const goPayment = function () {
 
     let data = {
         // orderId: 'a1234789'
-        orderId: Math.random()
+        orderId: orderId
     };
 
     axios({

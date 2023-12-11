@@ -1,5 +1,5 @@
 <template>
-    <div class="mona-live-item" v-for="(ld, index) in liveData" :key="index" @click="goLiveRoom(ld.roomId,ld.actUserId)">
+    <div class="mona-live-item" v-for="(ld, index) in liveData" :key="index" @click="goLiveRoom(ld.roomId,ld.actUserId,ld.userName)">
         <div class="actor-info">
             <!-- 主播头像 -->
             <van-image round width="45px" height="45px" :src="ld.avatar" />
@@ -44,13 +44,14 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const props = defineProps(["liveData"])
 
-function goLiveRoom(roomId:number,actUserId:string) {
+function goLiveRoom(roomId:number,actUserId:string,userName:string) {
     router.push({
         name: 'liveroom',
         query: {
             roomId,
-            actUserId
-        }
+            actUserId,
+            userName
+        },
     })
 }
 </script>

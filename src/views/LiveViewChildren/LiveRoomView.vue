@@ -90,7 +90,7 @@
         <van-popup v-model:show="goodsShow" position="bottom" :overlay-style="{
             backgroundColor: 'transparent'
         }" duration="0">
-            <LiveGoods :goods="goods" />
+            <LiveGoods :goods="goods" :userName="userName"/>
         </van-popup>
 
 
@@ -136,6 +136,7 @@ const count = ref(0);
 const commentValue = ref('');
 let commentBS = ref();
 // let commentBS = ref(null);
+const userName = ref();
 let roomId = ref();
 let actUserId = ref();
 let thumbsUpAni = '';
@@ -166,6 +167,7 @@ const attentionData = (data: any) => {
 }
 
 onMounted(async () => {
+    userName.value = route.query.userName;
     roomId.value = route.query.roomId;
     actUserId.value = route.query.actUserId;
     let { data } = await getLiveRoom(roomId.value, actUserId.value);
@@ -194,7 +196,7 @@ onMounted(async () => {
 
     // 显示是否关注
     attentionlist.attention.map((item: any) => {
-        console.log('列表', item.actUserId)
+        // console.log('列表', item.actUserId)
         if (roomData.value.actUserId == item.actUserId) {
             flag.value = false;
         }
