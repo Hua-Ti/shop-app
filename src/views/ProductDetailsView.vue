@@ -18,7 +18,7 @@
         </van-popup>
         <van-action-bar class="bottom-bar">
             <van-action-bar-icon icon="shop-o" text="店铺" />
-            <van-action-bar-icon icon="cart-o" text="购物车" />
+            <van-action-bar-icon icon="cart-o" @click="$router.push({name:'shop'})" text="购物车" />
             <van-action-bar-icon icon="star-o" @click="onClickIcon" v-show="flag" text="未收藏" />
             <van-action-bar-icon icon="star" @click="onClickIcon" v-show="!flag" text="已收藏" color="#f46" />
             <van-action-bar-button color="#FFE6E8" @click="selectColor = true" class="left-attow" type="warning"
@@ -27,13 +27,13 @@
                 text="立即购买" />
         </van-action-bar>
     </div>
-    <div class="price-box" v-if="price.nowPrice">
+    <div class="price-box1" v-if="price.nowPrice">
         <div class="detailTitle">
             <div class="price-num">
-                <span class="price">{{ price.currency }} {{ price.nowPrice }}</span>
+                <span class="price1">{{ price.currency }} {{ price.nowPrice }}</span>
                 <span class="active" v-if="price.priceTags.length">{{ price.priceTags[0].text }}</span>
             </div>
-            <span>已售{{ price.sales }}</span>
+            <span class="share">已售{{ price.sales }}</span>
         </div>
 
         <div v-if="popoversList.popovers.length" class="coupon" @click="couponShow = true">
@@ -87,12 +87,18 @@
                                 item.name }}</p>
                     </div>
                 </div>
-                <div class="select-color">
+                <div class="select-color" v-if="skuInfoList.props[1]">
                     <p class="select-color-title">{{ skuInfoList.props[1].label }}</p>
                     <div class="select-size-list">
                         <p :class="{ active: skuInfoListSizeId == item.sizeId }"
                             @click="changeSelectSize(item.sizeId, item.name)" v-for="item in skuInfoList.props[1].list">{{
                                 item.name }}</p>
+                    </div>
+                </div>
+                <div v-else class="select-color">
+                    <p class="select-color-title">尺码</p>
+                    <div class="select-size-list">
+                        <p :class="{ active: skuInfoListSizeName=='均码' }">{{freeSize}}</p>
                     </div>
                 </div>
                 <div class="select-color">
@@ -109,7 +115,7 @@
                 </div>
                 <div class="select-bottom">
                     <button class="cart" @click="addShopingInformation">加入购物车</button>
-                    <button class="now-buy">立即购买</button>
+                    <button class="now-buy" @click="buyImmediately">立即购买</button>
                 </div>
             </div>
 
@@ -155,7 +161,8 @@ import { ref, onMounted, nextTick, reactive, computed } from "vue"
 import { useRouter } from "vue-router";
 import { getProdectDetails, getPopoversList } from "../apic/search";
 import BScroll from '@better-scroll/core';
-import { Toast, showToast } from 'vant';import { collectionProduct } from '../stores/bgChange'
+import { Toast, showToast } from 'vant';
+import { collectionProduct } from '../stores/bgChange'
 
 //收藏操作
 const collectDataListProduct = collectionProduct();
@@ -223,6 +230,29 @@ const changeSelectSize = (id: number, name: string) => {
 
 }
 
+const buyImmediately = ()=>{
+    shopCarDataList.shopId = shopInfoList.shopId;
+    shopCarDataList.shopName = shopInfoList.name;
+    shopCarDataList.imgSrc = filterImgItem.value;
+    shopCarDataList.goodsName = skuInfoList.title;
+    shopCarDataList.count = goodsHowNum.value;
+    shopCarDataList.price = price.nowPrice;
+    shopCarDataList.isFreeMail = true;
+    shopCarDataList.id = Date.now();
+    if (skuInfoListColorName.value == "颜色") {
+        showToast('请选择颜色');
+    } else if (skuInfoListSizeName.value == "尺码") {
+        showToast('请选择尺码');
+    } else {
+        shopCarDataList.size = skuInfoListSizeName.value;
+        shopCarDataList.style = skuInfoListColorName.value;
+        console.log(shopCarDataList);
+        let test = [shopCarDataList];
+        localStorage.buyData = JSON.stringify(test) ;
+        console.log(shopCarDataList);
+        router.push({name:'confirmorder'})
+    }
+}
 // 增加数量
 const goodsHowNum = ref(1);
 const clickLeft = () => {
@@ -243,11 +273,22 @@ let shopCarDataList = reactive({
     price: "",
     isFreeMail: true,
     style: "",
-    id:0,
+    id: 0,
 })
 // 向购物车中添加商品
 // 确保historyLists是一个字符串数组
-let historyShopCartList = ref([] as Array<string>)
+let historyShopCartList = ref([{
+    shopId: "",
+    shopName: "",
+    imgSrc: "",
+    goodsName: "",
+    count: 1,
+    size: "",
+    price: "",
+    isFreeMail: true,
+    style: "",
+    id: 0,
+}]);
 const addShopingInformation = () => {
     shopCarDataList.shopId = shopInfoList.shopId;
     shopCarDataList.shopName = shopInfoList.name;
@@ -256,7 +297,7 @@ const addShopingInformation = () => {
     shopCarDataList.count = goodsHowNum.value;
     shopCarDataList.price = price.nowPrice;
     shopCarDataList.isFreeMail = true;
-    shopCarDataList.id=Date.parse(new Date());
+    shopCarDataList.id = Date.now();
     if (skuInfoListColorName.value == "颜色") {
         showToast('请选择颜色');
     } else if (skuInfoListSizeName.value == "尺码") {
@@ -273,7 +314,7 @@ const addShopingInformation = () => {
 
         if (historyShopCartList.value.length > 0) {
             historyShopCartList.value = historyShopCartList.value.filter(s => {
-                return s.style!=shopCarDataList.style || s.size!=shopCarDataList.size;
+                return s.style != shopCarDataList.style || s.size != shopCarDataList.size;
             })
         }
 
@@ -286,6 +327,8 @@ const addShopingInformation = () => {
         localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
         // 退出遮罩层
         selectColor.value = false;
+
+        showToast('添加成功');
 
     }
 
@@ -369,6 +412,11 @@ let popoversList = reactive({
 
 let filterInventory = ref(0);
 let filterImgItem = ref("");
+
+let freeSize = computed(()=>{
+ return skuInfoListSizeName.value = "均码";
+
+})
 let filterImg = computed(() => {
 
     let targetImg = skuInfoList.skus.filter((e) => {
@@ -712,7 +760,7 @@ const initScroll1 = (index: number) => {
     }
 }
 
-.price-box {
+.price-box1 {
     font-size: 12px;
     padding: 10px 10px 50px;
     box-sizing: border-box;
@@ -837,7 +885,9 @@ const initScroll1 = (index: number) => {
         color: #666;
 
         .price-num {
-            .price {
+            display: flex;
+
+            .price1 {
                 font-size: 20px;
                 font-weight: bold;
                 color: #000;
