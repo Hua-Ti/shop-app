@@ -1,29 +1,29 @@
 <!-- 瀑布流（热门模块） -->
 <template>
     <div class="waterfallFlow">
-
-        <div class="mubu" v-show="flags"></div>
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
-                <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
+                <div v-masonry-tile class="item" v-for="(item, index) in getCollList" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId, item)">
-                    <div class="picture">
+                    <lazy-component lazyComponent=true loading="../assets/images/dianpu.jpg">
+                        <div class="picture">
 
-                        <img class="bigPic" :src="item.itemImage" alt="">
+                            <img class="bigPic" :src="item.itemImage" alt="">
 
-                        <div class="liveBroadcastAtTheSamePrice">
-                            <img :src="item.lefttop_taglist[0]?.img" alt="">
+                            <div class="liveBroadcastAtTheSamePrice">
+                                <img :src="item.lefttop_taglist[0]?.img" alt="">
+                            </div>
+                            <!-- 头像 -->
+                            <div class="headImage">
+                                <img :src="item.actorAvatar" alt="">
+                                <span>{{ item.actorName }}</span>
+                            </div>
+                            <!-- 播放 -->
+                            <div class="Play">
+                                <img src="../assets/images/Play.png" alt="">
+                            </div>
                         </div>
-                        <!-- 头像 -->
-                        <div class="headImage">
-                            <img :src="item.actorAvatar" alt="">
-                            <span>{{ item.actorName }}</span>
-                        </div>
-                        <!-- 播放 -->
-                        <div class="Play">
-                            <img src="../assets/images/Play.png" alt="">
-                        </div>
-                    </div>
+                    </lazy-component>
                     <p class="title">{{ item.title }}</p>
                     <!-- 价格 -->
                     <div class="price">
@@ -37,8 +37,7 @@
 ) }}
                                     <span class="decimalTwo"
                                         v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10)
-                                            /
+                                        {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) /
                                             10) * 100) }}
                                     </span>
                                 </span>
@@ -50,7 +49,6 @@
                 </div>
             </div>
         </van-list>
-
     </div>
 </template>
 <script setup lang="ts">
@@ -62,7 +60,6 @@ import { collection } from '../stores/bgChange'
 const router = useRouter();
 
 const collectDataList = collection();
-const flags = ref(true)
 
 
 // const list = ref([]);
@@ -86,29 +83,28 @@ function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: str
         }
     })
 }
-
 const onLoad = async () => {
+    if (props.getHomeC) {
+        // 异步更新数据
+        let HomeContentData: any = await getHomeContent(count.value);//第二页数据
+        // console.log(1111)
+        for (let i = 0; i < HomeContentData.data.list.length; i++) {
+            getHomeC.value.push(HomeContentData.data.list[i]);
+        }
+        // getHomeC.value=HomeContentData.data.list
+        // console.log('首页内容', getHomeC.value);
+        // 加载状态结束
+        loading.value = false;
 
-    // 异步更新数据
-    let HomeContentData: any = await getHomeContent(count.value);//第二页数据
-    // console.log(1111)
-    for (let i = 0; i < HomeContentData.data.list.length; i++) {
-        getHomeC.value.push(HomeContentData.data.list[i]);
-    }
-
-    // 加载状态结束
-    loading.value = false;
-
-    // 数据全部加载完成
-    nextTick(() => {
+        // 数据全部加载完成
+        nextTick(() => {
+            loading.value = false
+            count.value++;
+            console.log('sdadasd')
+        })
+    } else if (props.getCollList) {
         loading.value = false
-        count.value++;
-        console.log('sdadasd')
-    })
-    setTimeout(() => {
-        flags.value = false
-    }, 3000)
-
+    }
 };
 
 
@@ -120,14 +116,7 @@ const onLoad = async () => {
     padding: 10px 0px 10px 6px;
     box-sizing: border-box;
     width: 100vw;
-    .mubu{
-        position: fixed;
-        width: 100vw;
-        height:41vh;
-        background-color: #fff;
-        bottom:50px;
-        z-index:1;
-    }
+
     .item {
         margin-bottom: 10px;
         width: 49%;
@@ -141,7 +130,8 @@ const onLoad = async () => {
 
     .picture {
         position: relative;
-
+        // min-height: 157.76px;
+        // background-color: #ff4668;
     }
 
     .bigPic {
@@ -152,6 +142,7 @@ const onLoad = async () => {
         background-color: hsl(0, 0%, 87%);
     }
 
+ 
 
     // 播放
     .Play {

@@ -12,7 +12,7 @@
 
             <!-- 二级导航 -->
             <div class="head-top">
-                <van-tabs v-model:active="active" v-if="homeTwoNav.length >= 1">
+                <van-tabs v-model:active="active" v-if="homeTwoNav?.length >= 1">
                     <template>
                         <van-tab :to="{ name: 'homechild', query: { pid: 666 } }" title="热门"></van-tab>
                     </template>
@@ -38,6 +38,7 @@ import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getHomeNavigation } from '../apic/homes'
 import { type List, type item } from '../typings'
+import {useBgColor} from '../stores/bgChange';
 const router = useRouter();
 const route = useRoute();
 let keyWord = ref('');
@@ -46,7 +47,13 @@ const activeIndex: item = { '666': 0 }
 // let count = ref(Math.random() * 2000)
 const homeTwoNav = ref<Array<List>>([])
 
-const active = ref(0)
+const active = ref(0);
+
+const headTwo='bbclk';
+const bgArr = ['bbclk', 'bqf', 'kswy', 'mndy', 'my', 'mf', 'pc', 'qzfy', 'sngmj', 'xgzjx', 'yrf', 'zzs'];
+const bgColorArr=['#b18f56','#6888a4','#5f5657','#86a9b1','#8aa062','#b27160','#be8d77','#af7f68','#aaa968','#98b0b8','#a897af','#a36b67']
+const bgChange=useBgColor();
+let changeColor=ref(bgColorArr[bgChange.bgColorIndex]);
 
 // 点击跳转相关
 //跳购物车页面
@@ -76,6 +83,13 @@ onMounted(async () => {
 
 })
 
+//监听颜色变化
+watch(() => bgChange.bgColorIndex, (newVal, oldVal) => {
+    console.log(newVal);
+    changeColor.value=bgColorArr[bgChange.bgColorIndex];
+    
+})
+
 
 </script>
 
@@ -84,15 +98,16 @@ onMounted(async () => {
     font-size: 16px;
 
     .head {
-        // background: rgb(220, 157, 167);
+        background: rgb(220, 157, 167);
         background: linear-gradient(180deg, rgb(232, 188, 195) 0%, rgba(225, 148, 160, 0.978) 100%);
         color: #fff;
         height: 97.99px;
     }
 
     .headTwo {
-        // background-color: burlywood !important;
-        // background: linear-gradient(180deg, rgb(233, 213, 136) 0%, #b17f6f 100%);
+        // background-color: burlywood;
+        background: none;
+        background-color: v-bind(changeColor);
         height: 97.99px;
     }
 
@@ -151,7 +166,5 @@ onMounted(async () => {
             box-sizing: border-box;
         }
     }
-
-
 }
 </style>

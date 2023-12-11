@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import AttentionView from '../views/AttentionView.vue'
+import CollectionView from '../views/CollectionView.vue'
 import LoginVire from '../views/AuthorizationViewChildren/LoginVire.vue'
 import RegisterView from '../views/AuthorizationViewChildren/RegisterView.vue'
 import ShopView from '../views/ShopView.vue'
@@ -19,6 +19,7 @@ import ConfirmOrder from '../views/ShopViewChildren/ConfirmOrder.vue'
 import AddressManagement from '../views/AddressManagement.vue'
 import LocationView from '../views/AddressManagementChildren/LocationView.vue'
 import ModuleHome from '../views/HomeChildView/ModuleHome.vue'
+import attentionData from '../views/UserViewChildren/attentionData.vue'
 
 
 // 在路由中引入pinia
@@ -49,12 +50,9 @@ const router = createRouter({
       ]
     },
     {
-      path: '/attention',
-      name: 'attention',
-      component: AttentionView,
-      meta: {
-        keepAlive: true //设置页面是否需要使用缓存
-      },
+      path: '/collection',
+      name: 'collection',
+      component: CollectionView
     },
     {
       path: '/shop',
@@ -83,7 +81,7 @@ const router = createRouter({
           path: 'homepage',
           name: 'homepage',
           component: HomePage,
-        },
+        }
       ]
     },
     {
@@ -169,10 +167,15 @@ const router = createRouter({
       path: '/moduleHome',
       name: "moduleHome",
       component: ModuleHome
-    }, {
-      path: '/project-detail',
-      name: "project-detail",
-      component: () => import("../views/ProductDetailsView.vue")
+    },{
+      path:'/project-detail',
+      name:"project-detail",
+      component:()=>import("../views/ProductDetailsView.vue")
+    },
+    {
+      path: '/attention',
+      name: 'attention',
+      component: attentionData,
     }
 
   ]

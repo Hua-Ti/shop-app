@@ -1,14 +1,16 @@
 <!-- 瀑布流（热门模块） -->
 <template>
     <div class="waterfallFlowShree">
+        <div class="mubu" v-show="flags"></div>
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId)">
+                    <!-- <lazy-component loading="../assets/images/dianpu.jpg"> -->
                     <div class="picture">
-                        <!-- 幕布 -->
-                        <div class="curtain"></div>
+                    
                         <img class="bigPic" :src="item.itemImage" alt="">
+
                         <div class="liveBroadcastAtTheSamePrice">
                             <img :src="item.lefttop_taglist[0]?.img" alt="">
                         </div>
@@ -36,7 +38,9 @@
 ) }}
                                         <span class="decimalTwo"
                                             v-if="Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10) / 10) * 100)">
-                                            {{ Math.floor((item.showDiscountPrice - Math.floor(item.showDiscountPrice * 10)
+                                            {{ Math.floor((item.showDiscountPrice -
+                                                Math.floor(item.showDiscountPrice *
+                                                    10)
                                                 /
                                                 10) * 100) }}
                                         </span>
@@ -47,6 +51,7 @@
                             <div class="sale">{{ item.sale }}</div>
                         </div>
                     </div>
+                    <!-- </lazy-component> -->
                 </div>
             </div>
         </van-list>
@@ -57,18 +62,27 @@ import { useRouter, useRoute } from "vue-router";
 import { getModuleHome } from '../apic/homes'
 import { type getHomeC } from '../typings'
 import { ref, nextTick } from 'vue';
+// import {useIndex} from '../stores/bgChange'
 const router = useRouter();
 const route = useRoute();
 
+// const indexData=useIndex();
+// const index=indexData.bgColorIndex
+// console.log('小标',index)
+
+// console.log('index',index)
 // const list = ref([]);
 const getHomeC = ref<Array<getHomeC>>([])
 const loading = ref(false);
 const finished = ref(false);
 const count = ref(1)
-let keyword: string = route.query.keyword;
+let keyword = route.query.keyword;
+const flags = ref(true)
+const bgColorArr=['#b18f56','#6888a4','#5f5657','#86a9b1','#8aa062','#b27160','#be8d77','#af7f68','#aaa968','#98b0b8','#a897af','#a36b67']
 // console.log('keyword', keyword)
 
 const props = defineProps(['getHomeC'])
+route.query.index
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string) {
     // console.log(actorUrlId)
     router.push({
@@ -97,6 +111,9 @@ const onLoad = async () => {
         loading.value = false
         count.value++;
     })
+    setTimeout(() => {
+        flags.value = false
+    }, 3000)
 };
 
 
@@ -108,10 +125,20 @@ const onLoad = async () => {
     padding: 10px 0px 10px 6px;
     box-sizing: border-box;
     width: 100vw;
+    .mubu{
+        position: fixed;
+        width: 100vw;
+        height:68vh;
+        background-color: #fff;
+        bottom:50px;
+        margin-left: -6px;
+        z-index:1;
+    }
 
     .item {
         margin-bottom: 10px;
         width: 49%;
+        // min-height: 250px;
     }
 
     .item:nth-child(n+1) {
@@ -122,21 +149,18 @@ const onLoad = async () => {
 
     .picture {
         position: relative;
+        width: 100%;
     }
 
-    .bigPic,
-    .curtain {
+    .bigPic {
         width: 100%;
         height: 100%;
         border-top-right-radius: 5px;
         border-top-left-radius: 5px;
+        background-color: hsl(0, 0%, 87%);
+        z-index: 99;
     }
 
-    .curtain {
-        z-index: 99999 !important;
-        height: 100%;
-        background-color: #ff4668;
-    }
 
     // 播放
     .Play {

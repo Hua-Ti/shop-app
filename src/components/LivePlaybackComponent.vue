@@ -40,9 +40,15 @@
                         <p>买家评论</p>
                         <span class="num">{{ totalNum }}</span>
                     </div>
-                    <div class="collection">
-                        <van-icon class="myIcon" color="white" size="16" name="star" />
-                        <p>收藏</p>
+                    <div class="collection" @click="collectionList">
+                        <div v-show="flag">
+                            <van-icon class="myIcon" color="white" size="16" name="star" />
+                            <p>收藏</p>
+                        </div>
+                        <div v-show="!flag">
+                            <van-icon class="myIcon" color="yellow" size="16" name="star" />
+                            <p>已收藏</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -233,7 +239,12 @@ import { showConfirmDialog } from 'vant';
 import { getPlaybackComment, getPlaybackGoodsShop } from '../apic/live-data'
 import type { getPlaybackCommentItem, getPlaybackBuyData, getPlaybackItemExplainSkuTopTitle_taglist, shopCarData } from '../typings';
 import { useRouter } from 'vue-router';
+import { collection } from '../stores/bgChange';
+
 const router = useRouter();
+//收藏操作
+const collectDataList = collection();
+let flag = ref(true);
 
 // 传参内容
 const props = defineProps({
@@ -362,6 +373,8 @@ onMounted(() => {
     getCommentsData();
     getShopGoodsData();
     // console.log(props.itemUrlId, props.actorUrlId);
+    collec();
+    console.log('uid', collectDataList.collectionData.videoId, collectDataList.collectionData.itemId)
 })
 
 // 评论区弹出框
@@ -376,6 +389,28 @@ function changeShowBtn() {
 function changeShopShowBottom() {
     shopShowBottom.value = true;
 }
+// 点击切换收藏
+function collectionList() {
+    if (flag.value == true) {
+        // if(collectDataList.collectionData!=''){
+        collectDataList.addList(collectDataList.collectionData);
+        flag.value = false;
+        // }
+    } else {
+        flag.value = true;
+        collectDataList.remove(collectDataList.collectionData);
+    }
+}
+// 判断是否收藏
+function collec() {
+    collectDataList.collectionDataList.map((item: any, index: number) => {
+        if (collectDataList.collectionData == item) {
+            flag.value = false;
+        }
+    })
+}
+
+
 
 // 选择购物车的内容以及高亮
 let colorActive = ref(0);
@@ -1017,6 +1052,20 @@ function gotoShop() {
     padding: 15px 0;
     font-size: 12px;
     color: rgb(165, 165, 165);
+}
+
+.collection {
+    text-align: center;
+
+    p {
+        margin-top: 6px;
+    }
+}
+
+.comment {
+    p {
+        margin-top: 6px;
+    }
 }
 
 .shopCar {

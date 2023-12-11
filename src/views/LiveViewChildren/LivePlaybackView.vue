@@ -89,6 +89,7 @@ const video = ref();
 let totalTime = ref(0);
 const textArr = ['没有人比我更懂你~', '时尚E点，快乐亿点~', '最开心的三件事就是：买买买!', '追求精致生活,选择优雅购物', '正在加载中,请稍候~']
 
+
 // 解决mounted无法解析ref中dom元素的bug
 let isReady = ref(false);
 
@@ -127,6 +128,7 @@ const getData = async () => {
     isReady.value = true;
 }
 
+
 const isBenefitPoint = computed(() => {
     if (benefitPointList.value) {
         return true;
@@ -143,6 +145,7 @@ const randomText = computed(() => {
 
 onMounted(() => {
     getData();
+    
 })
 
 // 点击播放暂停

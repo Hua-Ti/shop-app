@@ -14,6 +14,7 @@ import 'vant/es/notify/style';
 // ImagePreview
 import 'vant/es/image-preview/style';
 import { VueMasonryPlugin } from 'vue-masonry';
+import { Lazyload } from 'vant';
 
 
 
@@ -32,5 +33,8 @@ app.use(pinia)
 app.use(router)
 app.use(VueMasonryPlugin);
 
+app.use(Lazyload, {
+    lazyComponent: true,
+});
 
 app.mount('#app')

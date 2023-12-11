@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AttentionChild: typeof import('./src/components/attentionChild.vue')['default']
     HomeRecommend: typeof import('./src/components/homeRecommend.vue')['default']
     HomeTwoModule: typeof import('./src/components/homeTwoModule.vue')['default']
     LiveComponent: typeof import('./src/components/LiveComponent.vue')['default']
@@ -43,6 +44,7 @@ declare module 'vue' {
     VanPullRefresh: typeof import('vant/es')['PullRefresh']
     VanSearch: typeof import('vant/es')['Search']
     VanShareSheet: typeof import('vant/es')['ShareSheet']
+    VanSkeleton: typeof import('vant/es')['Skeleton']
     VanSlider: typeof import('vant/es')['Slider']
     VanStepper: typeof import('vant/es')['Stepper']
     VanSubmitBar: typeof import('vant/es')['SubmitBar']
@@ -52,7 +54,9 @@ declare module 'vue' {
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
     VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
+    VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
     VanUploader: typeof import('vant/es')['Uploader']
+    WaterfallFlowFour: typeof import('./src/components/waterfallFlowFour.vue')['default']
     VarInput: typeof import('@varlet/ui')['_InputComponent']
     WaterfallFlowShree: typeof import('./src/components/waterfallFlowShree.vue')['default']
     WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']

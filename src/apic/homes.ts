@@ -41,8 +41,6 @@ export async function getHomeContentTwo(pids: string, count: number) {
     let { data } = await axios.get<Array<ContentTwo>>(`https://apis.netstart.cn/mogujie/category/miniWall?fcid=${pids}&page=${count}&sort=new`)
     return data
 }
-// https://apis.netstart.cn/mogujie/category/getSub?pid=599&page=1
-// https://apis.netstart.cn/mogujie/video/item?q=羽绒服
 
 //首页内容数据3
 export async function getModuleHome(keyword: string) {

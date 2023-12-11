@@ -20,13 +20,13 @@ import mySrc from './assets/icons/my.svg';
           <span class="nav-title">首页</span>
         </div>
       </RouterLink>
-      <RouterLink :to="{ name: 'attention' }" v-slot="{ navigate, isActive, isExactActive }" custom>
+      <RouterLink :to="{ name: 'collection' }" v-slot="{ navigate, isActive, isExactActive }" custom>
 
         <div @click="navigate" :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']">
 
           <van-image width="22" height="22" :src="attentionSrc" />
 
-          <span class="nav-title">关注</span>
+          <span class="nav-title">收藏</span>
         </div>
       </RouterLink>
       <RouterLink :to="{ name: 'live' }" v-slot="{ navigate, isActive, isExactActive }" custom>

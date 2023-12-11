@@ -30,7 +30,6 @@
                     <p class="item_l">简介</p>
                     <div class="item_r">这家伙很懒，什么都没留下!</div>
                 </div>
-
             </div>
         </div>
     </div>
