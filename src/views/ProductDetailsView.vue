@@ -161,7 +161,8 @@ import { ref, onMounted, nextTick, reactive, computed } from "vue"
 import { useRouter } from "vue-router";
 import { getProdectDetails, getPopoversList } from "../apic/search";
 import BScroll from '@better-scroll/core';
-import { Toast, showToast } from 'vant';import { collectionProduct } from '../stores/bgChange'
+import { Toast, showToast } from 'vant';
+import { collectionProduct } from '../stores/bgChange'
 
 //收藏操作
 const collectDataListProduct = collectionProduct();
