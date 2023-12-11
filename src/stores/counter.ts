@@ -66,13 +66,19 @@ export const useUserGeolocationStore = defineStore('userGeolocation', () => {
 }, { persist: true })
 
 
-// export const useUserGeolocationStore = defineStore('userGeolocation', () => {
 
-//   const userLocation = ref<userLocationItem>();
+//获取用户昵称，简介
+export const usePetNameStore = defineStore('patName', () => {
 
-//   function getUserGeolocation(curLocation: userLocationItem) {
-//     userLocation.value = curLocation;
-//   }
+  const userPatname = ref('');
+  const userjianjie = ref('')
 
-//   return { userLocation, getUserGeolocation, }
-// }, { persist: true })
+  function getUserPatname(curLocation: string) {
+    userPatname.value = curLocation;
+  }
+  function getUserjianjie(curLocation: string) {
+    userjianjie.value = curLocation;
+  }
+
+  return { userPatname, userjianjie, getUserPatname, getUserjianjie }
+}, { persist: true })

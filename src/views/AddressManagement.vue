@@ -8,13 +8,16 @@
             </van-nav-bar>
         </div>
         <!-- 地址列表 -->
-
-        <van-config-provider :theme-vars="themeVars">
-            <van-address-list v-model="chosenAddressId" :list="list" default-tag-text="默认" @edit="compile($event)"
-                @select="daGou($event)" :show-add-button="false">
-            </van-address-list>
-        </van-config-provider>
-
+        <div class="list-box">
+            <div class="picture" v-show="list.length == 0"><img src="../assets/images/noAddress.png" alt="">
+                <p>您还没有收获地址哦~</p>
+            </div>
+            <van-config-provider :theme-vars="themeVars">
+                <van-address-list v-model="chosenAddressId" :list="list" default-tag-text="默认" @edit="compile($event)"
+                    @select="daGou($event)" :show-add-button="false">
+                </van-address-list>
+            </van-config-provider>
+        </div>
         <!-- 增加地址 -->
         <div class="bottom">
             <div class="button-box">
@@ -121,12 +124,12 @@ const showPopup = () => {
     diqu.value = ''
     address.value = ''
     checked.value = false
-    console.log('我是更改前', checked.value)
+    // console.log('我是更改前', checked.value)
 }
 
 const changrfalse = (() => {
     getLocation.getShowPopUps(false);
-    console.log('改为falsel了')
+    // console.log('改为falsel了')
 })
 
 //编辑地址
@@ -164,11 +167,11 @@ const getdelete = (() => {
 //打勾的地址
 onMounted(() => {
 
-    console.log('我是地址的Mounted')
-    console.log('我是地址的Mounted', getLocation.ShowPopUps)
+    // console.log('我是地址的Mounted')
+    // console.log('我是地址的Mounted', getLocation.ShowPopUps)
 
     if (getLocation.ShowPopUps == true) {
-        console.log('111')
+        // console.log('111')
         show.value = true;
         if (getLocation.userLocation) {
 
@@ -204,7 +207,7 @@ onMounted(() => {
         }
 
     }
-    console.log('我是地址的Mounted结束')
+    // console.log('我是地址的Mounted结束')
 })
 
 //切换打勾
@@ -231,7 +234,7 @@ const goLocation = () => {
     // getLocation.getShowPopUps(false);
     getLocation.getShowPopUps(false);
 
-    console.log('跳转定位页面')
+    // console.log('跳转定位页面')
 
 
 }
@@ -249,6 +252,8 @@ const addSave = () => {
         show.value = false;
 
     }
+
+    //添加新的地址
     if (name.value && tel.value && address.value && diqu.value != '') {
         let addressList = localStorage.addressList || `[]`;
         addressList = JSON.parse(addressList);
@@ -263,7 +268,7 @@ const addSave = () => {
             smalladdress: address.value,
         });
 
-
+        //变成默认
         for (let i = 0; i < addressList.length; i++) {
             const last = addressList[0].isDefault;
             // console.log(addressList[0])
@@ -302,15 +307,15 @@ const addSave = () => {
 //路由更新
 onBeforeRouteUpdate(() => {
 
-    console.log("路由更新1")
+    // console.log("路由更新1")
     show.value = true;
     getLocation.getShowPopUps(true);
-    console.log("路由更新1,", getLocation.ShowPopUps)
+    // console.log("路由更新1,", getLocation.ShowPopUps)
     if (getLocation.locationShow == true) {
         diqu.value = getLocation.userLocation!.address
         address.value = getLocation.userLocation!.title
     }
-    console.log("路由更新2")
+    // console.log("路由更新2")
 })
 
 
@@ -326,6 +331,7 @@ onBeforeRouteUpdate(() => {
     left: 0;
     right: 0;
     z-index: 13;
+
 }
 
 .bottom {
@@ -366,6 +372,30 @@ onBeforeRouteUpdate(() => {
     }
 }
 
+.list-box {
+    height: 100vh;
+    width: 100vw;
+    // background-color: #ff4569;
+    overflow: auto;
+    padding-bottom: 8vh;
+    // margin-bottom: 100px;
+}
+
+.picture {
+    // background-color: #ff4569;
+    text-align: center;
+
+    img {
+        display: block;
+        width: 80vw;
+        margin: 10px auto;
+    }
+
+    p {
+        color: #aeaeae;
+        font-size: 15px;
+    }
+}
 
 .delete-button {
     height: 100%;

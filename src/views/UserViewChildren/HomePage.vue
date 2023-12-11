@@ -7,43 +7,55 @@
                 </template>
             </van-nav-bar>
         </div>
-        <div class="page-bg">
-        </div>
-        <div class="page-message">
-            <div class="base">
-                <div class="group_item">
-                    <p class="item_l">头像</p>
-                    <div class="item_r">
-                        <van-uploader v-model="fileList" reupload max-count="1" :deletable="false"
-                            accept="image/png, image/jpeg,data:image/jpeg;base64" :after-read="afterRead" />
+        <div class="xiamiande" :style="{ backgroundImage: `url(${bg})` }">
+            <div class="page-bg">
+            </div>
+            <div class="page-message">
+                <div class="base">
+                    <div class="group_item">
+                        <p class="item_l">头像</p>
+                        <div class="item_r">
+                            <van-uploader v-model="fileList" reupload max-count="1" :deletable="false"
+                                accept="image/png, image/jpeg,data:image/jpeg;base64" :after-read="afterRead" />
+                        </div>
                     </div>
-                </div>
-                <div class="group_item">
-                    <p class="item_l">用户id</p>
-                    <div class="item_r">{{ userid.accountName }}</div>
-                </div>
-                <!-- <div class="group_item">
-                    <div class="item_l">昵称</div>
-                    <div class="item_r" @touchmove="niChen" v-show="nichengshow == false">{{ nicheng ||
-                        userid.accountName
-                    }}
+                    <div class="group_item">
+                        <p class="item_l">用户id</p>
+                        <div class="item_r">{{ userid.accountName }}</div>
                     </div>
-                    <div><input type="text" v-show="nichengshow == true" autofocus v-model="nicheng" @focus="niChens" />
-                    </div>
-                </div> -->
-                <div class="group_item">
-                    <div class="item_l">昵称</div>
-                    <div class="item_r" @touchmove="niChen">{{ nicheng ||
-                        userid.accountName
-                    }}
-                    </div>
-                    <input type="text" v-show="nichengshow == true" v-model="nicheng" @blur="niChens" />
 
-                </div>
+                    <div class="group_item">
+                        <div class="item_l">昵称</div>
+                        <div class="item_r" @click="niChen" v-show="nichengshow != true">{{ nicheng ||
+                            userid.accountName
+                        }}
+                        </div>
+                        <input type="text" ref="inputmy" v-show="nichengshow == true" v-model="nicheng" @blur="niChens" />
 
-                <div class="group_item">
-                    <p class="item_l">简介</p>
-                    <div class="item_r">这家伙很懒，什么都没留下!</div>
+                    </div>
+
+                    <div class="group_item">
+                        <p class="item_l">简介</p>
+                        <div class="item_r" @click="showJian" v-show="jianjieshow == false">{{ jianjie || '这家伙很懒，什么都没留下!' }}
+                        </div>
+                        <input type="text" ref="inputmy2" v-show="jianjieshow == true" v-model="jianjie" @blur="niChens" />
+                    </div>
+                    <div class="group_item">
+                        <p class="item_l">我的尺码信息</p>
+                        <div class="item_r"><van-icon name="arrow" /></div>
+                    </div>
+                    <div class="group_item">
+                        <p class="item_l">我的发票助手</p>
+                        <div class="item_r"><van-icon name="arrow" /></div>
+                    </div>
+                    <div class="group_item">
+                        <p class="item_l">我的尺码信息</p>
+                        <div class="item_r"><van-icon name="arrow" /></div>
+                    </div>
+                    <div class="group_item">
+                        <p class="item_l">我的勋章</p>
+                        <div class="item_r"><van-icon name="arrow" /></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,10 +67,17 @@ import { ref, onMounted, getCurrentInstance } from 'vue'
 import { useRouter } from 'vue-router';
 import { accountNumber } from '../../stores/counter'
 import { getPicture } from '../../stores/picture'
+import bg from '../../assets/images/home_bg.png'
+import { nextTick } from 'vue';
+import { usePetNameStore } from "../../stores/counter"
+const store = usePetNameStore()
 const router = useRouter();
 const pictureSrc = getPicture()
 const nicheng = ref('')
+const clicked = ref<number>(1)
 const nichengshow = ref(false)
+const jianjieshow = ref(false)
+const jianjie = ref('')
 // const src = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
 const src = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
 const fileList = ref([
@@ -71,19 +90,85 @@ onMounted(() => {
     // src.value = pictureSrc.pictureurl
 
 })
+const inputmy = ref<HTMLElement>()
+const inputmy2 = ref<HTMLElement>()
+const startTime = ref<number>()
+
+
+//获取焦点
 const niChen = (() => {
-    nichengshow.value = true
+    // console.log("hhh");
+    if (clicked.value == 1) {
+        startTime.value = new Date().getTime();
+        clicked.value++;
+        setTimeout(function () {
+            // console.log('单击');// 单击事件触发
+            clicked.value = 1;
+        }, 300)
+    }
+    if (clicked.value == 2) {
+        clicked.value++;
+    } else {
+        var endTime = new Date().getTime();
+        if ((endTime - startTime.value!) < 300) {
+            // console.log('双击');// 双击事件
+            clicked.value = 1;
+            nichengshow.value = true
+            nextTick(() => {
+                inputmy.value!.focus()
+            })
+
+        }
+    }
 
 })
+const showJian = (() => {
+    if (clicked.value == 1) {
+        startTime.value = new Date().getTime();
+        clicked.value++;
+        setTimeout(function () {
+            console.log('单击');// 单击事件触发
+            clicked.value = 1;
+        }, 300)
+    }
+    if (clicked.value == 2) {
+        clicked.value++;
+    } else {
+        var endTime = new Date().getTime();
+        if ((endTime - startTime.value!) < 300) {
+            // console.log('双击');// 双击事件
+            clicked.value = 1;
+            jianjieshow.value = true
+            nextTick(() => {
+                inputmy2.value!.focus()
+            })
+
+        }
+    }
+})
+onMounted(() => {
+    if (store.userPatname) {
+        // console.log(111);
+        nicheng.value = store.userPatname
+    }
+    if (store.userjianjie) {
+        jianjie.value = store.userjianjie
+    }
+})
+//失去焦点
 const niChens = (() => {
     nichengshow.value = false
+    jianjieshow.value = false
+    store.getUserPatname(nicheng.value)
+    store.getUserjianjie(jianjie.value)
+    // console.log(store.getUserPatname);
 })
 
 const afterRead = (file: any) => {
     // 此时可以自行将文件上传至服务器
     console.log(file);
     pictureSrc.changePicture(file.content)
-    console.log(pictureSrc.pictureurl);
+    // console.log(pictureSrc.pictureurl);
 
 
 };
@@ -102,11 +187,12 @@ const afterRead = (file: any) => {
     right: 0px;
 }
 
-// input {
-//     background-color: #d1d1d1;
-//     border: none;
-//     height: 12px;
-// }
+input {
+    background-color: #ffffff;
+    border: none;
+    height: 11px;
+    width: 21vw;
+}
 
 .page-top {
     // padding: 0px 15px;
@@ -128,7 +214,15 @@ const afterRead = (file: any) => {
 
 .page-bg {
     height: 150px;
-    background: linear-gradient(90deg, #ff777a, #ff4879);
+    // background: linear-gradient(90deg, #ff777a, #ff4879);
+}
+
+.xiamiande {
+    background-position: -70px -60px;
+    background-repeat: no-repeat;
+    background-size: 160%;
+    // background-color: #f5f2f2;
+    height: 100vh;
 }
 
 .page-message {
@@ -151,8 +245,9 @@ const afterRead = (file: any) => {
 
 
     .group_item {
-        margin: 20px;
-        padding-bottom: 20px;
+        padding: 20px;
+        // margin-bottom: 20px;
+        // padding-bottom: 13px;
         display: flex;
         justify-content: space-between;
         align-items: center;

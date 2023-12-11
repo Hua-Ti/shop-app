@@ -20,6 +20,7 @@ import AddressManagement from '../views/AddressManagement.vue'
 import LocationView from '../views/AddressManagementChildren/LocationView.vue'
 import ModuleHome from '../views/HomeChildView/ModuleHome.vue'
 import attentionData from '../views/UserViewChildren/attentionData.vue'
+import MyOrderList from "../views/UserViewChildren/MyOrderList.vue"
 
 
 // 在路由中引入pinia
@@ -147,9 +148,9 @@ const router = createRouter({
       component: () => import("../views/SearchViewChildren/ProductListPageView.vue")
     },
     {
-      path:'/livetest',
-      name:'livetest',
-      component:LiveTest,
+      path: '/livetest',
+      name: 'livetest',
+      component: LiveTest,
     },
     {
       path: '/address-anagement',
@@ -167,15 +168,20 @@ const router = createRouter({
       path: '/moduleHome',
       name: "moduleHome",
       component: ModuleHome
-    },{
-      path:'/project-detail',
-      name:"project-detail",
-      component:()=>import("../views/ProductDetailsView.vue")
+    }, {
+      path: '/project-detail',
+      name: "project-detail",
+      component: () => import("../views/ProductDetailsView.vue")
     },
     {
       path: '/attention',
       name: 'attention',
       component: attentionData,
+    },
+    {
+      path: '/myorder',
+      name: 'myorder',
+      component: MyOrderList
     }
 
   ]
