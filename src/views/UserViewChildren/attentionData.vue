@@ -6,12 +6,14 @@
                 <van-tab title="用户" replace :to="{name:'attention',query:{id:0}}">
                     <div class="atten-item" v-show="attentionlist.attention.length>0">
                         <div class="att-item-list" v-for="(i, index) in attentionlist.attention" :key="index">
-                            <div>
-                                <div class="image" :style="{ backgroundImage: `url(${i.coverImageData.imgUrl})` }"></div>
-                            </div>
-                            <div class="information">
-                                <div class="title">{{ i.actorInfo.uname }}</div>
-                                <div class="content">{{ i.intro }}</div>
+                            <div class="itemList">
+                                <div>
+                                    <div class="image" :style="{ backgroundImage: `url(${i.coverImageData.imgUrl})` }"></div>
+                                </div>
+                                <div class="information">
+                                    <div class="title">{{ i.actorInfo.uname }}</div>
+                                    <div class="content">{{ i.intro }}</div>
+                                </div>
                             </div>
                             <div class="attentionIsArray" @click="cancelTheAttention(i)">已关注</div>
                         </div>
@@ -70,6 +72,7 @@ onMounted(()=>{
         active.value=Number(route.query.id)
     }
 })
+
 
 </script>
 <style lang="scss">
@@ -184,6 +187,10 @@ onMounted(()=>{
         text-align: center;
         font-size: 13px;
 
+    }
+    .itemList{
+        display: flex;
+        align-items: center;
     }
 
 }
