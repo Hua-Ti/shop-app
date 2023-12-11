@@ -1,8 +1,8 @@
 <!-- 瀑布流（热门模块） -->
 <template>
-    <div class="waterfallFlow">
-        <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
+    <div class="waterfallFlowFour">
+        <!-- <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
+            <!-- <div v-masonry class="item-menu" transition-duration="0.3s" item-selector=".item"> -->
                 <div v-masonry-tile class="item" v-for="(item, index) in getCollList" :key="index"
                     @click="liveBroadcastPage(item.itemIdUrl, item.actorIdUrl, item.explainId, item)">
                     <lazy-component lazyComponent=true loading="../assets/images/dianpu.jpg">
@@ -47,8 +47,8 @@
                         <div class="sale">{{ item.sale }}</div>
                     </div>
                 </div>
-            </div>
-        </van-list>
+            <!-- </div> -->
+        <!-- </van-list> -->
     </div>
 </template>
 <script setup lang="ts">
@@ -112,10 +112,13 @@ const onLoad = async () => {
 
 <style lang="scss">
 // 瀑布流内容
-.waterfallFlow {
+.waterfallFlowFour {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     padding: 10px 0px 10px 6px;
     box-sizing: border-box;
-    width: 100vw;
+    width: 98vw;
 
     .item {
         margin-bottom: 10px;
@@ -132,6 +135,7 @@ const onLoad = async () => {
         position: relative;
         // min-height: 157.76px;
         // background-color: #ff4668;
+        height: 220px;
     }
 
     .bigPic {

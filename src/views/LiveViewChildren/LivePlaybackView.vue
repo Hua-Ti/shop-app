@@ -161,7 +161,7 @@ function playVideo() {
 
 // 获取视频总时间
 function getTotalTime() {
-    totalTime.value = video.value.duration;
+    totalTime.value = video.value?.duration;
 }
 
 // 获取当前的播放时间

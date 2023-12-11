@@ -19,7 +19,6 @@ declare module 'vue' {
     VanActionBarButton: typeof import('vant/es')['ActionBarButton']
     VanActionBarIcon: typeof import('vant/es')['ActionBarIcon']
     VanAddressList: typeof import('vant/es')['AddressList']
-    VanBackTop: typeof import('vant/es')['BackTop']
     VanButton: typeof import('vant/es')['Button']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
@@ -56,5 +55,8 @@ declare module 'vue' {
     WaterfallFlowShree: typeof import('./src/components/waterfallFlowShree.vue')['default']
     WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLazy: typeof import('@varlet/ui')['_LazyComponent']
   }
 }

@@ -62,7 +62,7 @@ import mySrc from './assets/icons/my.svg';
     </div>
   </div>
   <div>
-    <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component }" >
       <keep-alive>
         <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" />
       </keep-alive>

@@ -69,6 +69,7 @@ export const collection = defineStore('sc', () => {
         console.log('数据', item)
         collectionData.value = item;
         localStorage.collectionData = JSON.stringify(collectionData.value);
+        console.log('pinia数据',collectionData.value)
     }
 
     const addList = (item: object) => {
