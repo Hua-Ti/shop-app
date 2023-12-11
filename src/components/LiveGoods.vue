@@ -62,7 +62,7 @@
                             <div class="prop-rows--title">{{ item.label }}</div>
                             <div class="prop-rows--content">
                                 <div class="prop-list">
-                                    <div class="prop-item" v-for="(co, i) in goodDetails[index].list"
+                                    <div class="prop-item" v-for="(co, i) in goodDetails[index]?.list"
                                         @click="Handover(co.type, i, co.index)"
                                         :class="{ active: co.index == arr[0] || co.index == arr[1] }">{{ co.name }}</div>
                                     <!-- {{ goodDetails.list }} -->
@@ -94,7 +94,7 @@ import { showToast } from 'vant';
 import { useRouter } from 'vue-router';
 import { onMounted, ref, reactive } from 'vue';
 import { getGood } from '../apic/live-data'
-const props = defineProps(["goods"]);
+const props = defineProps(["goods", "userName"]);
 const shopData = ref();
 const goodsList = ref(true);
 // const showGood = ref(false);
@@ -111,6 +111,10 @@ const colorIndex = ref(0);
 // 尺码高亮
 const sizeIndex = ref(0);
 const token = ref('');
+//颜色信息
+const ChoiceColor = ref("颜色");
+//尺寸信息
+const ChoiceSize = ref("尺码")
 
 
 // const activeIndex = ref(1);
@@ -126,6 +130,8 @@ const onClose = () => {
     // showGood.value = false;
     goodsList.value = true;
     shopData.value = [];
+    ChoiceColor.value = "颜色";
+    ChoiceSize.value = "尺码";
 }
 
 const getShopDetail = async (id: string) => {
@@ -142,6 +148,9 @@ const goShopping = (index: number) => {
         // showGood.value = true;
         count.value = props.goods.length - index;
         getShopDetail(shopData.value.itemId);
+        console.log("shop", shopData.value);
+        console.log(JSON.parse(localStorage.shopCarData));
+
     } else {
         showToast('待秒杀,客官再等等（*＾-＾*）');
     }
@@ -153,10 +162,16 @@ const Handover = (type: string, index: number, dataIndex: number) => {
     if (type === 'style') {
         colorIndex.value = index;
         arr.value[0] = dataIndex;
+        ChoiceColor.value = goodDetails.value[0].list[index].name;
+        goodDetails.value[0].label = "已选"
+        console.log("asas");
     }
     if (type === 'size') {
         sizeIndex.value = index;
         arr.value[1] = dataIndex;
+        ChoiceSize.value = goodDetails.value[1]?.list[index].name;
+
+
     }
 }
 
@@ -184,7 +199,39 @@ let shopCarDataList = reactive({
 let historyShopCartList = ref([] as Array<string>)
 const addShopingInformation = () => {
 
+    console.log(goodDetails.value);
 
+
+    shopCarDataList.shopId = shopData.value.shopId;
+    shopCarDataList.shopName = props.userName;
+    shopCarDataList.imgSrc = shopData.value.image;
+    shopCarDataList.goodsName = shopData.value.title;
+    shopCarDataList.count = value.value;
+    shopCarDataList.price = (shopData.value.defaultPrice / 100).toFixed(2);
+    shopCarDataList.isFreeMail = true;
+    shopCarDataList.id = +new Date();
+    console.log(goodDetails.value[0]?.label);
+
+    if (ChoiceColor.value == "颜色" || goodDetails.value[0].label == "规格") {
+        showToast(`请选择${goodDetails.value[0].label}`);
+    } else if (ChoiceSize.value == "尺码" && goodDetails.value.length > 1) {
+        console.log(ChoiceSize.value);
+
+        showToast(`请选择${goodDetails.value[1].label}`)
+    } else {
+        let historyListshops = localStorage.shopCarData || "[]";
+        historyListshops = JSON.parse(historyListshops);
+        historyShopCartList.value = historyListshops;
+        shopCarDataList.size = ChoiceSize.value;
+        shopCarDataList.style = ChoiceColor.value;
+
+        historyShopCartList.value.push(shopCarDataList);
+
+          // 将数据同步到localStorage中
+          localStorage.shopCarData = JSON.stringify(historyShopCartList.value);
+          showToast("添加成功!")
+          goodsList.value = true;
+    }
 }
 
 </script>
