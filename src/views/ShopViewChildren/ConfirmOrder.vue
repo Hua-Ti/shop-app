@@ -81,7 +81,6 @@
                         <p class="total-shu">共1件</p>
                     </div> -->
 
-
                 </div>
             </div>
             <div class="confirm-bottom">
@@ -93,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, toRaw } from 'vue'
 import type { shopCarData } from '../../typings'
 import { useRouter, RouterView } from 'vue-router';
 import line from '../../assets/images/shop_line.png'
@@ -103,6 +102,7 @@ const addressNeirong = getAddress()
 const router = useRouter();
 
 const data = ref<Array<shopCarData>>([]);
+let newShopCarData: any = [];
 
 const totalPrices = computed(() => {
     let all = 0;
@@ -116,7 +116,12 @@ const totalPrices = computed(() => {
 // 获取数据
 function getData() {
     data.value = JSON.parse(localStorage.buyData || `[]`)
-    console.log(data.value);
+    let aaa = JSON.parse(localStorage.buyData || `[]`)
+    console.log('我是aaa', aaa)
+    console.log('我是data.value', data.value)
+    // 获取旧shopCar
+    newShopCarData = JSON.parse(localStorage.shopCarData)
+    // console.log(data.value);
 }
 
 onMounted(() => {
@@ -125,16 +130,26 @@ onMounted(() => {
 
 const value = ref('');
 
-onMounted(() => {
-    console.log('我是确认的Mounted')
-})
-
 
 const onSubmit = () => {
     if (!addressNeirong.address) {
         showToast('请选择地址');
     } else {
+        // console.log(data.value)
+        const curData = toRaw(data.value);
+
+        // 筛选已经购买的商品
+        for (let i = 0; i < curData.length; i++) {
+            const shopE = curData[i];
+            newShopCarData = newShopCarData.filter((e: any) => {
+                return e.id != shopE.id;
+            })
+        }
+        // console.log(newShopCarData);
+
         localStorage.buyData = '[]';
+        localStorage.shopCarData = JSON.stringify(newShopCarData);
+
         router.replace({ name: 'pay' })
     }
 }
@@ -370,5 +385,9 @@ const onSubmit = () => {
     .total-dian {
         padding-top: 1px;
     }
+}
+
+.mainBox {
+    margin-bottom: 6px;
 }
 </style>

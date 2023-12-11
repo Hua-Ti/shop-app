@@ -6,7 +6,7 @@
                 <van-icon name="arrow-left" />
             </span>
             <input type="text" :placeholder="keyWord" class="input" @click="router.push({
-                name:'search'
+                name: 'search'
             })">
         </div>
 
@@ -28,7 +28,7 @@
                 <input type="number" v-model="option.maxPrice" :placeholder="option.maxPrice.toString()">
             </div>
             <van-button class="myBtn" @click="changeMoney(option.minPrice.toString(), option.maxPrice.toString())"
-            color="linear-gradient(to right, #ff4268, #ff2989)">
+                color="linear-gradient(to right, #ff4268, #ff2989)">
                 确认
             </van-button>
         </van-popup>
@@ -41,7 +41,7 @@
                         @click="projectDetailPage(item.tradeItemId)" />
                 </div>
             </van-list>
-            <van-back-top  class="buttonTop" right="13vw" bottom="10vh" />
+            <van-back-top class="buttonTop" right="13vw" bottom="10vh" />
         </div>
         <div v-else>
             <div class="noshopping">
@@ -137,10 +137,11 @@ const changeCondition = async (name: string) => {
 </script>
 
 <style lang="scss">
-.buttonTop{
+.buttonTop {
     background-color: #ff4466;
     opacity: .8;
 }
+
 .shopping-List {
     width: 100vw;
     position: relative;
@@ -243,6 +244,7 @@ const changeCondition = async (name: string) => {
     font-size: 15px;
 
     .price {
+        color: var(--subject-color);
         width: 330px;
         margin-top: 20px;
         display: flex;

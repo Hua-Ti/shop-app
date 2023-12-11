@@ -496,7 +496,7 @@ const initScroll1 = (index: number) => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .left-attow {
     .van-button__content {
         color: #f46;

@@ -11,7 +11,7 @@
         </van-nav-bar>
 
         <!-- 加购商品 -->
-        <div class="main">
+        <div class="main wrap" :ref="el => scrollEl = el as HTMLElement">
             <div class="shop-item">
                 <van-checkbox-group v-model="checked" ref="checkboxGroup" icon-size="16" checked-color="#ff4569">
                     <!-- 商品渲染 -->
@@ -62,9 +62,13 @@
 
         <!-- 结算选择 -->
         <div class="settlement">
-            <van-checkbox v-model="isCheckAll" icon-size="14" checked-color="#ff4569">
-                <p @click="checkAll">全选</p>
+            <van-checkbox v-model="isCheckAll" icon-size="14" checked-color="#ff4569" :label-disabled="true">
+                <p @click="allChecked">全选</p>
             </van-checkbox>
+
+            <div class="trashCan" @click="deleteData">
+                <van-icon name="delete-o" />
+            </div>
 
             <div class="allPrice-box">
                 <p class="allPrice">¥{{ totalPrice }}</p>
@@ -78,10 +82,27 @@
 </template>
 
 <script setup lang="ts" name="shop">
-import { ref, toRaw, computed, onMounted, watch } from 'vue';
+import type { shopCarData } from '../typings'
+import { ref, toRaw, computed, onMounted, watch, nextTick, onUnmounted } from 'vue';
 import { showToast } from 'vant';
+import BScroll from '@better-scroll/core'
 import { useRouter, RouterView } from 'vue-router';
 const router = useRouter();
+
+// BScroll 父容器dom元素
+const scrollEl = ref<HTMLElement>()
+// BS实例对象
+const bs = ref<BScroll>();
+
+// 初始化bs
+const initalBS = () => {
+    if (!bs.value) {
+        bs.value = new BScroll(scrollEl.value!, {
+            click: true, // 内部子元素可以被点击
+            bounce: false
+        })
+    }
+}
 
 let length = ref(0);
 const isCheckAll = ref(false);
@@ -93,9 +114,15 @@ const checked = ref([]);
 const checkboxGroup = ref();
 let allNum = ref(0);
 
-// 切换全选
-function checkAll() {
-
+// 全选
+function allChecked() {
+    if (isCheckAll.value) {
+        isCheckAll.value = false;
+        checkboxGroup.value.toggleAll(false);
+    } else {
+        isCheckAll.value = true;
+        checkboxGroup.value.toggleAll(true);
+    }
 }
 
 // 获取localstorage
@@ -106,6 +133,9 @@ function getLocalShopCarData() {
 
 onMounted(() => {
     getLocalShopCarData();
+    nextTick(() => {
+        initalBS();
+    })
 })
 
 const curLength = computed(() => {
@@ -140,6 +170,61 @@ watch(checked, () => {
     totalPrice.value = curPrice.toFixed(2)
 })
 
+watch(() => shopData, () => {
+    // console.log(111)
+    // 监听全选
+    if (checked.value.length == shopData.value.length) {
+        isCheckAll.value = true;
+    } else {
+        isCheckAll.value = false;
+    }
+
+    // 计算价格
+    let curPrice = 0;
+    for (let i = 0; i < shopData.value.length; i++) {
+        const shopE = shopData.value[i]
+        // 循环对比id
+        for (let j = 0; j < checked.value.length; j++) {
+            const checkedE = checked.value[j];
+            if (checkedE == shopE.id) {
+                curPrice += Number(shopE.price) * shopE.count;
+            }
+        }
+    }
+    totalPrice.value = curPrice.toFixed(2)
+}, { deep: true })
+
+let newShopCarData: Array<shopCarData> = [];
+const isDelete = ref(false);
+
+// 删除选中
+function deleteData() {
+    // 获取旧数据
+    newShopCarData = JSON.parse(localStorage.shopCarData)
+
+    // 获取选择的id
+    const checkedData = toRaw(checked.value);
+
+    // 筛选已经购买的商品
+    for (let i = 0; i < checkedData.length; i++) {
+        const shopE = checkedData[i];
+        newShopCarData = newShopCarData.filter((e: any) => {
+            return e.id != shopE;
+        })
+    }
+
+    // console.log(newShopCarData)
+    // 转存数据
+    localStorage.shopCarData = JSON.stringify(newShopCarData);
+
+    isDelete.value = !isDelete.value;
+}
+
+// 数据监听来更新local
+watch(isDelete, () => {
+    getLocalShopCarData();
+})
+
 
 const buyData: any = [];
 
@@ -172,12 +257,19 @@ function theSubmit() {
     router.push({ name: 'confirmorder' })
     // console.log(buyData.value)
 }
-onMounted(() => {
-    console.log('我是购物车的Mounted')
+
+// 卸载bs
+onUnmounted(() => {
+    bs.value?.destroy();
 })
 </script>
 
 <style lang="scss" scoped>
+.wrap {
+    height: 100vh;
+    margin-bottom: 52px;
+}
+
 .shopBox {
     position: fixed;
     top: 0;
@@ -193,6 +285,7 @@ onMounted(() => {
 .settlement {
     height: 50px;
     border-top: 1px solid gainsboro;
+    background-color: white;
     padding: 0 10px;
     display: flex;
     align-items: center;
@@ -338,5 +431,10 @@ onMounted(() => {
         border: none;
         background-color: #f7f7f7;
     }
+}
+
+.trashCan {
+    position: absolute;
+    left: 100px;
 }
 </style>

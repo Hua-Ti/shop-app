@@ -224,7 +224,7 @@
             </div>
             <div class="goods-bottom">
                 <button class="addShop" @click="storeDataToShop">加入购物车</button>
-                <button class="gotoShop">立即购买</button>
+                <button class="gotoShop" @click="gotoBuy">立即购买</button>
             </div>
             <div class="shopCar" v-show="shopShowBottom" @click="gotoShop">
                 <van-icon name="shopping-cart-o" size="16" />
@@ -237,7 +237,7 @@
 import { ref, onMounted } from 'vue';
 import { showConfirmDialog } from 'vant';
 import { getPlaybackComment, getPlaybackGoodsShop } from '../apic/live-data'
-import type { getPlaybackCommentItem, getPlaybackBuyData, getPlaybackItemExplainSkuTopTitle_taglist, shopCarData } from '../typings';
+import type { getPlaybackCommentItem, getPlaybackBuyData, getPlaybackItemExplainSkuTopTitle_taglist } from '../typings';
 import { useRouter } from 'vue-router';
 import { collection } from '../stores/bgChange';
 
@@ -428,6 +428,19 @@ function addSizeActiveClass(curId: number, curSize: string) {
     sizeName.value = curSize;
 }
 
+// 保存数据
+function saveShopData() {
+    curShopCarData.id = new Date().getTime();
+    curShopCarData.imgSrc = allImgSrc.value;
+    curShopCarData.size = sizeName.value;
+    curShopCarData.shopId = shopGoodsData.value?.shopInfo.shopId!;
+    curShopCarData.goodsName = shopGoodsData.value!.skuInfo.title;
+    curShopCarData.count = goodsHowNum.value;
+    curShopCarData.shopName = props.authorName!;
+    curShopCarData.price = props.goodsPrice!;
+    curShopCarData.style = colorName.value!;
+}
+
 // 点击提交到购物车
 function storeDataToShop() {
     let token = localStorage.token;
@@ -443,37 +456,33 @@ function storeDataToShop() {
             .catch(() => {
             });
     } else {
-        curShopCarData.id = new Date().getTime();
-        curShopCarData.imgSrc = allImgSrc.value;
-        curShopCarData.size = sizeName.value;
-        curShopCarData.shopId = shopGoodsData.value?.shopInfo.shopId!;
-        curShopCarData.goodsName = shopGoodsData.value!.skuInfo.title;
-        curShopCarData.count = goodsHowNum.value;
-        curShopCarData.shopName = props.authorName!;
-        curShopCarData.price = props.goodsPrice!;
-        curShopCarData.style = colorName.value!;
+        // 保存数据
+        saveShopData();
         // console.log(curShopCarData)
 
         // 存入localStorage里
         let localShopCarData = JSON.parse(localStorage.shopCarData || '[]')
         // console.log(localShopCarData);
-        let length = localShopCarData.length;
         if (localShopCarData.length > 0) {
 
-            // 循环遍历是否已经存在同款商品
-            for (let i = 0; i < length; i++) {
-                const e = localShopCarData[i];
+            // 筛选已经购买的商品
+            let newShopCarData = localShopCarData.filter((e: any) => {
                 if (e.shopId == curShopCarData.shopId && e.goodsName == curShopCarData.goodsName && e.style == curShopCarData.style && e.size == curShopCarData.size) {
-                    e.count++;
-                } else {
-                    localShopCarData.push(curShopCarData)
+                    e.count += curShopCarData.count;
+                    return e;
                 }
+            })
+
+            console.log(newShopCarData)
+
+            if (newShopCarData.length == 0) {
+                localShopCarData.push(curShopCarData);
             }
         } else {
             localShopCarData.push(curShopCarData);
         }
 
-        // console.log(localShopCarData);
+        console.log(localShopCarData);
         localStorage.shopCarData = JSON.stringify(localShopCarData)
 
         shopShowBottom.value = false;
@@ -499,6 +508,32 @@ function gotoShop() {
         router.replace({ name: 'shop' })
     }
 }
+
+// 立即购买
+function gotoBuy() {
+    let token = localStorage.token;
+    if (!token) {
+        showConfirmDialog({
+            title: '还没登录噢(๑˙ー˙๑)',
+            message: '现在是否去登录?',
+            confirmButtonColor: "#ff4569",
+        })
+            .then(() => {
+                router.replace({ name: 'login' })
+            })
+            .catch(() => {
+                console.log(111)
+            });
+    } else {
+        // 保存数据
+        saveShopData();
+        // console.log(curShopCarData)
+        let changeArr = [curShopCarData];
+        localStorage.buyData = JSON.stringify(changeArr)
+        router.replace({ name: 'confirmorder' })
+    }
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -784,6 +819,9 @@ function gotoShop() {
 
 .customer-comment {
     max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .item {
