@@ -194,7 +194,7 @@ onMounted(async () => {
 
     // 显示是否关注
     attentionlist.attention.map((item: any) => {
-        console.log('列表', item.actUserId)
+        // console.log('列表', item.actUserId)
         if (roomData.value.actUserId == item.actUserId) {
             flag.value = false;
         }

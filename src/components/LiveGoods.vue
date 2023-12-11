@@ -1,7 +1,7 @@
 <!-- 直播间商品列表 -->
 <template>
-    <div class="sell-bag" v-if="goodsList">
-        <div class="goods-count">全部商品 {{ goods.length }}</div>
+    <div class="sell-bag" v-show="goodsList">
+        <div class="goods-count">全部商品 {{ goods?.length }}</div>
         <div class="goods-item-list-wrap">
             <div class="goods-item flex" v-for="(g, index) in goods" :key="index">
                 <div class="goods-img" :style="{ backgroundImage: `url(${g.image})` }">
@@ -31,15 +31,15 @@
         </div>
     </div>
 
-    <div class="buy-bag" v-else>
+    <div class="buy-bag" v-show="!goodsList">
         <div class="close" @click="onClose">
             <van-icon name="cross" color="#989898" size="22" />
         </div>
         <!-- 商品信息 -->
         <div class="goods-info">
-            <div class="goods-pic" v-if="skuBarInfo.length > 0"
+            <div class="goods-pic" v-if="skuBarInfo?.length > 0"
                 :style="{ backgroundImage: `url(${skuBarInfo[colorIndex].image})` }"></div>
-            <div class="goods-pic" v-else :style="{ backgroundImage: `url(${shopData.image})` }"></div>
+            <div class="goods-pic" v-else :style="{ backgroundImage: `url(${shopData?.image})` }"></div>
 
             <div class="goods-detail">
                 <div class="title-wrap">
@@ -47,9 +47,9 @@
                         <div class="goods-index">{{ count }}号</div>
                         <div class="goods-tag goods-tag--seckill">秒杀中</div>
                     </div>
-                    <div class="goods-title">{{ shopData.title }}</div>
+                    <div class="goods-title">{{ shopData?.title }}</div>
                 </div>
-                <div class="goods-price-wrap">￥{{ (shopData.defaultPrice / 100).toFixed(2) }}</div>
+                <div class="goods-price-wrap">￥{{ (shopData?.defaultPrice / 100).toFixed(2) }}</div>
             </div>
         </div>
         <!-- 商品底部信息 -->
@@ -58,14 +58,14 @@
                 <div class="scroll">
                     <div class="prop">
                         <!-- 颜色与尺码 -->
-                        <div class="prop-rows" v-for="(item, index) in goodDetails" v-if="goodDetails.length > 0">
+                        <div class="prop-rows" v-for="(item, index) in goodDetails" v-if="goodDetails?.length > 0">
                             <div class="prop-rows--title">{{ item.label }}</div>
                             <div class="prop-rows--content">
                                 <div class="prop-list">
                                     <div class="prop-item" v-for="(co, i) in goodDetails[index].list"
                                         @click="Handover(co.type, i, co.index)"
                                         :class="{ active: co.index == arr[0] || co.index == arr[1] }">{{ co.name }}</div>
-                                    {{ goodDetails.list }}
+                                    <!-- {{ goodDetails.list }} -->
                                 </div>
                             </div>
                         </div>
@@ -81,10 +81,10 @@
                 </div>
 
             </div>
-                <van-action-bar @click="BuyHandle">
-                    <van-action-bar-button color="#be99ff" type="warning" text="加入购物车" />
-                    <van-action-bar-button color="#7232dd" type="danger" text="立即购买" />
-                </van-action-bar>
+            <van-action-bar @click="BuyHandle">
+                <van-action-bar-button color="#be99ff" type="warning" text="加入购物车" @click.stop="addShopingInformation" />
+                <van-action-bar-button color="#7232dd" type="danger" text="立即购买" />
+            </van-action-bar>
         </div>
     </div>
 </template>
@@ -92,11 +92,12 @@
 <script setup lang="ts">
 import { showToast } from 'vant';
 import { useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { getGood } from '../apic/live-data'
 const props = defineProps(["goods"]);
 const shopData = ref();
 const goodsList = ref(true);
+// const showGood = ref(false);
 const count = ref();
 const goodDeta = ref();
 const router = useRouter();
@@ -120,9 +121,11 @@ onMounted(() => {
     // console.log(props.goods);
 })
 
-const onClose = () =>{
-    arr.value = [0,0];
-    goodsList.value = true
+const onClose = () => {
+    arr.value = [0, 0];
+    // showGood.value = false;
+    goodsList.value = true;
+    shopData.value = [];
 }
 
 const getShopDetail = async (id: string) => {
@@ -130,21 +133,18 @@ const getShopDetail = async (id: string) => {
     goodDeta.value = data.result;
     goodDetails.value = data.result.skuInfo.props;
     skuBarInfo.value = data.result.skuBarInfo.list
-    // console.log("sas", goodDeta.value);
 }
 
 const goShopping = (index: number) => {
     if (props.goods[index].seckill) {
         shopData.value = props.goods[index];
         goodsList.value = false;
+        // showGood.value = true;
         count.value = props.goods.length - index;
-        console.log("asas", shopData.value);
-
         getShopDetail(shopData.value.itemId);
     } else {
         showToast('待秒杀,客官再等等（*＾-＾*）');
     }
-    // console.log(shopData.value);
 
 }
 
@@ -160,17 +160,31 @@ const Handover = (type: string, index: number, dataIndex: number) => {
     }
 }
 
-const BuyHandle = () =>{
-    console.log(token.value);
-    
-    if(!token.value){
-        console.log("asassas");
-        
+const BuyHandle = () => {
+    if (!token.value) {
         router.push({
-            name:"authorization",
+            name: "authorization",
         })
     }
-    
+
+}
+let shopCarDataList = reactive({
+    shopId: "",
+    shopName: "",
+    imgSrc: "",
+    goodsName: "",
+    count: 1,
+    size: "",
+    price: "",
+    isFreeMail: true,
+    style: "",
+    id: 0,
+})
+// 确保historyLists是一个字符串数组
+let historyShopCartList = ref([] as Array<string>)
+const addShopingInformation = () => {
+
+
 }
 
 </script>
@@ -179,12 +193,15 @@ const BuyHandle = () =>{
     .van-stepper__input {
         background-color: snow;
     }
-    .van-action-bar{
+
+    .van-action-bar {
+        padding: 0px 12px;
         background: none;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
     }
-    .van-action-bar-button{
-        height: 50px;
+
+    .van-action-bar-button {
+        height: 40px;
     }
 }
 </style>

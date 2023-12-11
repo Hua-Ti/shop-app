@@ -60,10 +60,8 @@ onMounted(async () => {
     liveList.value = data.tabs.items;
     page.value = 1;
     getLivesList();
-    console.log(liveList.value);
+    // console.log(liveList.value);
     // console.log("assasas",attentionlist.attention);
-
-
 
 });
 
@@ -94,7 +92,7 @@ const getLivesList = (async () => {
     loading.value = false
     filterShow.value = false
     refreshing.value = false
-    finished.value = false
+    finished.value = true
     // console.log("a",liveData.value);
     // console.log("b",attentionlist.attention);
 
