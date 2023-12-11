@@ -133,6 +133,7 @@ function getLocalShopCarData() {
 
 onMounted(() => {
     getLocalShopCarData();
+    isCheckAll.value = false;
     nextTick(() => {
         initalBS();
     })

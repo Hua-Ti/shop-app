@@ -191,7 +191,7 @@ router.beforeEach((to) => {
   // console.log(to.name)
   // console.log(store.fromName)
 
-  if (name == 'attention' || name == 'user' || name == 'shop') {
+  if (name == 'collection' || name == 'user' || name == 'shop') {
 
     store.changeFromName(name as string);
 
