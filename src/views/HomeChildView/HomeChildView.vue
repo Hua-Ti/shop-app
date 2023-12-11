@@ -41,7 +41,7 @@
                 <van-swipe :autoplay="3000" lazy-render @change="onChange">
                     <van-swipe-item v-for="(image, a) in images" :key="image">
                         <lazy-component>
-                            <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
+                            <img :src="image" v-lazy="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
                         </lazy-component>
                     </van-swipe-item>
                 </van-swipe>
@@ -131,7 +131,7 @@ async function fn(pid: string) {
 }
 const onChange = (index: string) => {
     console.log('当前 Swipe 索引：' + index);
-    bgChange.changeColor(index);
+    bgChange.changeColor(index); 
 }
 
 onMounted(async () => {
@@ -154,9 +154,6 @@ onMounted(async () => {
 // 监听路由变化，来跳转页面
 watch(() => route.query,
     (newVa, oldVal) => {
-        // console.log(66666);
-
-        // console.log(newVa, oldVal)
         if (newVa.pid !== '666' && pid !== undefined) {
             fn(newVa.pid as string);
         }

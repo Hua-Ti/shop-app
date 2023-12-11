@@ -76,6 +76,7 @@ const props = defineProps(['getHomeC', 'getCollList'])
 function liveBroadcastPage(itemUrlId: string, actorUrlId: string, explainId: string, item: any) {
     // 记录点击数据
     collectDataList.repalceData(item);
+    
 
     router.push({
         name: 'livePlayback',

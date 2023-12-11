@@ -56,4 +56,7 @@ declare module 'vue' {
     WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
   }
+  export interface ComponentCustomProperties {
+    vLazy: typeof import('@varlet/ui')['_LazyComponent']
+  }
 }

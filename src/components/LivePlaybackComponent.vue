@@ -375,6 +375,7 @@ onMounted(() => {
     // console.log(props.itemUrlId, props.actorUrlId);
     collec();
     console.log('uid', collectDataList.collectionData.videoId, collectDataList.collectionData.itemId)
+
 })
 
 // 评论区弹出框
@@ -405,7 +406,9 @@ function collectionList() {
 function collec() {
     collectDataList.collectionDataList.map((item: any, index: number) => {
         if (collectDataList.collectionData == item) {
+        // if (localStorage.collectionData == item) {
             flag.value = false;
+            console.log('相同')
         }
     })
 }
