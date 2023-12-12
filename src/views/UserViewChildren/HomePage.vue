@@ -14,7 +14,10 @@
                 <div class="base">
                     <div class="group_item">
                         <p class="item_l">头像</p>
-                        <div class="item_r">
+                        <div>
+                            <van-image class="img-bg" width="2.3rem" height="2.3rem" :src="pictureSrc.pictureurl || ssss" />
+                        </div>
+                        <div class="item_r tuatua">
                             <van-uploader v-model="fileList" reupload max-count="1" :deletable="false"
                                 accept="image/png, image/jpeg,data:image/jpeg;base64" :after-read="afterRead" />
                         </div>
@@ -78,21 +81,27 @@ const clicked = ref<number>(1)
 const nichengshow = ref(false)
 const jianjieshow = ref(false)
 const jianjie = ref('')
-// const src = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
 const src = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
+const ssss = ref(new URL('../../assets/images/user_touxiang.png', import.meta.url).href)
+
 const fileList = ref([
     { url: src },
 ]);
 const userid = accountNumber()
 
-onMounted(() => {
-    console.log('主页的onMounted');
-    // src.value = pictureSrc.pictureurl
 
-})
+
+
 const inputmy = ref<HTMLElement>()
 const inputmy2 = ref<HTMLElement>()
 const startTime = ref<number>()
+
+const afterRead = (file: any) => {
+    // 此时可以自行将文件上传至服务器
+    console.log(file);
+    pictureSrc.changePicture(file.content)
+    // console.log(pictureSrc.pictureurl);
+};
 
 
 //获取焦点
@@ -164,14 +173,6 @@ const niChens = (() => {
     // console.log(store.getUserPatname);
 })
 
-const afterRead = (file: any) => {
-    // 此时可以自行将文件上传至服务器
-    console.log(file);
-    pictureSrc.changePicture(file.content)
-    // console.log(pictureSrc.pictureurl);
-
-
-};
 
 //返回上一级
 
@@ -185,6 +186,7 @@ const afterRead = (file: any) => {
     bottom: 0;
     left: 0px;
     right: 0px;
+    z-index: 15;
 }
 
 input {
@@ -215,6 +217,13 @@ input {
 .page-bg {
     height: 150px;
     // background: linear-gradient(90deg, #ff777a, #ff4879);
+}
+
+.tuatua {
+    position: absolute;
+    left: 69%;
+    top: 18%;
+    opacity: 0;
 }
 
 .xiamiande {
@@ -249,6 +258,7 @@ input {
         // margin-bottom: 20px;
         // padding-bottom: 13px;
         display: flex;
+        position: relative;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid #ededed;
