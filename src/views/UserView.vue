@@ -6,7 +6,8 @@
                 <div class="user-message">
                     <div>
 
-                        <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem" :src="src" />
+                        <van-image class="img-bg" @click="gotoHomepage" round width="2.3rem" height="2.3rem"
+                            :src="pictureSrc.pictureurl || src" />
                     </div>
                 </div>
                 <div class="user_white">
@@ -68,9 +69,12 @@
                 <p>我的订单</p><span>全部 &gt;</span>
             </div>
             <div class="user-five">
-                <div>
+                <!-- <div>
                     <i class="iconfont">&#xe69a;<span class="nav-title"
                             @click="router.push({ name: 'myorder', query: { id: 0 } })">待付款</span></i>
+                </div> -->
+                <div>
+                    <i class="iconfont">&#xe69a;<span class="nav-title" @click="goOne">待付款</span></i>
                 </div>
                 <div>
                     <i class="iconfont">&#xe62c;<span class="nav-title"
@@ -194,6 +198,10 @@ function attention() {
     router.push({ name: 'attention' })
 }
 
+function goOne() {
+    console.log(2222)
+    router.push({ name: 'myorder', query: { id: 0 } })
+}
 
 </script>
 
