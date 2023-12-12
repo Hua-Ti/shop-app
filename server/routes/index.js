@@ -33,7 +33,6 @@ router.post('/api/queryOrder', function (req, res, next) {
       url:resData,
       method:'get'
     }).then(data => {
-
       let r = data.data.alipay_trade_query_response;
       if(r.code === '10000'){// 接口调用成功
         switch (r.trade_status) {

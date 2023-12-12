@@ -105,7 +105,6 @@ watch(() => bgChange.bgColorIndex, (newVal, oldVal) => {
     }
 
     .headTwo {
-        // background-color: burlywood;
         background: none;
         background-color: v-bind(changeColor);
         height: 97.99px;
@@ -113,7 +112,6 @@ watch(() => bgChange.bgColorIndex, (newVal, oldVal) => {
 
     .head-top {
         width: 95vw;
-        // background-color: aqua;
     }
 
     // 头部搜索

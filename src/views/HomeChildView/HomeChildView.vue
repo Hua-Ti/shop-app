@@ -4,7 +4,7 @@
     <div class="homeChild" v-if="route.query.pid === '666' || route.query.pid == undefined">
         <!-- 首页二级模块 -->
         <homeTwoModule :homeNav="homeNav" />
-
+        <div><a href="http://localhost:8080/#/imclient">客服</a></div>
         <!-- 限时快抢模块 -->
         <div class="goodList">
             <!-- 限时快抢 -->
@@ -38,11 +38,14 @@
             <!-- 轮播图 -->
             <div class="broadcastMap">
                 <!-- <lazy-component> -->
-                <van-swipe :autoplay="3000" lazy-render @change="onChange">
+                <!-- 无懒加载lazy-render -->
+                <van-swipe :autoplay="3000"  @change="onChange">
+                <!-- 有懒加载lazy-render -->
+                <!-- <van-swipe :autoplay="3000" lazy-render @change="onChange"> -->
                     <van-swipe-item v-for="(image, a) in images" :key="image">
-                        <lazy-component>
-                            <img :src="image" v-lazy="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
-                        </lazy-component>
+                        <!-- <lazy-component> -->
+                        <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
+                        <!-- </lazy-component> -->
                     </van-swipe-item>
                 </van-swipe>
                 <!-- </lazy-component> -->
@@ -131,7 +134,7 @@ async function fn(pid: string) {
 }
 const onChange = (index: string) => {
     console.log('当前 Swipe 索引：' + index);
-    bgChange.changeColor(index); 
+    bgChange.changeColor(index);
 }
 
 onMounted(async () => {

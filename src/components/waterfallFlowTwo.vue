@@ -57,6 +57,7 @@ const props = defineProps(['pid'])
 
 // 获取数据
 async function fuc(pid: string) {
+    console.log('changeCount',count.value)
     // 异步更新数据
     let HomeContentData: any = await getHomeContentTwo(pid, count.value);
     for (let i = 0; i < HomeContentData.result.wall.docs.length; i++) {
@@ -81,14 +82,17 @@ function product(id: string) {
     })
 }
 
-const onLoad = async () => {
+const onLoad = () => {
     console.log(22, props.pid)
     fuc(props.pid)
 };
 // 监听路由变化，来跳转页面
 watch(() => route.query.pid,
     (newVa, oldVal) => {
-        // console.log(newVa, oldVal)
+        console.log(newVa, oldVal)
+        count.value=1
+        console.log('count',count.value)
+        
         if (newVa !== '666') {
             console.log(3333, props.pid)
             ContTwoList.value.length = 0;
