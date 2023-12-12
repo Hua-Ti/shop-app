@@ -67,23 +67,28 @@
             <div class="order-box">
                 <p>我的订单</p><span>全部 &gt;</span>
             </div>
-            <div class="user-five" @click="router.push({ name: 'myorder' })">
+            <div class="user-five">
                 <div>
-                    <i class="iconfont">&#xe69a;<span class="nav-title">待付款</span></i>
+                    <i class="iconfont">&#xe69a;<span class="nav-title"
+                            @click="router.push({ name: 'myorder', query: { id: 0 } })">待付款</span></i>
                 </div>
                 <div>
-                    <i class="iconfont">&#xe62c;<span class="nav-title">待发货</span></i>
+                    <i class="iconfont">&#xe62c;<span class="nav-title"
+                            @click="router.push({ name: 'myorder', query: { id: 1 } })">待发货</span></i>
 
                 </div>
                 <div>
-                    <i class="iconfont">&#xe669;<span class="nav-title">待收获</span></i>
+                    <i class="iconfont">&#xe669;<span class="nav-title"
+                            @click="router.push({ name: 'myorder', query: { id: 2 } })">待收获</span></i>
 
                 </div>
                 <div>
-                    <i class="iconfont">&#xe6ab;<span class="nav-title">评价</span></i>
+                    <i class="iconfont">&#xe6ab;<span class="nav-title"
+                            @click="router.push({ name: 'myorder', query: { id: 3 } })">评价</span></i>
                 </div>
                 <div>
-                    <i class="iconfont">&#xe686;<span class="nav-title">退款售后</span></i>
+                    <i class="iconfont">&#xe686;<span class="nav-title"
+                            @click="router.push({ name: 'myorder', query: { id: 4 } })">退款售后</span></i>
                 </div>
             </div>
 
@@ -277,7 +282,7 @@ function attention() {
             width: 20vw;
             height: 9vh;
             border-radius: 50%;
-            z-index: 15;
+            z-index: 1;
         }
     }
 }
