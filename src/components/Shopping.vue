@@ -9,7 +9,7 @@
             <span>{{ props.title }}</span>
         </div>
         <div class="price-group">
-            <span class="price">￥{{ props.price }}</span>
+            <span class="price">¥{{ props.price }}</span>
             <span>{{ props.cfav }} <van-icon name="star-o" /></span>
         </div>
     </div>
@@ -43,20 +43,25 @@ const props = defineProps(["tradeItemId", "img", "title", "leftbottom_taglist", 
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
-        .advertising{
+
+        .advertising {
             padding: 3px;
             background-color: #fafafa;
             color: #c2c2c2;
             margin-right: 5px;
         }
     }
-    .price-group{
+
+    .price-group {
         display: flex;
         padding: 10px 10px 5px;
         justify-content: space-between;
-        font-size: 13px;
+        align-items: center;
+        font-size: 10px;
         font-weight: bold;
-        .price{
+        color: var(--subject-color);
+
+        .price {
             font-size: 16px;
             color: #000;
         }

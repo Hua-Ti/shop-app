@@ -4,19 +4,19 @@
         <div class="head-nav">
             <van-tabs v-model:active="active">
                 <van-tab title="收藏视频" replace :to="{ name: 'collection', query: { id: 0 } }">
-                    <div v-show="collectDataList.collectionDataList.length>0">
+                    <div v-show="collectDataList.collectionDataList.length > 0">
                         <waterfallFlowFour :getCollList="collectDataList.collectionDataList" />
                         <!-- <div class="more">没有更多了~~</div> -->
                     </div>
-                    <div v-show="collectDataList.collectionDataList.length<1">
+                    <div v-show="collectDataList.collectionDataList.length < 1">
                         <div class="aShop" v-show='!collectDataList.collectionDataList'>
-                        <img src="../assets/images/dianpu.jpg" alt="">
-                        <div>你还没有收藏任何视频哦~~</div>
-                    </div>
+                            <img src="../assets/images/dianpu.jpg" alt="">
+                            <div>你还没有收藏任何视频哦~~</div>
+                        </div>
                     </div>
                 </van-tab>
                 <van-tab title="收藏商品" replace :to="{ name: 'collection', query: { id: 1 } }">
-                    <div v-show="newData.length>0">
+                    <div v-show="newData.length > 0">
                         <div class="atten-item">
                             <div class="att-item-list" v-for="(i, index) in newData" :key="index">
                                 <div>
@@ -32,7 +32,7 @@
                         </div>
                         <div class="more">没有更多了~~</div>
                     </div>
-                    <div class="aShop" v-show='newData.length<1'>
+                    <div class="aShop" v-show='newData.length < 1'>
                         <img src="../assets/images/dianpu.jpg" alt="">
                         <div>你还没有收藏任何商品哦~~</div>
                     </div>
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useRouter,useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { collection, collectionProduct } from '../stores/bgChange';
 import waterfallFlowFour from '../components/waterfallFlowFour.vue';
 import { showConfirmDialog } from 'vant';
@@ -53,10 +53,10 @@ import { getProdectDetails } from "../apic/search";
 
 
 const router = useRouter();
-const route=useRoute();
+const route = useRoute();
 const collectDataList = collection();
 const collectProduct = collectionProduct();
-const newData=ref([])
+const newData = ref([]) as any;
 
 
 let active = ref(0);
@@ -76,25 +76,25 @@ function cancelTheAttention(contentId: string) {
     })
         .then(() => {
             // 确定
-            collectProduct.removeProduct(contentId)
+            collectProduct.removeProduct(contentId as any)
             scData();
         })
         .catch(() => {
             // 取消
         });
 };
-async function scData(){
-    newData.value=[]
-    for (let i=0;i<collectProduct.collectionDataProduct?.length;i++){
-        let data= await getProdectDetails(collectProduct.collectionDataProduct[i]);
+async function scData() {
+    newData.value = []
+    for (let i = 0; i < collectProduct.collectionDataProduct?.length; i++) {
+        let data = await getProdectDetails(collectProduct.collectionDataProduct[i]);
         newData.value.push(data)
     }
 }
 
-onMounted(()=>{
+onMounted(() => {
     // console.log(collectProduct.collectionDataProduct)
-    if(route.query.id!=undefined){
-        active.value=Number(route.query.id)
+    if (route.query.id != undefined) {
+        active.value = Number(route.query.id)
     }
     scData();
     console.log(newData.value)
@@ -220,4 +220,5 @@ onMounted(()=>{
 
     }
 
-}</style>
+}
+</style>

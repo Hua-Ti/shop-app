@@ -188,9 +188,10 @@ const onSubmit = () => {
         localStorage.buyData = '[]';
         localStorage.shopCarData = JSON.stringify(newShopCarData);
 
-
+        // 直接付款
         // goPayment();
 
+        // 页面跳转
         router.replace({ name: 'pay' })
     }
 }

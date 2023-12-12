@@ -46,7 +46,7 @@
                             <p>收藏</p>
                         </div>
                         <div v-show="!flag">
-                            <van-icon class="myIcon" color="yellow" size="16" name="star" />
+                            <van-icon class="myIcon" color="#f46" size="16" name="star" />
                             <p>已收藏</p>
                         </div>
                     </div>
