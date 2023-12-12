@@ -38,7 +38,7 @@
             <!-- 轮播图 -->
             <div class="broadcastMap">
                 <!-- <lazy-component> -->
-                <van-swipe :autoplay="3000" lazy-render @change="onChange">
+                <van-swipe :autoplay="3000" @change="onChange">
                     <van-swipe-item v-for="(image, a) in images" :key="image">
                         <lazy-component>
                             <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
@@ -131,7 +131,7 @@ async function fn(pid: string) {
 }
 const onChange = (index: string) => {
     console.log('当前 Swipe 索引：' + index);
-    bgChange.changeColor(index); 
+    bgChange.changeColor(index);
 }
 
 onMounted(async () => {

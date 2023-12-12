@@ -180,7 +180,6 @@ const router = createRouter({
       name: 'myorder',
       component: MyOrderList
     }
-
   ]
 })
 

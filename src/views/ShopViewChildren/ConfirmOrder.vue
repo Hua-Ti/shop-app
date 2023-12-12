@@ -32,7 +32,7 @@
 
         <!-- 确认提交的内容 -->
         <div class="confirm-center">
-            <div class="mainBox" v-for="e in data" :key="e.id">
+            <div class="mainBox" v-for="e in curMybuyData" :key="e.id">
                 <div class="dianming-box">
                     <div>
                         <van-icon name="shop-collect-o" color="gray" size="22" />&nbsp;
@@ -85,8 +85,10 @@
                 </div>
             </div>
             <div class="confirm-bottom">
-                <van-submit-bar :price="totalPrices" text-align="left" button-text="提交订单" button-color="#ff468a"
-                    @submit="onSubmit" />
+                <div class="confirm-text">
+                    <p>合计:</p><span>¥{{ totalPrices }}</span>
+                </div>
+                <button class="confirm-btn" @click="onSubmit">提交订单</button>
             </div>
         </div>
     </div>
@@ -99,28 +101,62 @@ import { useRouter, RouterView } from 'vue-router';
 import line from '../../assets/images/shop_line.png'
 import { showToast } from 'vant';
 import { getAddress } from '../../stores/address'
+import { useTotalPrice } from '../../stores/counter'
+const stores = useTotalPrice();
 const addressNeirong = getAddress()
 const router = useRouter();
 
-const data = ref<Array<shopCarData>>([]);
+// 支付宝相关
+import axios from "axios";
+import qs from 'qs'
+// import { ref, onMounted } from "vue";;
+const orderId = +new Date()
+// 支付宝方法
+const goPayment = function () {
+
+    let data = {
+        // orderId: 'a1234789'
+        orderId: orderId,
+        totalPrice: stores.totalPrice
+    };
+
+    axios({
+        url: 'http://localhost:3000/api/payment',
+        method: 'post',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded'
+        },
+        data: qs.stringify(data)
+    }).then((res: any) => {
+        console.log('成功', res);
+        console.log("sas");
+        window.location.href = res.data.result  // result是后端回传给我们的回调成功的地址
+    }).catch(err => {
+        console.log('错误信息', err);
+    })
+}
+
+const curMybuyData = ref<Array<shopCarData>>([]);
 let newShopCarData: any = [];
 
 const totalPrices = computed(() => {
+    let res = '0.00';
     let all = 0;
-    for (let i = 0; i < data.value.length; i++) {
-        const e = data.value[i];
-        all += e.count * Number(e.price) * 100;
+    for (let i = 0; i < curMybuyData.value.length; i++) {
+        const e = curMybuyData.value[i];
+        all += e.count * Number(e.price);
+        res = all.toFixed(2);
     }
-    return all;
+    return res;
 })
 
 // 获取数据
 function getData() {
-    data.value = JSON.parse(localStorage.buyData || `[]`)
-    console.log('我是data.value', data.value)
+    curMybuyData.value = JSON.parse(localStorage.buyData || `[]`)
+    console.log('我是curMybuyData.value', curMybuyData.value)
     // 获取旧shopCar
     newShopCarData = JSON.parse(localStorage.shopCarData || `[]`)
-    // console.log(data.value);
+    // console.log(curMybuyData.value);
 }
 
 onMounted(() => {
@@ -134,8 +170,11 @@ const onSubmit = () => {
     if (!addressNeirong.address) {
         showToast('请选择地址');
     } else {
-        // console.log(data.value)
-        const curData = toRaw(data.value);
+        // 将总金额传入stores
+        stores.setTotalPrice(totalPrices as any);
+
+        // console.log(curMybuyData.value)
+        const curData = toRaw(curMybuyData.value);
 
         // 筛选已经购买的商品
         for (let i = 0; i < curData.length; i++) {
@@ -148,6 +187,9 @@ const onSubmit = () => {
 
         localStorage.buyData = '[]';
         localStorage.shopCarData = JSON.stringify(newShopCarData);
+
+
+        // goPayment();
 
         router.replace({ name: 'pay' })
     }
@@ -388,5 +430,45 @@ const onSubmit = () => {
 
 .mainBox {
     margin-bottom: 6px;
+}
+
+.confirm-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    height: 55px;
+    padding: 0 10px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+        width: 100px;
+        height: 40px;
+        text-align: center;
+        color: white;
+        border: none;
+        border-radius: 999px;
+        background-color: var(--subject-color);
+    }
+
+    .confirm-text {
+        display: flex;
+        align-items: center;
+
+        p {
+            font-size: 14px;
+        }
+
+        span {
+            margin-left: 5px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--subject-color);
+        }
+    }
 }
 </style>

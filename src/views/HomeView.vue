@@ -98,7 +98,7 @@ watch(() => bgChange.bgColorIndex, (newVal, oldVal) => {
     font-size: 16px;
 
     .head {
-        background: rgb(220, 157, 167);
+        // background: rgb(220, 157, 167);
         background: linear-gradient(180deg, rgb(232, 188, 195) 0%, rgba(225, 148, 160, 0.978) 100%);
         color: #fff;
         height: 97.99px;
