@@ -112,6 +112,7 @@ router.post('/api/payment', function (req, res, next) {
 
   //前端给后端的数据
   let orderId = req.body.orderId;
+  let totalPrice = req.body.totalPrice;
   //对接支付宝
   const formData = new AlipayFormData();
 
@@ -120,7 +121,7 @@ router.post('/api/payment', function (req, res, next) {
   formData.addField('bizContent', {
     outTradeNo: orderId, // 因为测试原因我们可以把订单号改为Math.random()
     productCode: 'FAST_INSTANT_TRADE_PAY', // 产品码
-    totalAmount: '2', // 商品金额
+    totalAmount: totalPrice, // 商品金额
     subject: '打赏', // 出售商品的标题
     body: '您的支持是对我最大的鼓励' // 出售商品的内容
   });

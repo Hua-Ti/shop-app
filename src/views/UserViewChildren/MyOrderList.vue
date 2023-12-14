@@ -14,35 +14,35 @@
                     <img style="width: 100vw;" src="../../assets/images/order_bg.png" alt="">
                     <div class="aShop" v-show="attentionlist.attention.length < 1">
                         <img src="../../assets/images/order_bg2.png" alt="">
-                        <div>还没有相关订单哦~~0</div>
+                        <div>还没有相关订单哦~~</div>
                     </div>
                 </van-tab>
                 <van-tab title="待发货" replace :to="{ name: 'myorder', query: { id: 1 } }">
                     <img style="width: 100vw;" src="../../assets/images/order_bg.png" alt="">
                     <div class="aShop">
                         <img src="../../assets/images/order_bg2.png" alt="">
-                        <div>还没有相关订单哦~~1</div>
+                        <div>还没有相关订单哦~~</div>
                     </div>
                 </van-tab>
                 <van-tab title="待收获" replace :to="{ name: 'myorder', query: { id: 2 } }">
                     <img style="width: 100vw;" src="../../assets/images/order_bg.png" alt="">
                     <div class="aShop">
                         <img src="../../assets/images/order_bg2.png" alt="">
-                        <div>还没有相关订单哦~~2</div>
+                        <div>还没有相关订单哦~~</div>
                     </div>
                 </van-tab>
                 <van-tab title="待评价" replace :to="{ name: 'myorder', query: { id: 3 } }">
                     <img style="width: 100vw;" src="../../assets/images/order_bg.png" alt="">
                     <div class="aShop">
                         <img src="../../assets/images/order_bg2.png" alt="">
-                        <div>还没有相关订单哦~~3</div>
+                        <div>还没有相关订单哦~~</div>
                     </div>
                 </van-tab>
                 <van-tab title="售后" replace :to="{ name: 'myorder', query: { id: 4 } }">
                     <img style="width: 100vw;" src="../../assets/images/order_bg.png" alt="">
                     <div class="aShop">
                         <img src="../../assets/images/order_bg2.png" alt="">
-                        <div>还没有相关订单哦~~4</div>
+                        <div>还没有相关订单哦~~</div>
                     </div>
                 </van-tab>
             </van-tabs>

@@ -38,6 +38,7 @@
             <!-- 轮播图 -->
             <div class="broadcastMap">
                 <!-- <lazy-component> -->
+<<<<<<< HEAD
                 <!-- 无懒加载lazy-render -->
                 <van-swipe :autoplay="3000"  @change="onChange">
                 <!-- 有懒加载lazy-render -->
@@ -46,6 +47,13 @@
                         <!-- <lazy-component> -->
                         <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
                         <!-- </lazy-component> -->
+=======
+                <van-swipe :autoplay="3000" @change="onChange">
+                    <van-swipe-item v-for="(image, a) in images" :key="image">
+                        <lazy-component>
+                            <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
+                        </lazy-component>
+>>>>>>> e1417305b3376b54b8d52557b81e28d8b1985121
                     </van-swipe-item>
                 </van-swipe>
                 <!-- </lazy-component> -->

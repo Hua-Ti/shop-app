@@ -82,3 +82,14 @@ export const usePetNameStore = defineStore('patName', () => {
 
   return { userPatname, userjianjie, getUserPatname, getUserjianjie }
 }, { persist: true })
+
+
+// 支付总金额
+export const useTotalPrice = defineStore('totalPri', () => {
+  const totalPrice = ref(0);
+
+  function setTotalPrice(curPrice: number) {
+    totalPrice.value = curPrice;
+  }
+  return { totalPrice, setTotalPrice }
+}, { persist: true })

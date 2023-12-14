@@ -17,15 +17,14 @@ declare module 'vue' {
     Shopping: typeof import('./src/components/Shopping.vue')['default']
     VanActionBar: typeof import('vant/es')['ActionBar']
     VanActionBarButton: typeof import('vant/es')['ActionBarButton']
-    VanActionBarIcon: typeof import('vant/es')['ActionBarIcon']
     VanAddressList: typeof import('vant/es')['AddressList']
-    VanBackTop: typeof import('vant/es')['BackTop']
     VanButton: typeof import('vant/es')['Button']
     VanCell: typeof import('vant/es')['Cell']
     VanCellGroup: typeof import('vant/es')['CellGroup']
     VanCheckbox: typeof import('vant/es')['Checkbox']
     VanCheckboxGroup: typeof import('vant/es')['CheckboxGroup']
     VanConfigProvider: typeof import('vant/es')['ConfigProvider']
+    VanDivider: typeof import('vant/es')['Divider']
     VanField: typeof import('vant/es')['Field']
     VanFloatingBubble: typeof import('vant/es')['FloatingBubble']
     VanForm: typeof import('vant/es')['Form']
@@ -49,15 +48,11 @@ declare module 'vue' {
     VanSwitch: typeof import('vant/es')['Switch']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
-    VanTextEllipsis: typeof import('vant/es')['TextEllipsis']
     VanUploader: typeof import('vant/es')['Uploader']
     VarInput: typeof import('@varlet/ui')['_InputComponent']
     WaterfallFlowFour: typeof import('./src/components/waterfallFlowFour.vue')['default']
     WaterfallFlowShree: typeof import('./src/components/waterfallFlowShree.vue')['default']
     WaterfallFlowTwo: typeof import('./src/components/waterfallFlowTwo.vue')['default']
     WaterfallFlowView: typeof import('./src/components/WaterfallFlowView.vue')['default']
-  }
-  export interface ComponentCustomProperties {
-    vLazy: typeof import('@varlet/ui')['_LazyComponent']
   }
 }

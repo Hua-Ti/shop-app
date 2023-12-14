@@ -2,7 +2,7 @@
 <template>
     <div class="waterfallFlow">
 
-        <div class="mubu" v-show="flags"></div>
+        <!-- <div class="mubu" v-show="flags"></div> -->
         <van-list class="item-menu" v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <div v-masonry class="item-menu" transition-duration="0.3s" i tem-selector=".item">
                 <div v-masonry-tile class="item" v-for="(item, index) in getHomeC" :key="index"
