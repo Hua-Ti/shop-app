@@ -132,7 +132,7 @@ async function fn(pid: string) {
     }
     // console.log(RecommendNav)
 }
-const onChange = (index: string) => {
+const onChange = (index:any) => {
     console.log('当前 Swipe 索引：' + index);
     bgChange.changeColor(index);
 }

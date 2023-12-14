@@ -18,7 +18,7 @@
         </div>
         <van-popup class="price-box" v-model:show="show" round style="width: 100%; height: 25%; padding: 10px;">
             <div class="price">
-                <span v-for="item in priceList" key="item" @click="changeMoney(item.min, item.max)">{{ item.min }} -
+                <span v-for="(item,index) in priceList" :key="index" @click="changeMoney(item.min, item.max)">{{ item.min }} -
                     {{ item.max }}</span>
             </div>
             <div class="section">
