@@ -111,7 +111,7 @@
                     <i class="iconfont">&#xe610;<span class="nav-title">大姨妈</span></i>
                 </div>
                 <div>
-                    <i class="iconfont">&#xe606;<span class="nav-title">客服</span></i>
+                    <i class="iconfont">&#xe606;<span class="nav-title"> <a href="http://localhost:8080/#/imclient">客服</a></span></i>
                 </div>
                 <div>
                     <i class="iconfont">&#xe611;<span class="nav-title">达人中心</span></i>

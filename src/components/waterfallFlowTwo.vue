@@ -90,7 +90,7 @@ const onLoad = () => {
 watch(() => route.query.pid,
     (newVa, oldVal) => {
         console.log(newVa, oldVal)
-        count.value=1
+        // count.value=1
         console.log('count',count.value)
         
         if (newVa !== '666') {

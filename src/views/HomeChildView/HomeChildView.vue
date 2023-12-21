@@ -4,7 +4,6 @@
     <div class="homeChild" v-if="route.query.pid === '666' || route.query.pid == undefined">
         <!-- 首页二级模块 -->
         <homeTwoModule :homeNav="homeNav" />
-        <div><a href="http://localhost:8080/#/imclient">客服</a></div>
         <!-- 限时快抢模块 -->
         <div class="goodList">
             <!-- 限时快抢 -->
@@ -38,22 +37,11 @@
             <!-- 轮播图 -->
             <div class="broadcastMap">
                 <!-- <lazy-component> -->
-<<<<<<< HEAD
-                <!-- 无懒加载lazy-render -->
-                <van-swipe :autoplay="3000"  @change="onChange">
-                <!-- 有懒加载lazy-render -->
-                <!-- <van-swipe :autoplay="3000" lazy-render @change="onChange"> -->
-                    <van-swipe-item v-for="(image, a) in images" :key="image">
-                        <!-- <lazy-component> -->
-                        <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
-                        <!-- </lazy-component> -->
-=======
                 <van-swipe :autoplay="3000" @change="onChange">
                     <van-swipe-item v-for="(image, a) in images" :key="image">
                         <lazy-component>
                             <img :src="image" :to="{ name: 'moduleHome', query: { keyword: TypeData[a] } }" />
                         </lazy-component>
->>>>>>> e1417305b3376b54b8d52557b81e28d8b1985121
                     </van-swipe-item>
                 </van-swipe>
                 <!-- </lazy-component> -->

@@ -117,7 +117,7 @@ const goPayment = function () {
     let data = {
         // orderId: 'a1234789'
         orderId: orderId,
-        totalPrice: stores.totalPrice
+        totalPrice: totalPrices.value
     };
 
     axios({
@@ -192,7 +192,10 @@ const onSubmit = () => {
         // goPayment();
 
         // 页面跳转
-        router.replace({ name: 'pay' })
+        // router.replace({ name: 'pay' })
+        setTimeout(() => {
+            goPayment()
+        },100)
     }
 }
 
